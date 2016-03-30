@@ -34,7 +34,7 @@ class ClassUtil
      */
     final static public function getNameShort($for)
     {
-        return (string) self::newClassReflection($for)->getName();
+        return (string) self::newClassReflection($for)->getShortName();
     }
 
     /**

@@ -40,8 +40,8 @@ env :
 # Use builder to install system environment and application 
 # requirements.
 install :
-  - bash .config/builders/build-reqs/build-reqs.bash up-env
-  - bash .config/builders/build-reqs/build-reqs.bash up-app
+  - bash .run/builders/build-reqs/build-reqs.bash up-env
+  - bash .run/builders/build-reqs/build-reqs.bash up-app
 
 # Run unit tests!
 script : bin/phpunit -vvv
@@ -49,7 +49,7 @@ script : bin/phpunit -vvv
 # Use builder to run post-operations, most importantly handle
 # statistics submissions for text coverage.
 after_script :
-  - bash .config/builders/build-reqs/build-reqs.bash dn-app
-  - bash .config/builders/build-reqs/build-reqs.bash dn-env
+  - bash .run/builders/build-reqs/build-reqs.bash dn-app
+  - bash .run/builders/build-reqs/build-reqs.bash dn-env
 
 ...

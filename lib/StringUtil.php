@@ -13,9 +13,9 @@
 namespace SR\Utility;
 
 /**
- * Class StringUtils.
+ * Class StringUtil.
  */
-class StringUtils
+class StringUtil
 {
     /**
      * @param string $string

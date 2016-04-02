@@ -86,6 +86,20 @@ class ClassUtil
     }
 
     /**
+     * @param string $trait
+     *
+     * @return bool
+     */
+    final public static function isTrait($trait)
+    {
+        try {
+            return static::assertTrait($trait);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
+    }
+
+    /**
      * @param mixed $class
      *
      * @throws \InvalidArgumentException
@@ -115,6 +129,22 @@ class ClassUtil
         }
 
         throw new \InvalidArgumentException('Failed asserting passed value is an object instance.');
+    }
+
+    /**
+     * @param mixed $trait
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return bool
+     */
+    final public static function assertTrait($trait)
+    {
+        if (is_string($trait) && trait_exists((string) $trait)) {
+            return true;
+        }
+
+        throw new \InvalidArgumentException('Failed asserting passed value is valid trait name.');
     }
 
     /**

@@ -60,6 +60,18 @@ class ClassUtilTest extends \PHPUnit_Framework_TestCase
         ClassUtil::assertInstance(__CLASS__);
     }
 
+    public function testTraitTester()
+    {
+        $trait = 'SR\Utility\Tests\Fixture\FixtureTrait';
+
+        static::assertTrue(ClassUtil::assertTrait($trait));
+        static::assertTrue(ClassUtil::isTrait($trait));
+        static::assertFalse(ClassUtil::isTrait(__CLASS__));
+
+        $this->expectException('\InvalidArgumentException');
+        ClassUtil::assertTrait(__CLASS__);
+    }
+
     public function testNewClassReflection()
     {
         $instanceReflection = ClassUtil::newClassReflection(new ClassUtil());

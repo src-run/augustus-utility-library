@@ -22,7 +22,7 @@ class ClassUtil
      *
      * @return string
      */
-    final static public function getName($for)
+    final public static function getName($for)
     {
         return (string) self::newClassReflection($for)->getName();
     }
@@ -32,7 +32,7 @@ class ClassUtil
      *
      * @return string
      */
-    final static public function getNameShort($for)
+    final public static function getNameShort($for)
     {
         return (string) self::newClassReflection($for)->getShortName();
     }
@@ -42,7 +42,7 @@ class ClassUtil
      *
      * @return string
      */
-    final static public function getNamespace($for)
+    final public static function getNamespace($for)
     {
         return self::newClassReflection($for)->getNamespaceName();
     }
@@ -52,7 +52,7 @@ class ClassUtil
      *
      * @return string[]
      */
-    final static public function getNamespaceArray($for)
+    final public static function getNamespaceArray($for)
     {
         return (array) explode('\\', self::getNamespace($for));
     }
@@ -62,7 +62,7 @@ class ClassUtil
      *
      * @return bool
      */
-    final static public function isClass($class)
+    final public static function isClass($class)
     {
         try {
             return static::assertClass($class);
@@ -76,7 +76,7 @@ class ClassUtil
      *
      * @return bool
      */
-    final static public function isInstance($instance)
+    final public static function isInstance($instance)
     {
         try {
             return static::assertInstance($instance);
@@ -92,7 +92,7 @@ class ClassUtil
      *
      * @return bool
      */
-    final static public function assertClass($class)
+    final public static function assertClass($class)
     {
         if (is_string($class) && class_exists((string) $class)) {
             return true;
@@ -108,7 +108,7 @@ class ClassUtil
      *
      * @return bool
      */
-    final static public function assertInstance($instance)
+    final public static function assertInstance($instance)
     {
         if (is_object($instance)) {
             return true;
@@ -122,7 +122,7 @@ class ClassUtil
      *
      * @return null|\ReflectionClass|\ReflectionObject
      */
-    final static public function newClassReflection($for)
+    final public static function newClassReflection($for)
     {
         if (self::isClass($for)) {
             return new \ReflectionClass($for);

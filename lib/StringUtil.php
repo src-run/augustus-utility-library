@@ -23,7 +23,7 @@ class StringUtil
      *
      * @return int|null
      */
-    final static public function searchPositionFromLeft($string, $needle)
+    final public static function searchPositionFromLeft($string, $needle)
     {
         return self::searchPosition($string, $needle, false);
     }
@@ -34,7 +34,7 @@ class StringUtil
      *
      * @return int|null
      */
-    final static public function searchPositionFromRight($string, $needle)
+    final public static function searchPositionFromRight($string, $needle)
     {
         return self::searchPosition($string, $needle, true);
     }
@@ -46,7 +46,7 @@ class StringUtil
      *
      * @return int|null
      */
-    final static public function searchPosition($string, $needle, $fromRight = false)
+    final public static function searchPosition($string, $needle, $fromRight = false)
     {
         $_ = self::searchPositionFunctionSelect($fromRight);
 
@@ -62,7 +62,7 @@ class StringUtil
      *
      * @return string
      */
-    final static private function searchPositionFunctionSelect($fromRight)
+    final private static function searchPositionFunctionSelect($fromRight)
     {
         return $fromRight ? 'mb_strrpos' : 'mb_strpos';
     }
@@ -72,7 +72,7 @@ class StringUtil
      *
      * @return string
      */
-    final static public function toAlphanumeric($string)
+    final public static function toAlphanumeric($string)
     {
         return (string) preg_replace('/[^a-z0-9]/i', '', $string);
     }
@@ -82,7 +82,7 @@ class StringUtil
      *
      * @return string
      */
-    final static public function toAlphanumericAndDashes($string)
+    final public static function toAlphanumericAndDashes($string)
     {
         return (string) preg_replace('/[^a-z0-9-]/i', '', $string);
     }
@@ -200,6 +200,7 @@ class StringUtil
 
     /**
      * @param string $string
+     *
      * @return array
      */
     final public static function split($string)

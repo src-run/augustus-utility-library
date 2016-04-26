@@ -13,18 +13,29 @@
 namespace SR\Utility;
 
 /**
- * Class ClassUtil.
+ * Class ClassInspect
  */
-class ClassUtil
+class ClassInspect
 {
+    /**
+     * @param string|object $for
+     * @param bool          $qualified
+     *
+     * @return string
+     */
+    final public static function getName($for, $qualified = true)
+    {
+        return $qualified ? static::getNameQualified($for) : static::getNameShort($for);
+    }
+
     /**
      * @param string|object $for
      *
      * @return string
      */
-    final public static function getName($for)
+    final public static function getNameQualified($for)
     {
-        return (string) self::newClassReflection($for)->getName();
+        return (string) self::getReflection($for)->getName();
     }
 
     /**
@@ -34,7 +45,7 @@ class ClassUtil
      */
     final public static function getNameShort($for)
     {
-        return (string) self::newClassReflection($for)->getShortName();
+        return (string) self::getReflection($for)->getShortName();
     }
 
     /**
@@ -44,7 +55,7 @@ class ClassUtil
      */
     final public static function getNamespace($for)
     {
-        return self::newClassReflection($for)->getNamespaceName();
+        return self::getReflection($for)->getNamespaceName();
     }
 
     /**
@@ -108,7 +119,7 @@ class ClassUtil
      */
     final public static function assertClass($class)
     {
-        if (is_string($class) && class_exists((string) $class)) {
+        if (is_string($class) && class_exists($class)) {
             return true;
         }
 
@@ -140,7 +151,7 @@ class ClassUtil
      */
     final public static function assertTrait($trait)
     {
-        if (is_string($trait) && trait_exists((string) $trait)) {
+        if (is_string($trait) && trait_exists($trait)) {
             return true;
         }
 
@@ -152,7 +163,7 @@ class ClassUtil
      *
      * @return null|\ReflectionClass|\ReflectionObject
      */
-    final public static function newClassReflection($for)
+    final public static function getReflection($for)
     {
         if (self::isClass($for)) {
             return new \ReflectionClass($for);

@@ -12,12 +12,10 @@
 
 namespace SR\Utility\Tests;
 
-use SR\Utility\StringUtil;
-
 /**
- * Class StringUtilTest.
+ * Class StringTransformTest
  */
-class StringUtilTest extends \PHPUnit_Framework_TestCase
+class StringTransformTest extends AbstractTest
 {
     static public $fixtureData = [
         'abcdef01234',
@@ -28,79 +26,31 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         'The cow looked over the hill!',
     ];
 
-    private function runThroughAssertions(array $assertions, array $fixtureData = null)
-    {
-        foreach ($assertions as $call => $opts) {
-            $this->runThroughFixtureData($call, $opts, $fixtureData);
-        }
-    }
+    static public $fixtureCamelCase = [
+        'stringFixture',
+        'secondStringFixtureExample',
+        'anExampleWithABackToBackUpperCharacter',
+        'aBCDEF',
+    ];
 
-    private function runThroughFixtureData($callable, array $assert, array $fixtureData = null)
-    {
-        $fixtureData = $fixtureData === null ? self::$fixtureData : $fixtureData;
+    static public $fixturePascalCase = [
+        'StringFixture',
+        'SecondStringFixtureExample',
+        'AnExampleWithABackToBackUpperCharacter',
+        'ABCDEF',
+    ];
 
-        foreach ($fixtureData as $i => $data) {
-            $parameters = $assert[$i];
-            array_unshift($parameters, $data);
-            $expected = array_pop($parameters);
-            $received = call_user_func_array('SR\Utility\\'.$callable, $parameters);
-            $this->assertSame($expected, $received,
-                'Call to '.$callable.' did not result in expectation of "'.$expected.'" with input "'.implode(",", $parameters).'": received "'.$received.'"');
-        }
-    }
-
-    public function testSearchPositionDefault()
-    {
-        $assertions = [
-            'StringUtil::searchPosition' => [
-                ['b', 1],
-                ['-', 0],
-                ['1', 7],
-                ['@', 9],
-                ['Z', null],
-                [' over', 14]
-            ]
-        ];
-
-        $this->runThroughAssertions($assertions);
-    }
-
-    public function testSearchPositionLeft()
-    {
-        $assertions = [
-            'StringUtil::searchPositionFromLeft' => [
-                ['bcdef', 1],
-                ['|', null],
-                ['4', 10],
-                ['M', 3],
-                ['dE0@$@30cc', 1],
-                ['e cow looked', 2]
-            ]
-        ];
-
-        $this->runThroughAssertions($assertions);
-    }
-
-    public function testSearchPositionRight()
-    {
-        $assertions = [
-            'StringUtil::searchPositionFromRight' => [
-                ['bcdef', 1],
-                ['|', null],
-                ['4', 10],
-                ['M', 6],
-                ['dE0@$@30cc', 1],
-                ['e cow looked', 2]
-            ]
-        ];
-
-        $this->runThroughAssertions($assertions);
-    }
+    static public $fixtureSnakeCase = [
+        'string_fixture',
+        'second_string_fixture_example',
+        'an_example_with_a_back_to_back_upper_character',
+        'a_b_c_d_e_f',
+    ];
 
     public function testToAlphanumeric()
     {
         $assertions = [
-            'StringUtil::toAlphanumeric' => [
+            'StringTransform::toAlphanumeric' => [
                 ['abcdef01234'],
                 [''],
                 ['abcd1234'],
@@ -116,7 +66,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function testToAlphanumericAndDashes()
     {
         $assertions = [
-            'StringUtil::toAlphanumericAndDashes' => [
+            'StringTransform::toAlphanumericAndDashes' => [
                 ['abcdef01234'],
                 ['-----------'],
                 ['abcd---1234'],
@@ -132,7 +82,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function testSpacesToDashes()
     {
         $assertions = [
-            'StringUtil::spacesToDashes' => [
+            'StringTransform::spacesToDashes' => [
                 ['abcdef01234'],
                 ['-'],
                 ['abcd-1234'],
@@ -145,7 +95,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         $this->runThroughAssertions($assertions);
 
         $assertions = [
-            'StringUtil::spacesToDashes' => [
+            'StringTransform::spacesToDashes' => [
                 [false, 'abcdef01234'],
                 [false, '-----------'],
                 [false, 'abcd---1234'],
@@ -161,7 +111,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function testDashesToSpaces()
     {
         $assertions = [
-            'StringUtil::dashesToSpaces' => [
+            'StringTransform::dashesToSpaces' => [
                 ['abcdef01234'],
                 [' '],
                 ['abcd 1234'],
@@ -174,7 +124,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         $this->runThroughAssertions($assertions);
 
         $assertions = [
-            'StringUtil::dashesToSpaces' => [
+            'StringTransform::dashesToSpaces' => [
                 [false, 'abcdef01234'],
                 [false, '           '],
                 [false, 'abcd   1234'],
@@ -190,7 +140,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function testToSlug()
     {
         $assertions = [
-            'StringUtil::toSlug' => [
+            'StringTransform::toSlug' => [
                 ['abcdef01234'],
                 ['-'],
                 ['abcd-1234'],
@@ -214,7 +164,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         ];
 
         $assertions = [
-            'StringUtil::toPhoneNumber' => [
+            'StringTransform::toPhoneNumber' => [
                 ['12223334444'],
                 ['12223334444'],
                 ['12223334444'],
@@ -239,7 +189,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         ];
 
         $assertions = [
-            'StringUtil::toPhoneNumberFormatted' => [
+            'StringTransform::toPhoneNumberFormatted' => [
                 ['+1 (222) 333-4444'],
                 ['+1 (222) 333-4444'],
                 ['+1 (222) 333-4444'],
@@ -254,7 +204,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
 
         $format = '+%COUNTRY% %NPA%-%CO%-%LINE%';
         $assertions = [
-            'StringUtil::toPhoneNumberFormatted' => [
+            'StringTransform::toPhoneNumberFormatted' => [
                 [$format, '+1 222-333-4444'],
                 [$format, '+1 222-333-4444'],
                 [$format, '+1 222-333-4444'],
@@ -269,7 +219,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
 
         $format = '%NPA%-%CO%-%LINE%';
         $assertions = [
-            'StringUtil::toPhoneNumberFormatted' => [
+            'StringTransform::toPhoneNumberFormatted' => [
                 [$format, '222-333-4444'],
                 [$format, '222-333-4444'],
                 [$format, '222-333-4444'],
@@ -296,7 +246,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         ];
 
         $assertions = [
-            'StringUtil::compare' => [
+            'StringTransform::compare' => [
                 ['abcdef0123', true],
                 ['ß', true],
                 ['漢字はユニコード', true],
@@ -308,6 +258,86 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->runThroughAssertions($assertions, $fixtureData);
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    private function fixtureToAssertionExpectations(array $array)
+    {
+        array_walk($array, function (&$element) {
+            $element = [$element];
+        });
+
+        return $array;
+    }
+
+    public function testCamelToSnakeCase()
+    {
+        $parameters = self::$fixtureCamelCase;
+        $assertions = [
+            'StringTransform::camelToSnakeCase' =>
+                $this->fixtureToAssertionExpectations(self::$fixtureSnakeCase)
+        ];
+
+        $this->runThroughAssertions($assertions, $parameters);
+    }
+
+    public function testCamelToPascalCase()
+    {
+        $parameters = self::$fixtureCamelCase;
+        $assertions = [
+            'StringTransform::camelToPascalCase' =>
+                $this->fixtureToAssertionExpectations(self::$fixturePascalCase)
+        ];
+
+        $this->runThroughAssertions($assertions, $parameters);
+    }
+
+    public function testPascalToSnakeCase()
+    {
+        $parameters = self::$fixturePascalCase;
+        $assertions = [
+            'StringTransform::pascalToSnakeCase' =>
+                $this->fixtureToAssertionExpectations(self::$fixtureSnakeCase)
+        ];
+
+        $this->runThroughAssertions($assertions, $parameters);
+    }
+
+    public function testPascalToCamelCase()
+    {
+        $parameters = self::$fixturePascalCase;
+        $assertions = [
+            'StringTransform::pascalToCamelCase' =>
+                $this->fixtureToAssertionExpectations(self::$fixtureCamelCase)
+        ];
+
+        $this->runThroughAssertions($assertions, $parameters);
+    }
+
+    public function testSnakeToCamelCase()
+    {
+        $parameters = self::$fixtureSnakeCase;
+        $assertions = [
+            'StringTransform::snakeToCamelCase' =>
+                $this->fixtureToAssertionExpectations(self::$fixtureCamelCase)
+        ];
+
+        $this->runThroughAssertions($assertions, $parameters);
+    }
+
+    public function testSnakeToPascalCase()
+    {
+        $parameters = self::$fixtureSnakeCase;
+        $assertions = [
+            'StringTransform::snakeToPascalCase' =>
+                $this->fixtureToAssertionExpectations(self::$fixturePascalCase)
+        ];
+
+        $this->runThroughAssertions($assertions, $parameters);
     }
 }
 

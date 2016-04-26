@@ -13,60 +13,10 @@
 namespace SR\Utility;
 
 /**
- * Class StringUtil.
+ * Class StringTransform
  */
-class StringUtil
+class StringTransform
 {
-    /**
-     * @param string $string
-     * @param string $needle
-     *
-     * @return int|null
-     */
-    final public static function searchPositionFromLeft($string, $needle)
-    {
-        return self::searchPosition($string, $needle, false);
-    }
-
-    /**
-     * @param string $string
-     * @param string $needle
-     *
-     * @return int|null
-     */
-    final public static function searchPositionFromRight($string, $needle)
-    {
-        return self::searchPosition($string, $needle, true);
-    }
-
-    /**
-     * @param string $string
-     * @param string $needle
-     * @param bool   $fromRight
-     *
-     * @return int|null
-     */
-    final public static function searchPosition($string, $needle, $fromRight = false)
-    {
-        $_ = self::searchPositionFunctionSelect($fromRight);
-
-        if (false === ($position = $_($string, $needle))) {
-            return null;
-        }
-
-        return (int) $position;
-    }
-
-    /**
-     * @param bool $fromRight
-     *
-     * @return string
-     */
-    final private static function searchPositionFunctionSelect($fromRight)
-    {
-        return $fromRight ? 'mb_strrpos' : 'mb_strpos';
-    }
-
     /**
      * @param string $string
      *
@@ -213,6 +163,70 @@ class StringUtil
         }
 
         return (array) $result;
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    final public static function camelToSnakeCase($string)
+    {
+        return strtolower(preg_replace('#(?<=\\w)(?=[A-Z])#', '_$1', $string));
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    final public static function camelToPascalCase($string)
+    {
+        return ucfirst($string);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    final public static function pascalToSnakeCase($string)
+    {
+        return static::camelToSnakeCase($string);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    final public static function pascalToCamelCase($string)
+    {
+        return lcfirst($string);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    final public static function snakeToCamelCase($string)
+    {
+        $visitor = function($match) {
+            return strtoupper($match[2]);
+        };
+
+        return preg_replace_callback('{(_)([a-z])}', $visitor, $string);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    final public static function snakeToPascalCase($string)
+    {
+        return static::camelToPascalCase(static::snakeToCamelCase($string));
     }
 }
 

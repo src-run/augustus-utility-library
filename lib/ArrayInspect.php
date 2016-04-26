@@ -13,16 +13,16 @@
 namespace SR\Utility;
 
 /**
- * Class ArrayUtil.
+ * Class ArrayInspect
  */
-class ArrayUtil
+class ArrayInspect
 {
     /**
      * @param array $array
      * 
      * @return bool|null
      */
-    final public static function isHash(array $array)
+    final public static function isAssociative(array $array)
     {
         if (count($array) === 0) {
             return null;
@@ -30,7 +30,7 @@ class ArrayUtil
 
         $keys = array_keys($array);
 
-        return (bool) (array_keys($keys) !== $keys);
+        return array_keys($keys) !== $keys;
     }
 }
 

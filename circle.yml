@@ -8,8 +8,10 @@ checkout:
 dependencies:
   pre:
     - echo "date.timezone = America/New_York" | tee -a "$(php -i | grep "Loaded Configuration File" | grep -oP "\/opt\/.*")"
-    - wget -qO bin/coveralls https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar && chmod +x bin/coveralls
-    - wget -qO bin/phpunit https://phar.phpunit.de/phpunit.phar && chmod +x bin/phpunit
+    - wget -O bin/coveralls https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
+    - chmod +x bin/coveralls
+    - wget -O bin/phpunit https://phar.phpunit.de/phpunit.phar
+    - chmod +x bin/phpunit
   override:
     - build_package=true bash .run/builders/build-reqs/build-reqs.bash up-env
     - build_package=true bash .run/builders/build-reqs/build-reqs.bash up-app

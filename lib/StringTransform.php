@@ -13,7 +13,7 @@
 namespace SR\Utility;
 
 /**
- * Class StringTransform
+ * Class StringTransform.
  */
 class StringTransform
 {
@@ -212,7 +212,7 @@ class StringTransform
      */
     final public static function snakeToCamelCase($string)
     {
-        $visitor = function($match) {
+        $visitor = function ($match) {
             return strtoupper($match[2]);
         };
 

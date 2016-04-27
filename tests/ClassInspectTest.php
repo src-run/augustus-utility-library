@@ -15,7 +15,7 @@ namespace SR\Utility\Tests;
 use SR\Utility\ClassInspect;
 
 /**
- * Class ClassInspectTest
+ * Class ClassInspectTest.
  */
 class ClassInspectTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,7 +35,7 @@ class ClassInspectTest extends \PHPUnit_Framework_TestCase
         static::assertSame(explode('\\', __NAMESPACE__), ClassInspect::getNamespaceArray(__CLASS__));
         static::assertSame(explode('\\', 'SR\Utility'), ClassInspect::getNamespaceArray($instance));
     }
-    
+
     public function testClassTester()
     {
         $instance = new ClassInspect();

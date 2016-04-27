@@ -13,11 +13,11 @@
 namespace SR\Utility\Tests;
 
 /**
- * Class StringTransformTest
+ * Class StringTransformTest.
  */
 class StringTransformTest extends AbstractTest
 {
-    static public $fixtureData = [
+    public static $fixtureData = [
         'abcdef01234',
         '-----------',
         'abcd---1234',
@@ -26,21 +26,21 @@ class StringTransformTest extends AbstractTest
         'The cow looked over the hill!',
     ];
 
-    static public $fixtureCamelCase = [
+    public static $fixtureCamelCase = [
         'stringFixture',
         'secondStringFixtureExample',
         'anExampleWithABackToBackUpperCharacter',
         'aBCDEF',
     ];
 
-    static public $fixturePascalCase = [
+    public static $fixturePascalCase = [
         'StringFixture',
         'SecondStringFixtureExample',
         'AnExampleWithABackToBackUpperCharacter',
         'ABCDEF',
     ];
 
-    static public $fixtureSnakeCase = [
+    public static $fixtureSnakeCase = [
         'string_fixture',
         'second_string_fixture_example',
         'an_example_with_a_back_to_back_upper_character',
@@ -54,10 +54,10 @@ class StringTransformTest extends AbstractTest
                 ['abcdef01234'],
                 [''],
                 ['abcd1234'],
-                ['LMNOMQR1',],
+                ['LMNOMQR1'],
                 ['jdE030cc'],
-                ['Thecowlookedoverthehill']
-            ]
+                ['Thecowlookedoverthehill'],
+            ],
         ];
 
         $this->runThroughAssertions($assertions);
@@ -70,10 +70,10 @@ class StringTransformTest extends AbstractTest
                 ['abcdef01234'],
                 ['-----------'],
                 ['abcd---1234'],
-                ['--LMNOMQR1',],
+                ['--LMNOMQR1'],
                 ['jdE030cc'],
-                ['Thecowlookedoverthehill']
-            ]
+                ['Thecowlookedoverthehill'],
+            ],
         ];
 
         $this->runThroughAssertions($assertions);
@@ -88,8 +88,8 @@ class StringTransformTest extends AbstractTest
                 ['abcd-1234'],
                 ['-LMNOMQR@1'],
                 ['jdE0@$@30cc'],
-                ['The-cow-looked-over-the-hill!']
-            ]
+                ['The-cow-looked-over-the-hill!'],
+            ],
         ];
 
         $this->runThroughAssertions($assertions);
@@ -101,8 +101,8 @@ class StringTransformTest extends AbstractTest
                 [false, 'abcd---1234'],
                 [false, '--LMNOMQR@1'],
                 [false, 'jdE0@$@30cc'],
-                [false, 'The-cow-looked-over-the-hill!']
-            ]
+                [false, 'The-cow-looked-over-the-hill!'],
+            ],
         ];
 
         $this->runThroughAssertions($assertions);
@@ -117,8 +117,8 @@ class StringTransformTest extends AbstractTest
                 ['abcd 1234'],
                 [' LMNOMQR@1'],
                 ['jdE0@$@30cc'],
-                ['The cow looked over the hill!']
-            ]
+                ['The cow looked over the hill!'],
+            ],
         ];
 
         $this->runThroughAssertions($assertions);
@@ -130,8 +130,8 @@ class StringTransformTest extends AbstractTest
                 [false, 'abcd   1234'],
                 [false, '  LMNOMQR@1'],
                 [false, 'jdE0@$@30cc'],
-                [false, 'The cow looked over the hill!']
-            ]
+                [false, 'The cow looked over the hill!'],
+            ],
         ];
 
         $this->runThroughAssertions($assertions);
@@ -146,8 +146,8 @@ class StringTransformTest extends AbstractTest
                 ['abcd-1234'],
                 ['-lmnomqr1'],
                 ['jde030cc'],
-                ['the-cow-looked-over-the-hill']
-            ]
+                ['the-cow-looked-over-the-hill'],
+            ],
         ];
 
         $this->runThroughAssertions($assertions);
@@ -160,7 +160,7 @@ class StringTransformTest extends AbstractTest
             '222-333-4444',
             '(222) 333 4444',
             '(222) 333-4444',
-            '+1 (222) 333-4444'
+            '+1 (222) 333-4444',
         ];
 
         $assertions = [
@@ -170,7 +170,7 @@ class StringTransformTest extends AbstractTest
                 ['12223334444'],
                 ['12223334444'],
                 ['12223334444'],
-            ]
+            ],
         ];
 
         $this->runThroughAssertions($assertions, $fixtureData);
@@ -185,7 +185,7 @@ class StringTransformTest extends AbstractTest
             '222-333-4444',
             '(222) 333 4444',
             '(222) 333-4444',
-            '+1 (222) 333-4444'
+            '+1 (222) 333-4444',
         ];
 
         $assertions = [
@@ -197,7 +197,7 @@ class StringTransformTest extends AbstractTest
                 ['+1 (222) 333-4444'],
                 ['+1 (222) 333-4444'],
                 ['+1 (222) 333-4444'],
-            ]
+            ],
         ];
 
         $this->runThroughAssertions($assertions, $fixtureData);
@@ -212,7 +212,7 @@ class StringTransformTest extends AbstractTest
                 [$format, '+1 222-333-4444'],
                 [$format, '+1 222-333-4444'],
                 [$format, '+1 222-333-4444'],
-            ]
+            ],
         ];
 
         $this->runThroughAssertions($assertions, $fixtureData);
@@ -227,7 +227,7 @@ class StringTransformTest extends AbstractTest
                 [$format, '222-333-4444'],
                 [$format, '222-333-4444'],
                 [$format, '222-333-4444'],
-            ]
+            ],
         ];
 
         $this->runThroughAssertions($assertions, $fixtureData);
@@ -253,8 +253,8 @@ class StringTransformTest extends AbstractTest
                 ['ss', false],
                 ['sz', false],
                 ['defg', false],
-                ['abc', false]
-            ]
+                ['abc', false],
+            ],
         ];
 
         $this->runThroughAssertions($assertions, $fixtureData);
@@ -278,8 +278,7 @@ class StringTransformTest extends AbstractTest
     {
         $parameters = self::$fixtureCamelCase;
         $assertions = [
-            'StringTransform::camelToSnakeCase' =>
-                $this->fixtureToAssertionExpectations(self::$fixtureSnakeCase)
+            'StringTransform::camelToSnakeCase' => $this->fixtureToAssertionExpectations(self::$fixtureSnakeCase),
         ];
 
         $this->runThroughAssertions($assertions, $parameters);
@@ -289,8 +288,7 @@ class StringTransformTest extends AbstractTest
     {
         $parameters = self::$fixtureCamelCase;
         $assertions = [
-            'StringTransform::camelToPascalCase' =>
-                $this->fixtureToAssertionExpectations(self::$fixturePascalCase)
+            'StringTransform::camelToPascalCase' => $this->fixtureToAssertionExpectations(self::$fixturePascalCase),
         ];
 
         $this->runThroughAssertions($assertions, $parameters);
@@ -300,8 +298,7 @@ class StringTransformTest extends AbstractTest
     {
         $parameters = self::$fixturePascalCase;
         $assertions = [
-            'StringTransform::pascalToSnakeCase' =>
-                $this->fixtureToAssertionExpectations(self::$fixtureSnakeCase)
+            'StringTransform::pascalToSnakeCase' => $this->fixtureToAssertionExpectations(self::$fixtureSnakeCase),
         ];
 
         $this->runThroughAssertions($assertions, $parameters);
@@ -311,8 +308,7 @@ class StringTransformTest extends AbstractTest
     {
         $parameters = self::$fixturePascalCase;
         $assertions = [
-            'StringTransform::pascalToCamelCase' =>
-                $this->fixtureToAssertionExpectations(self::$fixtureCamelCase)
+            'StringTransform::pascalToCamelCase' => $this->fixtureToAssertionExpectations(self::$fixtureCamelCase),
         ];
 
         $this->runThroughAssertions($assertions, $parameters);
@@ -322,8 +318,7 @@ class StringTransformTest extends AbstractTest
     {
         $parameters = self::$fixtureSnakeCase;
         $assertions = [
-            'StringTransform::snakeToCamelCase' =>
-                $this->fixtureToAssertionExpectations(self::$fixtureCamelCase)
+            'StringTransform::snakeToCamelCase' => $this->fixtureToAssertionExpectations(self::$fixtureCamelCase),
         ];
 
         $this->runThroughAssertions($assertions, $parameters);
@@ -333,8 +328,7 @@ class StringTransformTest extends AbstractTest
     {
         $parameters = self::$fixtureSnakeCase;
         $assertions = [
-            'StringTransform::snakeToPascalCase' =>
-                $this->fixtureToAssertionExpectations(self::$fixturePascalCase)
+            'StringTransform::snakeToPascalCase' => $this->fixtureToAssertionExpectations(self::$fixturePascalCase),
         ];
 
         $this->runThroughAssertions($assertions, $parameters);

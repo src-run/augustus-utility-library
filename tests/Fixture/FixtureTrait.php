@@ -21,9 +21,18 @@ trait FixtureTrait
     protected $propProtecte = 'propProtecte';
     public $propPublic = 'propPublic';
 
-    private function methodPrivate() { return __METHOD__; }
-    protected function methodProtected() { return __METHOD__; }
-    public function methodPublic() { return __METHOD__; }
+    private function methodPrivate()
+    {
+        return __METHOD__;
+    }
+    protected function methodProtected()
+    {
+        return __METHOD__;
+    }
+    public function methodPublic()
+    {
+        return __METHOD__;
+    }
 }
 
 /* EOF */

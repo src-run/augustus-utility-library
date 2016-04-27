@@ -15,15 +15,15 @@ namespace SR\Utility\Tests;
 use SR\Utility\EngineInspect;
 
 /**
- * Class EngineInspectTest
+ * Class EngineInspectTest.
  */
 class EngineInspectTest extends AbstractTest
 {
-    static public $fixtureData = [
+    public static $fixtureData = [
         'mysqli',
         'invalid',
         'mysqli',
-        'invalid'
+        'invalid',
     ];
 
     public function testLoaded()
@@ -34,7 +34,7 @@ class EngineInspectTest extends AbstractTest
                 [false],
                 [true],
                 [false],
-            ]
+            ],
         ];
 
         $this->runThroughAssertions($assertions);

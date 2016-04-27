@@ -13,11 +13,11 @@
 namespace SR\Utility\Tests;
 
 /**
- * Class StringInspectTest
+ * Class StringInspectTest.
  */
 class StringInspectTest extends AbstractTest
 {
-    static public $fixtureData = [
+    public static $fixtureData = [
         'abcdef01234',
         '-----------',
         'abcd---1234',
@@ -35,8 +35,8 @@ class StringInspectTest extends AbstractTest
                 ['1', 7],
                 ['@', 9],
                 ['Z', null],
-                [' over', 14]
-            ]
+                [' over', 14],
+            ],
         ];
 
         $this->runThroughAssertions($assertions);
@@ -51,8 +51,8 @@ class StringInspectTest extends AbstractTest
                 ['4', 10],
                 ['M', 3],
                 ['dE0@$@30cc', 1],
-                ['e cow looked', 2]
-            ]
+                ['e cow looked', 2],
+            ],
         ];
 
         $this->runThroughAssertions($assertions);
@@ -67,8 +67,8 @@ class StringInspectTest extends AbstractTest
                 ['4', 10],
                 ['M', 6],
                 ['dE0@$@30cc', 1],
-                ['e cow looked', 2]
-            ]
+                ['e cow looked', 2],
+            ],
         ];
 
         $this->runThroughAssertions($assertions);
@@ -83,8 +83,8 @@ class StringInspectTest extends AbstractTest
                 ['4', true],
                 ['--LMNOMQR@1', true],
                 ['dE0@$@30CC', false],
-                ['e cow looked', true]
-            ]
+                ['e cow looked', true],
+            ],
         ];
 
         $this->runThroughAssertions($assertions);

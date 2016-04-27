@@ -13,7 +13,7 @@
 namespace SR\Utility;
 
 /**
- * Class ClassInspect
+ * Class ClassInspect.
  */
 class ClassInspect
 {

@@ -13,7 +13,7 @@
 namespace SR\Utility;
 
 /**
- * Class EngineInspect
+ * Class EngineInspect.
  */
 class EngineInspect
 {

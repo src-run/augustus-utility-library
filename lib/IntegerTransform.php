@@ -13,7 +13,7 @@
 namespace SR\Utility;
 
 /**
- * Class IntegerTransform
+ * Class IntegerTransform.
  */
 class IntegerTransform
 {
@@ -30,7 +30,7 @@ class IntegerTransform
      *
      * @return int
      */
-    final static public function toBase($integer, $base, $toBase, $precision = null, $baseIsMaxInteger = false)
+    final public static function toBase($integer, $base, $toBase, $precision = null, $baseIsMaxInteger = false)
     {
         if (0 === $base) {
             throw new \InvalidArgumentException('Cannot convert from a base of zero.');

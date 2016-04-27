@@ -13,7 +13,7 @@
 namespace SR\Utility;
 
 /**
- * Class StringInspect
+ * Class StringInspect.
  */
 class StringInspect
 {

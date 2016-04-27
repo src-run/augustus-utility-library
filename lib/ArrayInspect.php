@@ -13,7 +13,7 @@
 namespace SR\Utility;
 
 /**
- * Class ArrayInspect
+ * Class ArrayInspect.
  */
 class ArrayInspect
 {

@@ -13,11 +13,11 @@
 namespace SR\Utility\Tests;
 
 /**
- * Class IntegerTransformTest
+ * Class IntegerTransformTest.
  */
 class IntegerTransformTest extends AbstractTest
 {
-    static public $fixtureData = [
+    public static $fixtureData = [
         '0',
         '10',
         '20',
@@ -40,9 +40,9 @@ class IntegerTransformTest extends AbstractTest
                 [30, 100, null, true, 100],
                 [100, 1000, null, true, 500],
                 [0, 100, null],
-            ]
+            ],
         ];
-        
+
         $this->expectException('\InvalidArgumentException');
         $this->expectExceptionMessage('Cannot convert from a base of zero.');
 

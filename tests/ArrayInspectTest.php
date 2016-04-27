@@ -13,11 +13,11 @@
 namespace SR\Utility\Tests;
 
 /**
- * Class ArrayInspectTest
+ * Class ArrayInspectTest.
  */
 class ArrayInspectTest extends AbstractTest
 {
-    static public $fixtureData = [
+    public static $fixtureData = [
         ['one', 'two', 'three'],
         ['o' => 'one', 't' => 'two', 'h' => 'three'],
         ['one', 'two', 'three-index' => 'three'],
@@ -32,7 +32,7 @@ class ArrayInspectTest extends AbstractTest
                 [true],
                 [true],
                 [null],
-            ]
+            ],
         ];
 
         $this->runThroughAssertions($assertions);

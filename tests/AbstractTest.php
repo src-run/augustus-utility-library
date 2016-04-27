@@ -13,11 +13,11 @@
 namespace SR\Utility\Tests;
 
 /**
- * Class AbstractTest
+ * Class AbstractTest.
  */
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
-    static public $fixtureData = [];
+    public static $fixtureData = [];
 
     protected function runThroughAssertions(array $assertions, array $fixtureData = null)
     {
@@ -53,7 +53,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             );
         }
     }
-    
+
     private function getArrayAsStringRecursive($array)
     {
         if (is_bool($array)) {

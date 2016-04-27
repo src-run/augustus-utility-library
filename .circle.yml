@@ -1,0 +1,16 @@
+machine:
+  php:
+    version: 7.0
+  environment:
+    build_package: true
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init
+dependencies:
+  override:
+    - bash .run/builders/build-reqs/build-reqs.bash up-env
+    - bash .run/builders/build-reqs/build-reqs.bash up-app
+test:
+  override:
+    - bin/phpunit -vvv

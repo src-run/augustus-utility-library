@@ -22,6 +22,11 @@ test:
     - wget -O bin/coveralls https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar && chmod +x bin/coveralls
     - bash .run/builders/build-reqs/build-reqs.bash dn-app
     - bash .run/builders/build-reqs/build-reqs.bash dn-env
+    - mkdir $CIRCLE_ARTIFACTS/phpunit
+    - mkdir $CIRCLE_ARTIFACTS/composer
+    - mv var/build/clover.xml $CIRCLE_ARTIFACTS/phpunit/clover.xml
+    - mv var/build/coverage $CIRCLE_ARTIFACTS/phpunit/coverage
+    - mv composer.lock composer.json $CIRCLE_ARTIFACTS/composer/
 notify:
   webhooks:
     - url: https://src.run/hooks/circle

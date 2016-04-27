@@ -12,5 +12,5 @@ app_prep   : dep-composer
 app_post   : ~
 app_path   : ~
 pkg_name   : augustus-utility-library
-pkg_desc   : "a core collection of generic type utilities (strings, classes, etc)."
+pkg_desc   : "a collection of utility objects for strings, arrays, classes, etc"
 pkg_bndl   : false

@@ -7,8 +7,8 @@
 ## Overview
 
 [Welcome](https://src.run/go/readme_welcome)!
-The `src-run/augustus-utility-library` package provides a core
-collection of generic "type" utilities for strings, classes, etc.
+The `src-run/augustus-utility-library` package provides
+a collection of utility objects for strings, arrays, classes, etc
 
 ### Grouping
 
@@ -16,7 +16,7 @@ This package is part of the
 [augustus](https://src.run/augustus-utility-library/group)
 group
 ([explanation](https://src.run/augustus-utility-library/group_explanation)),
-comprised of other releases with a concentration in 
+comprised of other releases with a concentration in
 *core reflection base classes*,
 and related functionality.
 

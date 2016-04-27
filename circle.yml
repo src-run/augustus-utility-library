@@ -1,19 +1,25 @@
 machine:
   php:
-    version: 7.0
-  environment:
-    build_package: true
+    version: 7.0.3
 checkout:
   post:
     - git submodule sync
     - git submodule update --init
 dependencies:
+  pre:
+    - echo "date.timezone = America/New_York" | tee -a "$(php -i | grep "Loaded Configuration File" | grep -oP "\/opt\/.*")"
+    - wget -qO bin/coveralls https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar && chmod +x bin/coveralls
+    - wget -qO bin/phpunit https://phar.phpunit.de/phpunit.phar && chmod +x bin/phpunit
   override:
-    - bash .run/builders/build-reqs/build-reqs.bash up-env
-    - bash .run/builders/build-reqs/build-reqs.bash up-app
+    - build_package=true bash .run/builders/build-reqs/build-reqs.bash up-env
+    - build_package=true bash .run/builders/build-reqs/build-reqs.bash up-app
 test:
   override:
-    - bin/phpunit -vvv
+    - mkdir -p $CIRCLE_TEST_REPORTS/phpunit
+    - bin/phpunit -vvv --log-junit $CIRCLE_TEST_REPORTS/phpunit/junit.xml --configuration phpunit.xml.dist
   post:
-    - bash .run/builders/build-reqs/build-reqs.bash dn-app
-    - bash .run/builders/build-reqs/build-reqs.bash dn-env
+    - build_package=true bash .run/builders/build-reqs/build-reqs.bash dn-app
+    - build_package=true bash .run/builders/build-reqs/build-reqs.bash dn-env
+notify:
+  webhooks:
+    - url: https://src.run/hooks/circle

@@ -14,3 +14,6 @@ dependencies:
 test:
   override:
     - bin/phpunit -vvv
+  post:
+    - bash .run/builders/build-reqs/build-reqs.bash dn-app
+    - bash .run/builders/build-reqs/build-reqs.bash dn-env

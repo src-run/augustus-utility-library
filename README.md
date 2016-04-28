@@ -7,8 +7,8 @@
 ## Overview
 
 [Welcome](https://src.run/go/readme_welcome)!
-The `src-run/augustus-utility-library` package provides
-a collection of utility objects for strings, arrays, classes, etc
+The `src-run/augustus-utility-library` package provides a
+collection of utility objects for strings, arrays, classes, etc.
 
 ### Grouping
 

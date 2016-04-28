@@ -3,11 +3,11 @@
   "license"     : "MIT",
   "type"        : "library",
   "homepage"    : "https://src.run/augustus-utility-library",
-  "description" : "A collection of utility objects for strings, arrays, classes, etc",
+  "description" : "collection of utility objects for strings, arrays, classes, etc",
   "support" : {
     "email"  : "rmf@src.run",
-    "issues" : "https://src.run/augustus-utility-library/issues",
-    "source" : "https://src.run/augustus-utility-library/git"
+    "source" : "https://src.run/augustus-utility-library/git",
+    "issues" : "https://src.run/augustus-utility-library/issues"
   },
   "keywords" : [
     "augustus-utility-library", "augustus", "utility", "library", "rmf", "src-run"

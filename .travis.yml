@@ -1,54 +1,46 @@
 ---
 
 ##
-# This file is part of the `src-run/augustus-utility-library` project.
+# This file is part of the `src-run/augustus-primitive-library` project.
 #
 # (c) Rob Frawley 2nd <rmf@src.run>
+# (c) Scribe Inc      <scr@src.run>
 #
 # For the full copyright and license information, view the LICENSE.md
 # file distributed with this source code.
 ##
 
-# Set the required project language environment and advise
-# Travis that this project fully supports the new, speedy,
-# container-built infrastructure.
-language : php
-sudo     : false
+language: php
 
-# Build against the following engines: Zend 5.6.x, 7.0.x, and
-# 7-nightly, and HHVM-stable and -nightly builds.
-php :
+sudo: false
+
+php:
   - 5.6
   - 7.0
 
-# Set a sane clone depth for Git.
-git :
-  depth : 3
+git:
+  depth: 3
 
-# Add custom Hostname to build environment.
-addons :
-  hosts :
-    - mainline.src.run
+services:
+  - mysql
+  - memcached
 
-# Define any required global enviornment variables. Specifically,
-# the package_builder variable must be set to true to enable the
-# automated package builder scripts.
-env :
-  global :
+addons:
+  hosts:
+    - travis.src.run
+
+env:
+  global:
     - build_package=true
+    - secure: xNYEoaweVZ4iHwJvEbxe1pFnqEJKW1Sey3mPORhAH7xq05btpgm84YxYWImQh+Yrb4gMeTBjF2+uET6aQS+52I9GPbPNq8K/9lQewWa1/djqhu+uSkoGQOSlXIOFqGYeQcWS1Q1UOr4oC8gfot9Lly6qn8/ngqvV4zLqTUxQzgCEhtk0Ul6TGS/MMmwuOkcmW1Q5+ZBKLYs9rGsVuGhhnpzVwyvOi1AFKenQ2fCqFStEi9zGcucmNE+An/5xR5PM79hJ2c47cKluPc0hJ5MK4QV9u80GXFGCAqhHt3MWAZXDD13yQbv5aMAzkR1UkaqD8qCY4Si5+XDTeC5Kx24CuBAnco27FH6JVGMqwerlBJtCa+C/zThfidj01x0VX2zgkMEkKidf/c4L2QA44Y5lMf5EnBIM3Tw1pP/PyDCxa+FvAYhg8dZ4/XVGDS0sNET3EdCOePDp3JOLF5621FHfAlBwBswaHPFLpxDgPo/ac8I5nxwOJ6T/dnc+dk/K0S7cjHTD/ui6Ip9elAUMbQGYRJ4O4d2uy3Wg48QUVNmsU4tRWR3OrWC42AprflB4LYXZ7spHeYwEyoib3FC7MkSYNMwrMi9eOL0ywLTyZbWIaQmCVY8ciiANKuyJYw5b4iKCqtdnXfou0qNZ4Q5uMhroAK6o1xH/zzQDWTT3EDREPSI=
 
-# Use builder to install system environment and application 
-# requirements.
-install :
+install:
   - bash .run/builders/build-reqs/build-reqs.bash up-env
   - bash .run/builders/build-reqs/build-reqs.bash up-app
 
-# Run unit tests!
-script : bin/phpunit -vvv
+script: bin/phpunit -vvv
 
-# Use builder to run post-operations, most importantly handle
-# statistics submissions for text coverage.
-after_script :
+after_script:
   - bash .run/builders/build-reqs/build-reqs.bash dn-app
   - bash .run/builders/build-reqs/build-reqs.bash dn-env
 

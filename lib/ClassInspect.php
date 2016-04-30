@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the `src-run/wonka-library` project.
+ * This file is part of the `augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
  * (c) Scribe Inc      <scr@src.run>
@@ -15,7 +15,7 @@ namespace SR\Utility;
 /**
  * Class ClassInspect.
  */
-class ClassInspect
+final class ClassInspect
 {
     /**
      * @param string|object $for
@@ -174,6 +174,26 @@ class ClassInspect
         }
 
         return null;
+    }
+
+    /**
+     * @param string|object $class
+     *
+     * @return bool
+     */
+    final public static function isThrowableEquitable($class)
+    {
+        if (self::isInstance($class)) {
+            return $class instanceof \Throwable || $class instanceof \Error || $class instanceof \Exception;
+        }
+
+        if (self::isClass($class)) {
+            $reflection = self::getReflection($class);
+
+            return $reflection->isSubclassOf('\Throwable') || $reflection->isSubclassOf('\Error') || $reflection->isSubclassOf('\Exception');
+        }
+
+        return false;
     }
 }
 

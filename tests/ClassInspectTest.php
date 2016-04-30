@@ -83,6 +83,21 @@ class ClassInspectTest extends \PHPUnit_Framework_TestCase
         $invalidReflection = ClassInspect::getReflection('Invalud\Path\To\A\Namespaced\Class\Id\Really\Hope');
         $this->assertNull($invalidReflection);
     }
+
+    public function testThrowableEquitable()
+    {
+        $class = 'SR\Utility\Tests\Fixture\IsInstanceOfThrowableFixture';
+        $instance = new $class();
+        $this->assertTrue(ClassInspect::isThrowableEquitable($class));
+        $this->assertTrue(ClassInspect::isThrowableEquitable($instance));
+
+        $class = 'SR\Utility\Tests\Fixture\NotInstanceOfThrowableFixture';
+        $instance = new $class();
+        $this->assertFalse(ClassInspect::isThrowableEquitable($class));
+        $this->assertFalse(ClassInspect::isThrowableEquitable($instance));
+
+        $this->assertFalse(ClassInspect::isThrowableEquitable(__NAMESPACE__.'\This\Class\Does\Not\Exist'));
+    }
 }
 
 /* EOF */

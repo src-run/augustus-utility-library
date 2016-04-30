@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the `src-run/wonka-library` project.
+ * This file is part of the `augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
  * (c) Scribe Inc      <scr@src.run>
@@ -15,7 +15,7 @@ namespace SR\Utility;
 /**
  * Class ArrayInspect.
  */
-class ArrayInspect
+final class ArrayInspect
 {
     /**
      * @param mixed[] $array

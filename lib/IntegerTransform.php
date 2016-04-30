@@ -23,7 +23,7 @@ class IntegerTransform
      * @param int      $integer
      * @param int      $base
      * @param int      $toBase
-     * @param int|null $precision
+     * @param null|int $precision
      * @param bool     $baseIsMaxInteger
      *
      * @throws \InvalidArgumentException

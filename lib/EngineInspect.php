@@ -18,7 +18,7 @@ namespace SR\Utility;
 class EngineInspect
 {
     /**
-     * @param string[] $extensions
+     * @param string ...$extensions
      *
      * @return bool
      */

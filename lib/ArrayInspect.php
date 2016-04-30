@@ -18,8 +18,8 @@ namespace SR\Utility;
 class ArrayInspect
 {
     /**
-     * @param array $array
-     * 
+     * @param mixed[] $array
+     *
      * @return bool|null
      */
     final public static function isAssociative(array $array)

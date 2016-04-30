@@ -151,7 +151,7 @@ class StringTransform
     /**
      * @param string $string
      *
-     * @return array
+     * @return string[]
      */
     final public static function split($string)
     {

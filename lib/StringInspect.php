@@ -21,7 +21,7 @@ class StringInspect
      * @param string $string
      * @param string $needle
      *
-     * @return int|null
+     * @return null|int
      */
     final public static function searchPositionFromLeft($string, $needle)
     {
@@ -32,7 +32,7 @@ class StringInspect
      * @param string $string
      * @param string $needle
      *
-     * @return int|null
+     * @return null|int
      */
     final public static function searchPositionFromRight($string, $needle)
     {
@@ -44,7 +44,7 @@ class StringInspect
      * @param string $needle
      * @param bool   $fromRight
      *
-     * @return int|null
+     * @return null|int
      */
     final public static function searchPosition($string, $needle, $fromRight = false)
     {

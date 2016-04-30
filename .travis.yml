@@ -31,17 +31,17 @@ addons:
 
 env:
   global:
-    - build_package=true
     - secure: xNYEoaweVZ4iHwJvEbxe1pFnqEJKW1Sey3mPORhAH7xq05btpgm84YxYWImQh+Yrb4gMeTBjF2+uET6aQS+52I9GPbPNq8K/9lQewWa1/djqhu+uSkoGQOSlXIOFqGYeQcWS1Q1UOr4oC8gfot9Lly6qn8/ngqvV4zLqTUxQzgCEhtk0Ul6TGS/MMmwuOkcmW1Q5+ZBKLYs9rGsVuGhhnpzVwyvOi1AFKenQ2fCqFStEi9zGcucmNE+An/5xR5PM79hJ2c47cKluPc0hJ5MK4QV9u80GXFGCAqhHt3MWAZXDD13yQbv5aMAzkR1UkaqD8qCY4Si5+XDTeC5Kx24CuBAnco27FH6JVGMqwerlBJtCa+C/zThfidj01x0VX2zgkMEkKidf/c4L2QA44Y5lMf5EnBIM3Tw1pP/PyDCxa+FvAYhg8dZ4/XVGDS0sNET3EdCOePDp3JOLF5621FHfAlBwBswaHPFLpxDgPo/ac8I5nxwOJ6T/dnc+dk/K0S7cjHTD/ui6Ip9elAUMbQGYRJ4O4d2uy3Wg48QUVNmsU4tRWR3OrWC42AprflB4LYXZ7spHeYwEyoib3FC7MkSYNMwrMi9eOL0ywLTyZbWIaQmCVY8ciiANKuyJYw5b4iKCqtdnXfou0qNZ4Q5uMhroAK6o1xH/zzQDWTT3EDREPSI=
 
-install:
-  - bash .run/builders/build-reqs/build-reqs.bash up-env
-  - bash .run/builders/build-reqs/build-reqs.bash up-app
+install :
+  - bash .bldr/bldr -b up-env -q
+  - bash .bldr/bldr -b up-app -q
 
-script: bin/phpunit -vvv
+script :
+  - bin/phpunit -vvv
 
-after_script:
-  - bash .run/builders/build-reqs/build-reqs.bash dn-app
-  - bash .run/builders/build-reqs/build-reqs.bash dn-env
+after_script :
+  - bash .bldr/bldr -b down-app -q
+  - bash .bldr/bldr -b down-env -q
 
 ...

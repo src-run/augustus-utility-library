@@ -1,1 +1,64 @@
-.run/builders/build-skel/.build-skel-tpls/gitignore-libraries.txt
+
+##
+# This file is part of `scr-be/shared-public-knowledge`
+#
+# (c) Rob Frawley 2nd <rmf@src.run>
+#
+# For the full copyright and license information, view the LICENSE.md
+# file distributed with this source code.
+##
+
+# Symfony 2
+/app/cache/*
+/app/logs/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+
+# Symfony 3
+/var/cache/*
+/var/logs/*
+!var/cache/.gitkeep
+!var/logs/.gitkeep
+
+# Symfony/Silex/Other Parameter Files
+/app/config/parameters.yml
+/app/config/parameters.ini
+
+# Composer-created Directories
+/app/bootstrap.php.cache
+/var/bootstrap.php.cache
+/vendor/
+/composer.lock
+/composer
+/composer.phar
+
+# Generated Assets
+/web/bundles/
+/web/uploads/
+/web/css/
+/web/js/
+/web/compiled
+
+# PHPUnit (Non-Dist)
+/phpunit.xml
+
+# Build data
+/build/*
+!build/.gitkeep
+
+# IDEA Directories
+/.idea/
+
+# Scribe-Specific
+/app/config/sami.php
+/config/
+
+# libraries don't need bin, var directories
+/bin/
+/var/
+
+# Remember to Use *.md Variants
+LICENSE
+README
+
+# EOF

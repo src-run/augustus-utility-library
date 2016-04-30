@@ -1,1 +1,4 @@
-.run/builders/build-skel/.build-skel-tpls/coveralls-v2.yml
+---
+
+coverage_clover : var/build/clover.xml
+json_path       : var/build/coveralls-upload.json

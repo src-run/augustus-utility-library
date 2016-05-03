@@ -60,6 +60,18 @@ class ClassInspectTest extends \PHPUnit_Framework_TestCase
         ClassInspect::assertInstance(__CLASS__);
     }
 
+    public function testInterfaceTester()
+    {
+        $interface = 'SR\Utility\Tests\Fixture\FixtureInterface';
+
+        static::assertTrue(ClassInspect::assertInterface($interface));
+        static::assertTrue(ClassInspect::isInterface($interface));
+        static::assertFalse(ClassInspect::isInterface(__CLASS__));
+
+        $this->expectException('\InvalidArgumentException');
+        ClassInspect::assertInterface(__CLASS__);
+    }
+
     public function testTraitTester()
     {
         $trait = 'SR\Utility\Tests\Fixture\FixtureTrait';

@@ -97,6 +97,20 @@ final class ClassInspect
     }
 
     /**
+     * @param mixed $interface
+     *
+     * @return bool
+     */
+    final public static function isInterface($interface)
+    {
+        try {
+            return static::assertInterface($interface);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
+    }
+
+    /**
      * @param string $trait
      *
      * @return bool
@@ -140,6 +154,22 @@ final class ClassInspect
         }
 
         throw new \InvalidArgumentException('Failed asserting passed value is an object instance.');
+    }
+
+    /**
+     * @param mixed $interface
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return bool
+     */
+    final public static function assertInterface($interface)
+    {
+        if (interface_exists($interface)) {
+            return true;
+        }
+
+        throw new \InvalidArgumentException('Failed asserting passed value is valid interface.');
     }
 
     /**

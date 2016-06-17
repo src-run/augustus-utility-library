@@ -1,67 +1,68 @@
 # Contributing
 
-When contributing, ensure the following list of requirements have been completed
-prior to submission of pull requests.
+Looking to contribute a pull-request back to a **Source Consulting**
+project? Great! Before sending a pull-request, ensure the following
+requirements (__A__, __B__, and __C__) described below are properly met.
+This will ensure your contribution is merged smoothly and quickly.
 
-## A. PHP CS Fixer
+## A. Code Style
 
-Before submitting your code, it is important that its style matches that which
-is already used within this project. To achieve this,
-[PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) is used.
+All projects in the `SR` namespace adhere to strict code-style
+requirements. The expected style is guaranteed through use of the
+excellent auto-code-styling project
+[PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer).
 
-### Download and Setup
+### Download Fixer
 
-The most current release of *PHP CS Fixer* can be included in your project using
-composer or downloaded directly.
-
-#### As Composer Dependency
-
-If using composer, add `fabpot/php-cs-fixer` to your project's `composer.json`
-file and update the project's vendor dependencies using the `composer` CLI.
-
-*Note: For the purposes of this document we will assume installation using
-the __below detailed system-wide method__ and not this composer method.*
-
-#### As System-Wide Executable
-
-Installing `php-cs-fixer` as a system-wide executable saves time and removes
-redundant `require-dev` entries with each project's `composer.json`. To use
-this method, following the below steps.
-
-__Step 1__: Ensure the entry for `phar.readonly` is set to `Off` within the
-PHP CLI SAPI config. The following will ensure `phar.readonly` is set correctly.
+__A.__ To download *PHP CS Fixer* using *curl*:
 
 ```bash
-sudo sed -i '/.*phar.readonly.*/c\phar.readonly = Off' $(php -i | grep "Loaded Configuration File" | grep -oP '[^\s]+ini')
+curl http://get.sensiolabs.org/php-cs-fixer.phar -o php-cs-fixer
 ```
 
-__Step 2__: Build PHP-CS-Fixer and move executable to global location.
+__B.__ If *curl* is unavailable, download using *wget*:
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/src-run/usr-src-runner/master/scripts/get-php-cs-fixer)
-sudo chmox +x php-cs-fixer
-sudo mv php-cs-fixer /usr/loca/bin/php-cs-fixer
+wget http://get.sensiolabs.org/php-cs-fixer.phar -O php-cs-fixer
 ```
 
-### Configure and Run
+### Install Fixer
 
-When running `php-cs-fixer`, there are a collection of "levels" and "fixers" one
-can enable or disable to achieve the expected formatting. For the purpose of
-all `SR\` namespaced code, the `level` must be set to `symfony` and the
-`filters` must disable `empty_return`. To `php-cs-fixer` against your code, use
-the following.
+It is recommended to install *PHP-CS-Fixer* at a system-level, making it
+available within your normal `PATH` environment variable (allowing you
+to call `php-cs-fixer` from any location). After downloading:
 
 ```bash
-php-cs-fixer fix path/to/[src|lib] --level=symfony --fixers=-empty_return
+sudo chmod a+x php-cs-fixer
+sudo mv php-cs-fixer /usr/local/bin/php-cs-fixer
 ```
 
-## B. File-Level Doc-Blocks
+### Run Fixer
 
-All files must contain a file-level doc-block using the following template.
+When running *PHP CS Fixer*, there are a collection of "rules" that can
+be passed via the --rules command-line option. Rules are also grouped
+into "rule collections" that are prefixed by an "@" (at symbol). To
+disable a rule, it should be prefixed by an "-" (minus sign).
+
+*PHP CS Fixer* must be configured and run with the following rules:
+- `@Symfony`
+- `-simplified_null_return`
+
+For example, to fix code within the `lib` directory of the current path:
+
+```bash
+php-cs-fixer fix lib/ --rules=@Symfony,-simplified_null_return
+```
+
+## B. New Files
+
+Every file must contain a file-level "doc-block" following the below
+template. The placeholder `PACKAGE_NAME` must match the
+[Packagist](https://packagist.org/) project name for the respective file.
 
 ```php
 /*
- * This file is part of the `<package-name>` project.
+ * This file is part of the `PACKAGE_NAME` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
  *
@@ -70,26 +71,29 @@ All files must contain a file-level doc-block using the following template.
  */
 ```
 
-## B. Contributor Attributions
+An "end of file" comment followed by an empty new line, must be present
+at the end of all files.
 
-Any desired contributor attribution must be added *at the class or method
-level* using the PHPDocumentor `@author` tag. For example, a class-level
-attribution would use the following template.
+```php
+/* EOF */
+
+```
+
+## C. Attribution
+
+Sometimes completely new classes are written by a contributor. When
+this is the case, *the contributor __may__ choose (at their discretion)*,
+to use a class-level "doc-block" to provide attribution using the
+following template.
 
 ```php
 /**
- * Class <class-name>.
+ * Class ReallyCoolContributedClass.
  *
- * @author [Contributor Name] <[contributor@email]>
+ * @author CONTRIBUTOR_NAME <CONTRIBUTOR_EMAIL>
  */
-class ClassName
+class ReallyCoolContributedClass
 {
     // ...
 }
 ```
-
-# Pull-Requests Welcome
-
-With the above requirements met, submit your pull requests to the respective
-project repository for inclusion.
-

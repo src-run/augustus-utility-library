@@ -53,7 +53,7 @@ final class ClassInstantiator
     }
 
     /**
-     * @param string  $classFqn
+     * @param string $classFqn
      * @param mixed[] ...$constructorArguments
      *
      * @return object

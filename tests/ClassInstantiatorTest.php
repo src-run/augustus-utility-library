@@ -13,102 +13,59 @@
 namespace SR\Utility\Tests;
 
 use SR\Utility\ClassInspect;
+use SR\Utility\ClassInstantiator;
 
 /**
- * Class ClassInspectTest.
+ * Class ClassInstantiator.
  */
-class ClassInspectTest extends \PHPUnit_Framework_TestCase
+class ClassInstantiatorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetInformation()
+    public function testInstantiateFromObject()
     {
-        $instance = new ClassInspect();
+        $obj = new ClassInspect();
+        $one = ClassInstantiator::instantiate($obj);
 
-        static::assertSame(__CLASS__, ClassInspect::getName(__CLASS__));
-        static::assertSame(get_class($instance), ClassInspect::getName($instance));
+        $this->assertInstanceOf('SR\Utility\ClassInspect', $one);
 
-        static::assertSame('ClassInspectTest', ClassInspect::getNameShort(__CLASS__));
-        static::assertSame('ClassInspect', ClassInspect::getNameShort($instance));
+        $two = ClassInstantiator::instantiate($one);
+        $this->assertInstanceOf('SR\Utility\ClassInspect', $two);
 
-        static::assertSame(__NAMESPACE__, ClassInspect::getNamespace(__CLASS__));
-        static::assertSame('SR\Utility', ClassInspect::getNamespace($instance));
-
-        static::assertSame(explode('\\', __NAMESPACE__), ClassInspect::getNamespaceArray(__CLASS__));
-        static::assertSame(explode('\\', 'SR\Utility'), ClassInspect::getNamespaceArray($instance));
+        $this->assertNotSame($obj, $one);
+        $this->assertNotSame($one, $two);
+        $this->assertNotSame($obj, $two);
     }
 
-    public function testClassTester()
+    public function testInstantiateFromClassName()
     {
-        $instance = new ClassInspect();
+        $obj = 'SR\Utility\ClassInspect';
+        $one = ClassInstantiator::instantiate($obj);
 
-        static::assertTrue(ClassInspect::assertClass(__CLASS__));
-        static::assertTrue(ClassInspect::isClass(__CLASS__));
-        static::assertFalse(ClassInspect::isClass($instance));
+        $this->assertInstanceOf($obj, $one);
 
+        $two = ClassInstantiator::instantiate($one);
+
+        $this->assertInstanceOf($obj, $two);
+        $this->assertNotSame($one, $two);
+    }
+
+    public function testInstantiateWithInternal()
+    {
         $this->expectException('\InvalidArgumentException');
-        ClassInspect::assertClass($instance);
+
+        ClassInstantiator::instantiate('SR\Utility\Tests\ClassInternal');
     }
+}
 
-    public function testInstanceTester()
+/**
+ * Fixtures
+ */
+
+class ClassInternal extends ClassInternalParent {}
+class ClassInternalParent extends \SplFileInfo
+{
+    public function __construct()
     {
-        $instance = new ClassInspect();
-
-        static::assertTrue(ClassInspect::assertInstance($instance));
-        static::assertTrue(ClassInspect::isInstance($instance));
-        static::assertFalse(ClassInspect::isInstance(__CLASS__));
-
-        $this->expectException('\InvalidArgumentException');
-        ClassInspect::assertInstance(__CLASS__);
-    }
-
-    public function testInterfaceTester()
-    {
-        $interface = 'SR\Utility\Tests\Fixture\FixtureInterface';
-
-        static::assertTrue(ClassInspect::assertInterface($interface));
-        static::assertTrue(ClassInspect::isInterface($interface));
-        static::assertFalse(ClassInspect::isInterface(__CLASS__));
-
-        $this->expectException('\InvalidArgumentException');
-        ClassInspect::assertInterface(__CLASS__);
-    }
-
-    public function testTraitTester()
-    {
-        $trait = 'SR\Utility\Tests\Fixture\FixtureTrait';
-
-        static::assertTrue(ClassInspect::assertTrait($trait));
-        static::assertTrue(ClassInspect::isTrait($trait));
-        static::assertFalse(ClassInspect::isTrait(__CLASS__));
-
-        $this->expectException('\InvalidArgumentException');
-        ClassInspect::assertTrait(__CLASS__);
-    }
-
-    public function testNewClassReflection()
-    {
-        $instanceReflection = ClassInspect::getReflection(new ClassInspect());
-        $this->assertTrue($instanceReflection instanceof \ReflectionObject);
-
-        $classReflection = ClassInspect::getReflection(__CLASS__);
-        $this->assertTrue($classReflection instanceof \ReflectionClass);
-
-        $invalidReflection = ClassInspect::getReflection('Invalud\Path\To\A\Namespaced\Class\Id\Really\Hope');
-        $this->assertNull($invalidReflection);
-    }
-
-    public function testThrowableEquitable()
-    {
-        $class = 'SR\Utility\Tests\Fixture\IsInstanceOfThrowableFixture';
-        $instance = new $class();
-        $this->assertTrue(ClassInspect::isThrowableEquitable($class));
-        $this->assertTrue(ClassInspect::isThrowableEquitable($instance));
-
-        $class = 'SR\Utility\Tests\Fixture\NotInstanceOfThrowableFixture';
-        $instance = new $class();
-        $this->assertFalse(ClassInspect::isThrowableEquitable($class));
-        $this->assertFalse(ClassInspect::isThrowableEquitable($instance));
-
-        $this->assertFalse(ClassInspect::isThrowableEquitable(__NAMESPACE__.'\This\Class\Does\Not\Exist'));
+        parent::__construct(__FILE__);
     }
 }
 

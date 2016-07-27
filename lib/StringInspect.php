@@ -51,7 +51,7 @@ final class StringInspect
         $_ = self::searchPositionFunctionName($fromRight);
 
         if (false === ($position = $_($string, $needle))) {
-            return null;
+            return;
         }
 
         return (int) $position;

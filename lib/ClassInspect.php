@@ -203,7 +203,7 @@ final class ClassInspect
             return new \ReflectionObject($for);
         }
 
-        return null;
+        return;
     }
 
     /**

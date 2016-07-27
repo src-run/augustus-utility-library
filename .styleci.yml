@@ -6,7 +6,7 @@ enabled:
   - phpdoc_scalar 
   - phpdoc_indent
 
-disable:
+disabled:
   - simplified_null_return
 
 finder:

@@ -2,6 +2,9 @@ preset: symfony
 
 enabled:
   - short_array_syntax
+  - phpdoc_order
+  - phpdoc_scalar 
+  - phpdoc_indent
 
 disable:
   - simplified_null_return

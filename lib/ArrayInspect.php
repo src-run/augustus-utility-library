@@ -25,7 +25,7 @@ final class ArrayInspect
     final public static function isAssociative(array $array)
     {
         if (count($array) === 0) {
-            return null;
+            return;
         }
 
         $keys = array_keys($array);

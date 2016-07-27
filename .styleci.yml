@@ -1,0 +1,16 @@
+preset: symfony
+
+enabled:
+  - short_array_syntax
+
+disabled:
+  - long_array_syntax
+
+finder:
+  exclude:
+    - "tests"
+  name:
+    - "*.php"
+  path:
+    - "lib"
+    - "src"

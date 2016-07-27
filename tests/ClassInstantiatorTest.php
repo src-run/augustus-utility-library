@@ -57,10 +57,15 @@ class ClassInstantiatorTest extends \PHPUnit_Framework_TestCase
 }
 
 /**
- * Fixtures
+ * Fixture class for test.
  */
+class ClassInternal extends ClassInternalParent
+{
+}
 
-class ClassInternal extends ClassInternalParent {}
+/**
+ * Fixture class for test.
+ */
 class ClassInternalParent extends \SplFileInfo
 {
     public function __construct()

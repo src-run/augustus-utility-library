@@ -53,7 +53,7 @@ final class ClassInstantiator
     }
 
     /**
-     * @param string   $classFqn
+     * @param string  $classFqn
      * @param mixed[] ...$constructorArguments
      *
      * @return object
@@ -82,7 +82,7 @@ final class ClassInstantiator
      */
     final private static function isInstantiable(\ReflectionClass $reflectionClass)
     {
-        return (!static::hasInternalAncestors($reflectionClass) && !$reflectionClass->isAbstract());
+        return !static::hasInternalAncestors($reflectionClass) && !$reflectionClass->isAbstract();
     }
 
     /**

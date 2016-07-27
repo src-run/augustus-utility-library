@@ -25,10 +25,12 @@ trait FixtureTrait
     {
         return __METHOD__;
     }
+
     protected function methodProtected()
     {
         return __METHOD__;
     }
+
     public function methodPublic()
     {
         return __METHOD__;

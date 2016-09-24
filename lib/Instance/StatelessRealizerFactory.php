@@ -11,34 +11,14 @@
 
 namespace SR\Util\Instance;
 
-class StatelessRealizerFactory
+use SR\Util\Info\ClassInfo;
+
+final class StatelessRealizerFactory extends AbstractRealizationFactory
 {
     /**
-     * @var object|string
+     * @var object[]
      */
-    private $what;
-
-    /**
-     * @var mixed[]
-     */
-    private $with;
-
-    /**
-     * Provide the item to instantiate and any additonal arguments during construction.
-     *
-     * @param object|string $what
-     * @param mixed[]       ...$with
-     */
-    public function __construct($what, ...$with)
-    {
-        $this->conceiveItem = $what;
-        $this->conceiveWith = $with;
-    }
-
-    public function isSupported()
-    {
-        return $this->
-    }
+    private static $cachedInstances;
 
     /**
      * @param string|object $what
@@ -46,29 +26,9 @@ class StatelessRealizerFactory
      *
      * @return object
      */
-    final public static function Incepter($what, ...$constructorArguments)
+    final public static function instantiate($what, ...$constructorArguments)
     {
-        $classFqn = static::getQualifiedClassName($what);
-
-        if (isset(static::$cachedInstances[$classFqn])) {
-            return clone static::$cachedInstances[$classFqn];
-        }
-
-        return static::buildAndCache($classFqn, ...$constructorArguments);
-    }
-
-    /**
-     * @param string|object $what
-     *
-     * @return string
-     */
-    final private static function getQualifiedClassName($what)
-    {
-        if (ClassInfo::isClass($what)) {
-            return $what;
-        }
-
-        return ClassInfo::getNameQualified($what);
+        return static::buildAndCache(static::getQualifiedClassName($what), ...$constructorArguments);
     }
 
     /**
@@ -77,7 +37,7 @@ class StatelessRealizerFactory
      *
      * @return object
      */
-    final private static function buildAndCache($classFqn, ...$constructorArguments)
+    private static function buildAndCache($classFqn, ...$constructorArguments)
     {
         $reflectionClass = ClassInfo::getReflection($classFqn);
 
@@ -85,40 +45,6 @@ class StatelessRealizerFactory
             throw new \InvalidArgumentException(sprintf('Class "%s" is not instantiable.', $classFqn));
         }
 
-        $instance = $reflectionClass->newInstanceArgs($constructorArguments);
-
-        if ($reflectionClass->isCloneable()) {
-            static::$cachedInstances[$classFqn] = clone $instance;
-        }
-
-        return $instance;
-    }
-
-    /**
-     * @param \ReflectionClass $reflectionClass
-     *
-     * @return bool
-     */
-    final private static function isInstantiable(\ReflectionClass $reflectionClass)
-    {
-        return !static::hasInternalAncestors($reflectionClass) && !$reflectionClass->isAbstract();
-    }
-
-    /**
-     * @param \ReflectionClass $reflectionClass
-     *
-     * @return bool
-     */
-    final public static function hasInternalAncestors(\ReflectionClass $reflectionClass)
-    {
-        do {
-            if ($reflectionClass->isInternal()) {
-                return true;
-            }
-        } while ($reflectionClass = $reflectionClass->getParentClass());
-
-        return false;
+        return $reflectionClass->newInstanceArgs($constructorArguments);
     }
 }
-
-/* EOF */

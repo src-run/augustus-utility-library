@@ -9,64 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Transform\Argument\Expression\Archetype;
+namespace SR\Util\Transform\Argument\Expression\Archetype;
 
-use SR\Silencer\CallSilencer;
-
-class StringArchetype implements ArchetypeInterface
+class StringArchetype extends AbstractArchetype
 {
-    /**
-     * @var string
-     */
-    protected $value;
-
-    /**
-     * @param string|null $value
-     *
-     * @return StringArchetype
-     */
-    public function set(string $value = null) : ArchetypeInterface
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function get() : string
-    {
-        return null === $this->value ? '' : $this->value;
-    }
-
-    /**
-     * @return bool
-     */
-    public function has() : bool
-    {
-        return $this->value !== null && count($this->value) > 0;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isValid() : bool
-    {
-        if (!$this->has()) {
-            return false;
-        }
-
-        return CallSilencer::create(
-            function () {
-                return preg_match(sprintf('{%s}', $this->get()), null);
-            },
-            function ($result) {
-                return $result !== false;
-            })
-            ->invoke()
-            ->isResultValid();
-    }
 }
 
 /* EOF */

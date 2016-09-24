@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Transform;
+namespace SR\Util\Transform;
 
 final class NumberTransform extends AbstractTransform
 {
@@ -92,7 +92,7 @@ final class NumberTransform extends AbstractTransform
      *
      * @return NumberTransform|AbstractTransform
      */
-    final public function multiply($by = 1)
+    final public function multiply($by)
     {
         return $this->apply(function () use ($by) {
             return $this->get() * $by;
@@ -104,43 +104,10 @@ final class NumberTransform extends AbstractTransform
      *
      * @return NumberTransform|AbstractTransform
      */
-    final public function divide($by = 1)
+    final public function divide($by)
     {
         return $this->apply(function () use ($by) {
             return $this->get() / $by;
-        });
-    }
-
-    /**
-     * @param int      $base
-     * @param int      $toBase
-     * @param int|null $precision
-     * @param bool     $baseIsMaxInteger
-     *
-     * @return AbstractTransform|NumberTransform|StringTransform
-     */
-    final public function toBase($base, $toBase, $precision = null, $baseIsMaxInteger = false)
-    {
-        return $this->apply(function () use ($base, $toBase, $precision, $baseIsMaxInteger) {
-            if (0 === $base) {
-                throw new \InvalidArgumentException('Cannot convert from a base of zero.');
-            }
-
-            $converted = $this->get() * $toBase / $base;
-
-            if (null !== $precision) {
-                $converted = round($converted, $precision);
-            }
-
-            if ($precision === 0) {
-                $converted = (int) $converted;
-            }
-
-            if ($baseIsMaxInteger && $converted > $toBase) {
-                return $toBase;
-            }
-
-            return $converted;
         });
     }
 }

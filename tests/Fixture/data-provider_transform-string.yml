@@ -1,0 +1,211 @@
+---
+
+data:
+
+  target: "SR\\Util\\Transform\\StringTransform"
+
+  provided:
+    global:
+      - "abcdef01234"
+      - "-----------"
+      - "abcd---1234"
+      - "--LMNOMQR@1"
+      - "jdE0@$@30cc"
+      - "The cow looked over a   hill!"
+      - "Sentence containing\nnew-lines\n\rand return\tand other"
+      - "0123"
+      - "abcdEF"
+      - "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+"
+
+    camelToSnakeCase:
+      - aCamelCaseString
+      - camelWithABackToBackUpper
+
+    camelToPascalCase:
+      - aCamelCaseString
+      - camelWithABackToBackUpper
+
+    pascalToSnakeCase:
+      - ACamelCaseString
+      - CamelWithABackToBackUpper
+
+    pascalToCamelCase:
+      - ACamelCaseString
+      - CamelWithABackToBackUpper
+
+    snakeToCamelCase:
+      - a_camel_case_string
+      - camel_with_a_back_to_back_upper
+
+    snakeToPascalCase:
+      - a_camel_case_string
+      - camel_with_a_back_to_back_upper
+
+    toPhoneNumber:
+      - "12223334444"
+      - "2223334444"
+      - "1-222-333-4444"
+      - "222-333-4444"
+      - "(222) 333 4444"
+      - "(222)333-4444"
+      - "+1 (222) 333-4444"
+
+    toPhoneFormat:
+      - "12223334444"
+      - "2223334444"
+      - "1-222-333-4444"
+      - "222-333-4444"
+      - "(222) 333 4444"
+      - "(222)333-4444"
+      - "+1 (222) 333-4444"
+
+  expected:
+    toUpper:
+      - "ABCDEF01234"
+      - "-----------"
+      - "ABCD---1234"
+      - "--LMNOMQR@1"
+      - "JDE0@$@30CC"
+      - "THE COW LOOKED OVER A   HILL!"
+      - "SENTENCE CONTAINING\nNEW-LINES\n\rAND RETURN\tAND OTHER"
+      - "0123"
+      - "ABCDEF"
+      - "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+"
+
+    toLower:
+      - "abcdef01234"
+      - "-----------"
+      - "abcd---1234"
+      - "--lmnomqr@1"
+      - "jde0@$@30cc"
+      - "the cow looked over a   hill!"
+      - "sentence containing\nnew-lines\n\rand return\tand other"
+      - "0123"
+      - "abcdef"
+      - "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+"
+
+    toAlphanumeric:
+      - "abcdef01234"
+      - ""
+      - "abcd1234"
+      - "LMNOMQR1"
+      - "jdE030cc"
+      - "Thecowlookedoverahill"
+      - "Sentencecontainingnewlinesandreturnandother"
+      - "0123"
+      - "abcdEF"
+      - "abcdefghijklmnopqrstuvwxyz0123456789"
+
+    toAlpha:
+      - "abcdef"
+      - ""
+      - "abcd"
+      - "LMNOMQR"
+      - "jdEcc"
+      - "Thecowlookedoverahill"
+      - "Sentencecontainingnewlinesandreturnandother"
+      - ""
+      - "abcdEF"
+      - "abcdefghijklmnopqrstuvwxyz"
+
+    toNumeric:
+      - "01234"
+      - ""
+      - "1234"
+      - "1"
+      - "030"
+      - ""
+      - ""
+      - "0123"
+      - ""
+      - "0123456789"
+
+    toAlphanumericAndDashes:
+      - "abcdef01234"
+      - "-----------"
+      - "abcd---1234"
+      - "--LMNOMQR1"
+      - "jdE030cc"
+      - "Thecowlookedoverahill"
+      - "Sentencecontainingnew-linesandreturnandother"
+      - "0123"
+      - "abcdEF"
+      - "abcdefghijklmnopqrstuvwxyz0123456789"
+
+    spacesToDashes:
+      - "abcdef01234"
+      - "-----------"
+      - "abcd---1234"
+      - "--LMNOMQR@1"
+      - "jdE0@$@30cc"
+      - "The-cow-looked-over-a-hill!"
+      - "Sentence-containing\nnew-lines\n\rand-return\tand-other"
+      - "0123"
+      - "abcdEF"
+      - "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+"
+
+    dashesToSpaces:
+      - "abcdef01234"
+      - " "
+      - "abcd 1234"
+      - " LMNOMQR@1"
+      - "jdE0@$@30cc"
+      - "The cow looked over a   hill!"
+      - "Sentence containing\nnew lines\n\rand return\tand other"
+      - "0123"
+      - "abcdEF"
+      - "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+"
+
+    slugify:
+      - "abcdef01234"
+      - ""
+      - "abcd-1234"
+      - "lmnomqr-1"
+      - "jde0-30cc"
+      - "the-cow-looked-over-a-hill"
+      - "sentence-containing-new-lines-and-return-and-other"
+      - "0123"
+      - "abcdef"
+      - "abcdefghijklmnopqrstuvwxyz0123456789"
+
+    camelToSnakeCase:
+      - a_camel_case_string
+      - camel_with_a_back_to_back_upper
+
+    camelToPascalCase:
+      - ACamelCaseString
+      - CamelWithABackToBackUpper
+
+    pascalToSnakeCase:
+      - a_camel_case_string
+      - camel_with_a_back_to_back_upper
+
+    pascalToCamelCase:
+      - aCamelCaseString
+      - camelWithABackToBackUpper
+
+    snakeToCamelCase:
+      - aCamelCaseString
+      - camelWithABackToBackUpper
+
+    snakeToPascalCase:
+      - ACamelCaseString
+      - CamelWithABackToBackUpper
+
+    toPhoneNumber:
+      - "12223334444"
+      - "12223334444"
+      - "12223334444"
+      - "12223334444"
+      - "12223334444"
+      - "12223334444"
+      - "12223334444"
+
+    toPhoneFormat:
+      - "+1 (222) 333-4444"
+      - "+1 (222) 333-4444"
+      - "+1 (222) 333-4444"
+      - "+1 (222) 333-4444"
+      - "+1 (222) 333-4444"
+      - "+1 (222) 333-4444"
+      - "+1 (222) 333-4444"

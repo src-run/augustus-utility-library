@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Test;
+namespace SR\Util\Test;
 
 /**
  * Class AbstractTest.
@@ -18,14 +18,14 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
     public static $fixtureData = [];
 
-    protected function runThroughAssertions(array $assertions, array $fixtureData = null, $namespace = 'SR\Info\\')
+    protected function runThroughAssertions(array $assertions, array $fixtureData = null, $namespace = 'SR\Util\Info\\')
     {
         foreach ($assertions as $call => $opts) {
             $this->runThroughFixtureData($call, $opts, $fixtureData, $namespace);
         }
     }
 
-    protected function runThroughFixtureData($callable, array $assert, array $fixtureData = null, $namespace = 'SR\Info\\')
+    protected function runThroughFixtureData($callable, array $assert, array $fixtureData = null, $namespace = 'SR\Util\Info\\')
     {
         if ($fixtureData === null && (!property_exists($this, 'fixtureData') || count(static::$fixtureData) === 0)) {
             $this->fail('Fixture data not defined at either the test class or test method call context.');
@@ -52,7 +52,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             );
         }
     }
-    
+
     private function getArrayAsStringRecursive($array)
     {
         if (is_bool($array)) {

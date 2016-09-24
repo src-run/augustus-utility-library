@@ -9,12 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Transform\Argument\Expression\Representative;
+namespace SR\Util\Transform\Argument\Expression\Representative;
 
-use SR\Transform\Argument\Expression\Archetype\ArchetypeInterface;
-use SR\Transform\Argument\Expression\Archetype\StringArchetype;
-use SR\Transform\Argument\Expression\Archetype\GroupedArchetype;
-use SR\Transform\Argument\Expression\Archetype\RangedArchetype;
+use SR\Util\Transform\Argument\Expression\Archetype\ArchetypeInterface;
+use SR\Util\Transform\Argument\Expression\Archetype\RangedArchetype;
+use SR\Util\Transform\Argument\Expression\Archetype\StringArchetype;
 
 abstract class AbstractRepresentative implements RepresentativeInterface
 {
@@ -29,15 +28,35 @@ abstract class AbstractRepresentative implements RepresentativeInterface
     protected $caseSensitive = true;
 
     /**
+     * @var bool
+     */
+    protected $anchorRight = false;
+
+    /**
+     * @var bool
+     */
+    protected $anchorLeft = false;
+
+    /**
      * @return string
      */
     public function regex()
     {
+        $expressions = array_filter($this->selectors, function (ArchetypeInterface $value) {
+            return $value->isValid();
+        });
+
         $expressions = array_map(function (ArchetypeInterface $value) {
             return $value->get();
-        }, $this->selectors);
+        }, $expressions);
 
-        return sprintf('{%s}%s', implode('', $expressions), $this->isCaseSensitive() ? '' : 'i');
+        return sprintf(
+            '{%s%s%s}%s',
+            $this->isAnchoredLeft() ? '^' : '',
+            implode('', $expressions),
+            $this->isAnchoredRight() ? '$' : '',
+            $this->isCaseSensitive() ? '' : 'i'
+        );
     }
 
     /**
@@ -88,18 +107,7 @@ abstract class AbstractRepresentative implements RepresentativeInterface
     }
 
     /**
-     * @param string $value
-     * @param bool   $named
-     *
-     * @return RepresentativeInterface
-     */
-    public function addGroupSelector(string $value, bool $named = false) : RepresentativeInterface
-    {
-        return $this->add(new GroupedArchetype($value, $named));
-    }
-
-    /**
-     * @param  bool $enabled
+     * @param bool $enabled
      *
      * @return RepresentativeInterface
      */
@@ -132,6 +140,42 @@ abstract class AbstractRepresentative implements RepresentativeInterface
     public function disableCaseSensitivity() : RepresentativeInterface
     {
         return $this->setCaseSentitivity(false);
+    }
+
+    /**
+     * @return SearchReplaceRepresentative
+     */
+    public function enableAnchorLeft() : SearchReplaceRepresentative
+    {
+        $this->anchorLeft = true;
+
+        return $this;
+    }
+
+    /**
+     * @return SearchReplaceRepresentative
+     */
+    public function enableAnchorRight() : SearchReplaceRepresentative
+    {
+        $this->anchorRight = true;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAnchoredLeft() : bool
+    {
+        return $this->anchorLeft == true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAnchoredRight() : bool
+    {
+        return $this->anchorRight == true;
     }
 }
 

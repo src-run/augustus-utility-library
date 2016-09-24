@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Transform\Argument\Expression\Representative;
+namespace SR\Util\Transform\Argument\Expression\Representative;
 
-use SR\Transform\Argument\Expression\Archetype\ArchetypeInterface;
+use SR\Util\Transform\Argument\Expression\Archetype\ArchetypeInterface;
 
-class SearchReplaceRepresentative extends AbstractRepresentative
+class SearchReplaceRepresentative extends SearchRepresentative
 {
     /**
      * @var null|string
@@ -21,14 +21,13 @@ class SearchReplaceRepresentative extends AbstractRepresentative
     protected $replacement;
 
     /**
-     * @param string              $replacement
-     * @param bool                $caseSensitive
+     * @param string $replacement
+     * @param bool   $caseSensitive
      * @param ArchetypeInterface[] ...$selectors
      */
-    public function __construct(string $replacement, ArchetypeInterface ...$selectors)
+    public function __construct($replacement = false, ArchetypeInterface ...$selectors)
     {
-        $this->setCaseSensitivity(false);
-        $this->addSelectors($selectors);
+        parent::__construct(...$selectors);
 
         if (null === $replacement) {
             throw new \InvalidArgumentException('A replacement string must be provided as the first argument.');

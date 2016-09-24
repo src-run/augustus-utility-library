@@ -9,21 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Transform\Argument\Expression\Representative;
+namespace SR\Util\Transform\Argument\Expression\Representative;
 
-use SR\Transform\Argument\Expression\Archetype\AbstractArchetype;
-use SR\Transform\Argument\Expression\Archetype\StringArchetype;
-use SR\Transform\Argument\Expression\Archetype\GroupedArchetype;
-use SR\Transform\Argument\Expression\Archetype\RangedArchetype;
+use SR\Util\Transform\Argument\Expression\Archetype\ArchetypeInterface;
 
 interface RepresentativeInterface
 {
-    /**
-     * @param bool $caseSensitive
-     * @param ArchetypeInterface[] ...$selectors
-     */
-    public function __construct($caseSensitive = false, ArchetypeInterface ...$selectors);
-
     /**
      * @return string
      */
@@ -57,14 +48,6 @@ interface RepresentativeInterface
      * @return RepresentativeInterface
      */
     public function addRangeSelector(string $value, bool $negative = false) : RepresentativeInterface;
-
-    /**
-     * @param string $value
-     * @param bool   $named
-     *
-     * @return RepresentativeInterface
-     */
-    public function addGroupSelector(string $value, bool $named = false) : RepresentativeInterface;
 }
 
 /* EOF */

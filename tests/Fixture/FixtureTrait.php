@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Test\Fixture;
+namespace SR\Util\Test\Fixture;
 
 /**
  * Class FixtureTrait.

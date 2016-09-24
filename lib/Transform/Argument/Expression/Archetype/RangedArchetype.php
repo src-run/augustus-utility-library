@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Transform\Argument\Expression\Archetype;
+namespace SR\Util\Transform\Argument\Expression\Archetype;
 
-class RangedArchetype extends StringArchetype
+class RangedArchetype extends AbstractArchetype
 {
     /**
      * @var string

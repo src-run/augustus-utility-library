@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Info;
+namespace SR\Util\Info;
 
 /**
  * Class ClassInspect.
@@ -34,7 +34,7 @@ final class ClassInfo
      */
     final public static function getNameQualified($for)
     {
-        return (string) self::getReflection($for)->getName();
+        return (string) static::getReflection($for)->getName();
     }
 
     /**
@@ -44,7 +44,7 @@ final class ClassInfo
      */
     final public static function getNameShort($for)
     {
-        return (string) self::getReflection($for)->getShortName();
+        return (string) static::getReflection($for)->getShortName();
     }
 
     /**
@@ -54,7 +54,7 @@ final class ClassInfo
      */
     final public static function getNamespace($for)
     {
-        return self::getReflection($for)->getNamespaceName();
+        return static::getReflection($for)->getNamespaceName();
     }
 
     /**
@@ -64,7 +64,7 @@ final class ClassInfo
      */
     final public static function getNamespaceArray($for)
     {
-        return (array) explode('\\', self::getNamespace($for));
+        return (array) explode('\\', static::getNamespace($for));
     }
 
     /**
@@ -194,11 +194,11 @@ final class ClassInfo
      */
     final public static function getReflection($for)
     {
-        if (self::isClass($for)) {
+        if (static::isClass($for)) {
             return new \ReflectionClass($for);
         }
 
-        if (self::isInstance($for)) {
+        if (static::isInstance($for)) {
             return new \ReflectionObject($for);
         }
 
@@ -212,12 +212,12 @@ final class ClassInfo
      */
     final public static function isThrowableEquitable($class)
     {
-        if (self::isInstance($class)) {
+        if (static::isInstance($class)) {
             return $class instanceof \Throwable || $class instanceof \Error || $class instanceof \Exception;
         }
 
-        if (self::isClass($class)) {
-            $reflection = self::getReflection($class);
+        if (static::isClass($class)) {
+            $reflection = static::getReflection($class);
 
             return $reflection->isSubclassOf('\Throwable') || $reflection->isSubclassOf('\Error') || $reflection->isSubclassOf('\Exception');
         }

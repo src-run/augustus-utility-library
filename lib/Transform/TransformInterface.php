@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Transform;
+namespace SR\Util\Transform;
 
 interface TransformInterface
 {
@@ -17,13 +17,6 @@ interface TransformInterface
      * @param null|mixed $value
      */
     public function __construct($value = null);
-
-    /**
-     * @param mixed $value
-     *
-     * @return TransformInterface
-     */
-    public function create($value) : TransformInterface;
 
     /**
      * @return mixed
@@ -48,12 +41,31 @@ interface TransformInterface
     public function has() : bool;
 
     /**
+     * @return TransformInterface
+     */
+    public function enableMutable() : TransformInterface;
+
+    /**
+     * @return TransformInterface
+     */
+    public function disableMutable() : TransformInterface;
+
+    /**
+     * @return bool
+     */
+    public function isMutable() : bool;
+
+    /**
+     * @return TransformInterface
+     */
+    public function copy() : TransformInterface;
+
+    /**
      * @param \Closure $closure
-     * @param bool     $clone
      *
      * @return TransformInterface
      */
-    public function apply(\Closure $closure, $clone = true) : TransformInterface;
+    public function apply(\Closure $closure) : TransformInterface;
 
     /**
      * @param int|float $comparison

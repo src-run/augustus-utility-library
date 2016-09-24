@@ -11,32 +11,52 @@
 
 namespace SR\Util\Instance;
 
-final class StatefulRealizationFactoryion implements RealizationFactoryInterface
+use SR\Util\Info\ClassInfo;
+
+final class StatefulRealizationFactory extends AbstractRealizationFactory
 {
     /**
-     * @var \ReflectionClass
+     * @var object[]
      */
-    private $reflect;
+    private static $cachedInstances;
 
     /**
      * @param string|object $what
+     * @param mixed         ...$constructorArguments
      *
      * @return object
      */
-    public static function __construct($what)
+    final public static function instantiate($what, ...$constructorArguments)
     {
-        $this.reflect = static::getReflectionInstance($what);
+        $classFqn = static::getQualifiedClassName($what);
+
+        if (isset(static::$cachedInstances[$classFqn])) {
+            return clone static::$cachedInstances[$classFqn];
+        }
+
+        return static::buildAndCache($classFqn, ...$constructorArguments);
     }
 
     /**
-     * @param object|string|null $what
+     * @param string $classFqn
+     * @param mixed[] ...$constructorArguments
      *
-     * @return bool
+     * @return object
      */
-    public function isInstantiable()
+    private static function buildAndCache($classFqn, ...$constructorArguments)
     {
-        return parent::isInstantiable($what === null ? $this->reflect : static::getReflectionInstance($what));
+        $reflectionClass = ClassInfo::getReflection($classFqn);
+
+        if (!static::isInstantiable($reflectionClass)) {
+            throw new \InvalidArgumentException(sprintf('Class "%s" is not instantiable.', $classFqn));
+        }
+
+        $instance = $reflectionClass->newInstanceArgs($constructorArguments);
+
+        if ($reflectionClass->isCloneable()) {
+            static::$cachedInstances[$classFqn] = clone $instance;
+        }
+
+        return $instance;
     }
 }
-
-/* EOF */

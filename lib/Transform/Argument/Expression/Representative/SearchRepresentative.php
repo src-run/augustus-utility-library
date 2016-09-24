@@ -9,7 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Transform\Argument\Expression\Representative;
+namespace SR\Util\Transform\Argument\Expression\Representative;
+
+use SR\Util\Transform\Argument\Expression\Archetype\ArchetypeInterface;
 
 class SearchRepresentative extends AbstractRepresentative
 {
@@ -20,7 +22,7 @@ class SearchRepresentative extends AbstractRepresentative
     public function __construct(ArchetypeInterface ...$selectors)
     {
         $this->setCaseSensitivity(false);
-        $this->addSelectors($selectors);
+        $this->addSelectors(...$selectors);
     }
 }
 

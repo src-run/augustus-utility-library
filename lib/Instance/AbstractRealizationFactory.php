@@ -11,22 +11,10 @@
 
 namespace SR\Util\Instance;
 
-class AbstractRealizationFactory implements RealizationFactoryInterface
+use SR\Util\Info\ClassInfo;
+
+abstract class AbstractRealizationFactory implements RealizationFactoryInterface
 {
-    private $what;
-
-    /**
-     * @param object|string|null $what
-     *
-     * @return bool
-     */
-    public static function isInstantiable($what = null)
-    {
-        $what = static::getReflectionInstance($what);
-
-        return !static::hasInternalAncestors($what) && !$what->isAbstract();
-    }
-
     /**
      * @param string|object $what
      *
@@ -42,15 +30,13 @@ class AbstractRealizationFactory implements RealizationFactoryInterface
     }
 
     /**
-     * Returns a reflection object instance for the given string or object.
+     * @param \ReflectionClass $reflectionClass
      *
-     * @param string|object $for
-     *
-     * @return \ReflectionClass
+     * @return bool
      */
-    protected static function getReflectionInstance($for)
+    protected static function isInstantiable(\ReflectionClass $reflectionClass)
     {
-        return ClassInfo::getReflection(static::getQualifiedClassName($for));
+        return !static::hasInternalAncestors($reflectionClass) && !$reflectionClass->isAbstract();
     }
 
     /**
@@ -58,13 +44,13 @@ class AbstractRealizationFactory implements RealizationFactoryInterface
      *
      * @return bool
      */
-    protected static function hasInternalAncestors(\ReflectionClass $reflect)
+    public static function hasInternalAncestors(\ReflectionClass $reflectionClass)
     {
         do {
-            if ($reflect->isInternal()) {
+            if ($reflectionClass->isInternal()) {
                 return true;
             }
-        } while ($reflect = $reflect->getParentClass());
+        } while ($reflectionClass = $reflectionClass->getParentClass());
 
         return false;
     }

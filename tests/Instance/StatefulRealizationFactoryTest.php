@@ -9,25 +9,25 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Test\Instantiation;
+namespace SR\Util\Test\Instance;
 
-use SR\Info\ClassInfo;
-use SR\Util\Instantiators\Instantiator;
+use SR\Util\Info\ClassInfo;
+use SR\Util\Instance\StatefulRealizationFactory;
 
 /**
- * Class InstantiatorTest.
+ * Class StatefulRealizationFactoryTest.
  */
-class InstantiatorTest extends \PHPUnit_Framework_TestCase
+class StatefulRealizationFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testInstantiateFromObject()
     {
         $obj = new ClassInfo();
-        $one = Instantiator::instantiate($obj);
+        $one = StatefulRealizationFactory::instantiate($obj);
 
-        $this->assertInstanceOf('SR\Info\ClassInspect', $one);
+        $this->assertInstanceOf('SR\Util\Info\ClassInfo', $one);
 
-        $two = Instantiator::instantiate($one);
-        $this->assertInstanceOf('SR\Info\ClassInspect', $two);
+        $two = StatefulRealizationFactory::instantiate($one);
+        $this->assertInstanceOf('SR\Util\Info\ClassInfo', $two);
 
         $this->assertNotSame($obj, $one);
         $this->assertNotSame($one, $two);
@@ -36,12 +36,12 @@ class InstantiatorTest extends \PHPUnit_Framework_TestCase
 
     public function testInstantiateFromClassName()
     {
-        $obj = 'SR\Info\ClassInspect';
-        $one = Instantiator::instantiate($obj);
+        $obj = 'SR\Util\Info\ClassInfo';
+        $one = StatefulRealizationFactory::instantiate($obj);
 
         $this->assertInstanceOf($obj, $one);
 
-        $two = Instantiator::instantiate($one);
+        $two = StatefulRealizationFactory::instantiate($one);
 
         $this->assertInstanceOf($obj, $two);
         $this->assertNotSame($one, $two);
@@ -51,7 +51,7 @@ class InstantiatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException('\InvalidArgumentException');
 
-        Instantiator::instantiate('SR\Test\Info\ClassInternal');
+        StatefulRealizationFactory::instantiate('SR\Util\Test\Instance\ClassInternal');
     }
 }
 

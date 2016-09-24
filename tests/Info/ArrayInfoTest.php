@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Test\Info;
+namespace SR\Util\Test\Info;
 
-use SR\Test\AbstractTest;
+use SR\Util\Test\AbstractTest;
 
 class ArrayInfoTest extends AbstractTest
 {

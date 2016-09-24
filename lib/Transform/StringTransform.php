@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Transform;
+namespace SR\Util\Transform;
 
-use SR\Transform\Argument\Expression\Archetype\StringArchetype;
-use SR\Transform\Argument\Expression\Archetype\RangedArchetype;
-use SR\Transform\Argument\Expression\Representative\SearchReplaceRepresentative;
+use SR\Util\Transform\Argument\Expression\Archetype\RangedArchetype;
+use SR\Util\Transform\Argument\Expression\Archetype\StringArchetype;
+use SR\Util\Transform\Argument\Expression\Representative\SearchReplaceRepresentative;
 
 final class StringTransform extends AbstractTransform
 {
@@ -40,7 +40,7 @@ final class StringTransform extends AbstractTransform
     final public function replace(SearchReplaceRepresentative $config)
     {
         return $this->apply(function () use ($config) {
-            return preg_replace($config->regex(), $config->replace(), $this->get());
+            return preg_replace($config->regex(), $config->replacement(), $this->get());
         });
     }
 
@@ -51,7 +51,7 @@ final class StringTransform extends AbstractTransform
      */
     final public function toAlpha()
     {
-        return $this->replace(new SearchReplaceRepresentative('', false, new RangedArchetype('a-z', true)));
+        return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('a-z', true)));
     }
 
     /**
@@ -61,7 +61,7 @@ final class StringTransform extends AbstractTransform
      */
     final public function toNumeric()
     {
-        return $this->replace(new SearchReplaceRepresentative('', false, new RangedArchetype('0-9', true)));
+        return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('0-9', true)));
     }
 
     /**
@@ -71,7 +71,7 @@ final class StringTransform extends AbstractTransform
      */
     final public function toAlphanumeric()
     {
-        return $this->replace(new SearchReplaceRepresentative('', false, new RangedArchetype('a-z0-9', true)));
+        return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('a-z0-9', true)));
     }
 
     /**
@@ -81,7 +81,7 @@ final class StringTransform extends AbstractTransform
      */
     final public function toAlphanumericAndDashes()
     {
-        return $this->replace(new SearchReplaceRepresentative('', false, new RangedArchetype('a-z0-9-', true)));
+        return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('a-z0-9-', true)));
     }
 
     /**
@@ -89,7 +89,7 @@ final class StringTransform extends AbstractTransform
      */
     final public function spacesToDashes()
     {
-        return $this->replace(new SearchReplaceRepresentative('-', false, new StringArchetype('[\s]+')));
+        return $this->replace(new SearchReplaceRepresentative('-', new StringArchetype('[ ]+')));
     }
 
     /**
@@ -97,7 +97,7 @@ final class StringTransform extends AbstractTransform
      */
     final public function dashesToSpaces()
     {
-        return $this->replace(new SearchReplaceRepresentative(' ', false, new StringArchetype('[-]+')));
+        return $this->replace(new SearchReplaceRepresentative(' ', new StringArchetype('[-]+')));
     }
 
     /**
@@ -107,10 +107,16 @@ final class StringTransform extends AbstractTransform
      */
     final public function slugify($lowercase = true)
     {
-        return $this->apply(function () use ($lowercase) {
-            $string = $this->dashesToSpaces()->toAlphanumericAndDashes();
+        return $this->apply(function (StringTransform $value) use ($lowercase) {
+            $result = $value
+                ->enableMutable()
+                ->replace(new SearchReplaceRepresentative('-', new RangedArchetype('a-z0-9-', true)))
+                ->replace(new SearchReplaceRepresentative('-', new StringArchetype('[-]+')))
+                ->replace((new SearchReplaceRepresentative('', new StringArchetype('[-]')))->enableAnchorLeft())
+                ->replace((new SearchReplaceRepresentative('', new StringArchetype('[-]')))->enableAnchorRight())
+                ->toLower();
 
-            return $lowercase ? $string->toLower() : $string;
+            return $this->readyResult($result->get());
         });
     }
 

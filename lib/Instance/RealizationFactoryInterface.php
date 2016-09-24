@@ -14,36 +14,19 @@ namespace SR\Util\Instance;
 interface RealizationFactoryInterface
 {
     /**
-     * Provide the item to instantiate during construction (optionally).
-     *
-     * @param object|string $what
-     */
-    public function __construct($what = null);
-
-    /**
-     * Sets the item to instantiate.
-     *
-     * @param object|string $what
-     */
-    public function set($what = null) : RealizationFactoryInterface;
-
-    /**
-     * Attempts to instantiate the object given the passed arguments as constructor parameters.
-     *
-     * @param mixed[] ...$passArgs
+     * @param string|object $what
+     * @param mixed         ...$constructorArguments
      *
      * @return object
      */
-    public function instantiate(...$passArgs);
+    public static function instantiate($what, ...$constructorArguments);
 
     /**
-     * Returns true if the passed object can be Incepterd, otherwise false.
-     *
-     * @param  object|string $object An object instance or fully-qualified class name string
+     * @param \ReflectionClass $reflectionClass
      *
      * @return bool
      */
-    public function isRealizable() : bool;
+    public static function hasInternalAncestors(\ReflectionClass $reflect);
 }
 
 /* EOF */

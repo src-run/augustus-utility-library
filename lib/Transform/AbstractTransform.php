@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Transform;
+namespace SR\Util\Transform;
 
 abstract class AbstractTransform implements TransformInterface
 {
@@ -19,23 +19,20 @@ abstract class AbstractTransform implements TransformInterface
     protected $value;
 
     /**
+     * @var bool
+     */
+    protected $mutable;
+
+    /**
      * @param null|mixed $value
      */
     public function __construct($value = null)
     {
+        $this->mutable = false;
+
         if (null !== $value) {
             $this->set($value);
         }
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return TransformInterface
-     */
-    public function create($value) : TransformInterface
-    {
-        return new static($value);
     }
 
     /**
@@ -75,17 +72,75 @@ abstract class AbstractTransform implements TransformInterface
     }
 
     /**
+     * @return TransformInterface
+     */
+    public function enableMutable() : TransformInterface
+    {
+        $this->mutable = true;
+
+        return $this;
+    }
+
+    /**
+     * @return TransformInterface
+     */
+    public function disableMutable() : TransformInterface
+    {
+        $this->mutable = false;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMutable() : bool
+    {
+        return $this->mutable === true;
+    }
+
+    /**
+     * @return TransformInterface
+     */
+    final public function copy() : TransformInterface
+    {
+        return clone $this;
+    }
+
+    /**
      * @param \Closure $closure
-     * @param bool     $clone
      *
      * @return AbstractTransform|StringTransform|NumberTransform|TransformInterface
      */
-    final public function apply(\Closure $closure, $clone = true) : TransformInterface
+    final public function apply(\Closure $closure) : TransformInterface
     {
-        $instance = $clone ? clone $this : $this;
-        $instance->set($closure());
+        return $this->invokeClosure($closure);
+    }
 
-        return $instance;
+    /**
+     * @param \Closure $closure
+     *
+     * @return TransformInterface
+     */
+    final protected function invokeClosure(\Closure $closure) : TransformInterface
+    {
+        $bindTo = $this->isMutable() ? $this : clone $this;
+        $result = $closure->call($bindTo, $bindTo);
+
+        return $this->readyResult($result);
+    }
+
+    /**
+     * @param TransformInterface|mixed $value
+     *
+     * @return TransformInterface
+     */
+    final protected function readyResult($value) : TransformInterface
+    {
+        $result = $value instanceof TransformInterface ? $value->get() : $value;
+        $object = $this->isMutable() ? $this : $this->copy();
+
+        return $object->set($result);
     }
 
     /**

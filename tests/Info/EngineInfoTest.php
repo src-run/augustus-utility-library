@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Test\Info;
+namespace SR\Util\Test\Info;
 
-use SR\Info\EngineInfo;
-use SR\Test\AbstractTest;
+use SR\Util\Info\EngineInfo;
+use SR\Util\Test\AbstractTest;
 
 class EngineInfoTest extends AbstractTest
 {

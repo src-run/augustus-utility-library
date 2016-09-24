@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Test\Info;
+namespace SR\Util\Test\Info;
 
-use SR\Info\ClassInfo;
+use SR\Util\Info\ClassInfo;
 
 class ClassInfoTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,10 +26,10 @@ class ClassInfoTest extends \PHPUnit_Framework_TestCase
         static::assertSame('ClassInfo', ClassInfo::getNameShort($instance));
 
         static::assertSame(__NAMESPACE__, ClassInfo::getNamespace(__CLASS__));
-        static::assertSame('SR\Info', ClassInfo::getNamespace($instance));
+        static::assertSame('SR\Util\Info', ClassInfo::getNamespace($instance));
 
         static::assertSame(explode('\\', __NAMESPACE__), ClassInfo::getNamespaceArray(__CLASS__));
-        static::assertSame(explode('\\', 'SR\Info'), ClassInfo::getNamespaceArray($instance));
+        static::assertSame(explode('\\', 'SR\Util\Info'), ClassInfo::getNamespaceArray($instance));
     }
 
     public function testClassTester()
@@ -58,7 +58,7 @@ class ClassInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testInterfaceTester()
     {
-        $interface = 'SR\Test\Fixture\FixtureInterface';
+        $interface = 'SR\Util\Test\Fixture\FixtureInterface';
 
         static::assertTrue(ClassInfo::assertInterface($interface));
         static::assertTrue(ClassInfo::isInterface($interface));
@@ -70,7 +70,7 @@ class ClassInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testTraitTester()
     {
-        $trait = 'SR\Test\Fixture\FixtureTrait';
+        $trait = 'SR\Util\Test\Fixture\FixtureTrait';
 
         static::assertTrue(ClassInfo::assertTrait($trait));
         static::assertTrue(ClassInfo::isTrait($trait));
@@ -94,12 +94,12 @@ class ClassInfoTest extends \PHPUnit_Framework_TestCase
 
     public function testThrowableEquitable()
     {
-        $class = 'SR\Test\Fixture\IsInstanceOfThrowableFixture';
+        $class = 'SR\Util\Test\Fixture\IsInstanceOfThrowableFixture';
         $instance = new $class();
         $this->assertTrue(ClassInfo::isThrowableEquitable($class));
         $this->assertTrue(ClassInfo::isThrowableEquitable($instance));
 
-        $class = 'SR\Test\Fixture\NotInstanceOfThrowableFixture';
+        $class = 'SR\Util\Test\Fixture\NotInstanceOfThrowableFixture';
         $instance = new $class();
         $this->assertFalse(ClassInfo::isThrowableEquitable($class));
         $this->assertFalse(ClassInfo::isThrowableEquitable($instance));

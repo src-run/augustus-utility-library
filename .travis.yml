@@ -1,34 +1,33 @@
 ---
 
-##
+#
 # This file is part of the `src-run/augustus-utility-library` project.
 #
 # (c) Rob Frawley 2nd <rmf@src.run>
-# (c) Scribe Inc      <scr@src.run>
 #
 # For the full copyright and license information, view the LICENSE.md
 # file distributed with this source code.
-##
+#
 
 sudo     : false
 language : php
-php      : [ 5.6, 7.0 ]
+php      : [ 5.6, 7.0, 7.1 ]
 
-git :
+git:
   depth : 3
 
 env :
-  global :
-    - secure : Fo2FGu5UkwSD5qNXh3/FUVHdQ66deoEvDKVuM5CwRJFTfjsnfwb63NqP1pna31uEn0drYbEv4h/f3UbOUS3Y9m0UdwwzuZdZdrUkNB0iaIpezzw/uaQAJFWxthUu3Clxh6v9tYaG3+jxeSPeISzxgbzrXKT+GeqhoXqC2FViIcZx3tJN9px++tMTodmZxzrJcWtFtsrES/BjVNVXnxqaGv3hruAzTAk+HpHHxm17FfO0m9UfthFQ4e1bYiPdUWPdeSmd/PNRRbY5Bke05lpvqFlyX/7ZMD//hL0GY5If1V0nunm4zTGQE2T9jYZmZLzWFV3Pl8AL7Z0UbbD5NdOJE5lIcPyzeHZ/BloiRMPyH4WUjz1Yt/b9oFrR7xs/ciuTZ+O0wIJ9T2Je7foLy9yIk0wv0dlHp3XTQrHMUA0M0kWVeZKeJFAKfyCAjegCnoMvL4QvcTdSepjbZCVazrIVkbZcyXGZQIKk8wqn8tLLcy5br1TeFY1L4ocg8bixIu9aPE5mNzhuaaP3aw7vuNYp7QnArCogJB1G/znRMR54kAOtAkp+GOedEOB83W49TlcfhCFINLcw3StQP9N+TAX+UhYm5M2/xdDbitK/WS81yHjsd8jCHaNosOqjaRnkzVmjjAjY6g+3aDyNUArmgeRdyIgmS/ZxguJob7/naAEkMeI=
+  global:
+    - secure: "Fo2FGu5UkwSD5qNXh3/FUVHdQ66deoEvDKVuM5CwRJFTfjsnfwb63NqP1pna31uEn0drYbEv4h/f3UbOUS3Y9m0UdwwzuZdZdrUkNB0iaIpezzw/uaQAJFWxthUu3Clxh6v9tYaG3+jxeSPeISzxgbzrXKT+GeqhoXqC2FViIcZx3tJN9px++tMTodmZxzrJcWtFtsrES/BjVNVXnxqaGv3hruAzTAk+HpHHxm17FfO0m9UfthFQ4e1bYiPdUWPdeSmd/PNRRbY5Bke05lpvqFlyX/7ZMD//hL0GY5If1V0nunm4zTGQE2T9jYZmZLzWFV3Pl8AL7Z0UbbD5NdOJE5lIcPyzeHZ/BloiRMPyH4WUjz1Yt/b9oFrR7xs/ciuTZ+O0wIJ9T2Je7foLy9yIk0wv0dlHp3XTQrHMUA0M0kWVeZKeJFAKfyCAjegCnoMvL4QvcTdSepjbZCVazrIVkbZcyXGZQIKk8wqn8tLLcy5br1TeFY1L4ocg8bixIu9aPE5mNzhuaaP3aw7vuNYp7QnArCogJB1G/znRMR54kAOtAkp+GOedEOB83W49TlcfhCFINLcw3StQP9N+TAX+UhYm5M2/xdDbitK/WS81yHjsd8jCHaNosOqjaRnkzVmjjAjY6g+3aDyNUArmgeRdyIgmS/ZxguJob7/naAEkMeI="
 
-install :
+install:
   - bash .bldr/bldr -b up-env -q
   - bash .bldr/bldr -b up-app -q
 
-script :
+script:
   - bin/phpunit -vvv
 
-after_script :
+after_script:
   - bash .bldr/bldr -b down-app -q
   - bash .bldr/bldr -b down-env -q
 

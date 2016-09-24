@@ -4,18 +4,16 @@
  * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
- * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace SR\Utility\Tests;
+namespace SR\Test\Info;
 
-/**
- * Class StringInspectTest.
- */
-class StringInspectTest extends AbstractTest
+use SR\Test\AbstractTest;
+
+class StringInfoTest extends AbstractTest
 {
     public static $fixtureData = [
         'abcdef01234',
@@ -29,7 +27,7 @@ class StringInspectTest extends AbstractTest
     public function testSearchPosition()
     {
         $assertions = [
-            'StringInspect::searchPosition' => [
+            'StringInfo::searchPosition' => [
                 ['b', 1],
                 ['-', 0],
                 ['1', 7],
@@ -45,7 +43,7 @@ class StringInspectTest extends AbstractTest
     public function testSearchPositionLeft()
     {
         $assertions = [
-            'StringInspect::searchPositionFromLeft' => [
+            'StringInfo::searchPositionFromLeft' => [
                 ['bcdef', 1],
                 ['|', null],
                 ['4', 10],
@@ -61,7 +59,7 @@ class StringInspectTest extends AbstractTest
     public function testSearchPositionRight()
     {
         $assertions = [
-            'StringInspect::searchPositionFromRight' => [
+            'StringInfo::searchPositionFromRight' => [
                 ['bcdef', 1],
                 ['|', null],
                 ['4', 10],
@@ -77,7 +75,7 @@ class StringInspectTest extends AbstractTest
     public function testSearchContains()
     {
         $assertions = [
-            'StringInspect::contains' => [
+            'StringInfo::contains' => [
                 ['bcdef', true],
                 ['|', false],
                 ['4', true],
@@ -90,5 +88,3 @@ class StringInspectTest extends AbstractTest
         $this->runThroughAssertions($assertions);
     }
 }
-
-/* EOF */

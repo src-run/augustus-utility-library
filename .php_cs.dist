@@ -1,0 +1,30 @@
+<?php
+
+/*
+ * This file is part of the `src-run/augustus-utility-library` project.
+ *
+ * (c) Rob Frawley 2nd <rmf@src.run>
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
+use SLLH\StyleCIBridge\ConfigBridge;
+
+require_once __DIR__.'/vendor/autoload.php';
+
+$headerString = <<<EOF
+This file is part of the `src-run/augustus-utility-library` project.
+
+(c) Rob Frawley 2nd <rmf@src.run>
+
+For the full copyright and license information, please view the LICENSE.md
+file that was distributed with this source code.
+EOF;
+
+$headerConfig = [ 'header_comment' => [ 'header' => $headerString ] ];
+
+$config = ConfigBridge::create();
+$config->setRules(array_merge($config->getRules(), $headerConfig));
+
+return $config;

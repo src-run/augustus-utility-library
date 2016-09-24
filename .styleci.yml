@@ -1,17 +1,24 @@
+---
+
 preset: symfony
 
 enabled:
-  - short_array_syntax
+  - combine_consecutive_unsets
+  - linebreak_after_opening_tag
+  - no_short_echo_tag
+  - ordered_imports
   - phpdoc_order
+  - php_unit_construct
+  - php_unit_dedicate_assert
+  - php_unit_strict
+  - short_array_syntax
 
 disabled:
   - simplified_null_return
 
 finder:
   exclude:
-    - "tests"
-  name:
-    - "*.php"
-  path:
-    - "lib"
-    - "src"
+    - 'vendor'
+    - 'var'
+
+...

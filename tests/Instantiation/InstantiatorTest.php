@@ -4,31 +4,30 @@
  * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
- * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace SR\Utility\Tests;
+namespace SR\Test\Instantiation;
 
-use SR\Utility\ClassInspect;
-use SR\Utility\ClassInstantiator;
+use SR\Info\ClassInfo;
+use SR\Util\Instantiators\Instantiator;
 
 /**
- * Class ClassInstantiator.
+ * Class InstantiatorTest.
  */
-class ClassInstantiatorTest extends \PHPUnit_Framework_TestCase
+class InstantiatorTest extends \PHPUnit_Framework_TestCase
 {
     public function testInstantiateFromObject()
     {
-        $obj = new ClassInspect();
-        $one = ClassInstantiator::instantiate($obj);
+        $obj = new ClassInfo();
+        $one = Instantiator::instantiate($obj);
 
-        $this->assertInstanceOf('SR\Utility\ClassInspect', $one);
+        $this->assertInstanceOf('SR\Info\ClassInspect', $one);
 
-        $two = ClassInstantiator::instantiate($one);
-        $this->assertInstanceOf('SR\Utility\ClassInspect', $two);
+        $two = Instantiator::instantiate($one);
+        $this->assertInstanceOf('SR\Info\ClassInspect', $two);
 
         $this->assertNotSame($obj, $one);
         $this->assertNotSame($one, $two);
@@ -37,12 +36,12 @@ class ClassInstantiatorTest extends \PHPUnit_Framework_TestCase
 
     public function testInstantiateFromClassName()
     {
-        $obj = 'SR\Utility\ClassInspect';
-        $one = ClassInstantiator::instantiate($obj);
+        $obj = 'SR\Info\ClassInspect';
+        $one = Instantiator::instantiate($obj);
 
         $this->assertInstanceOf($obj, $one);
 
-        $two = ClassInstantiator::instantiate($one);
+        $two = Instantiator::instantiate($one);
 
         $this->assertInstanceOf($obj, $two);
         $this->assertNotSame($one, $two);
@@ -52,7 +51,7 @@ class ClassInstantiatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException('\InvalidArgumentException');
 
-        ClassInstantiator::instantiate('SR\Utility\Tests\ClassInternal');
+        Instantiator::instantiate('SR\Test\Info\ClassInternal');
     }
 }
 

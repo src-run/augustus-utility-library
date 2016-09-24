@@ -1,12 +1,12 @@
 
-##
-# This file is part of `scr-be/shared-public-knowledge`
+#
+# This file is part of the `src-run/augustus-utility-library` project.
 #
 # (c) Rob Frawley 2nd <rmf@src.run>
 #
 # For the full copyright and license information, view the LICENSE.md
 # file distributed with this source code.
-##
+#
 
 # Symfony 2
 /app/cache/*
@@ -60,5 +60,8 @@
 # Remember to Use *.md Variants
 LICENSE
 README
+
+# phpcsfixer cache
+.php_cs.cache
 
 # EOF

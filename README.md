@@ -1,9 +1,9 @@
 
 # [src-run] augustus-utility-library
 
-|       Travis-CI        |      Codacy Rating      |      Code Coverage      |        Style-CI         |
-|:----------------------:|:-----------------------:|:-----------------------:|:-----------------------:|
-| [![Travis](https://src.run/augustus-utility-library/travis.svg)](https://src.run/augustus-utility-library/travis) | [![Codacy](https://src.run/augustus-utility-library/codacy.svg)](https://src.run/augustus-utility-library/codacy) | [![Coveralls](https://src.run/augustus-utility-library/coveralls.svg)](https://src.run/augustus-utility-library/coveralls) | [![Coveralls](https://src.run/augustus-utility-library/styleci.svg)](https://src.run/augustus-utility-library/styleci) |
+|       Travis-CI        |      Codacy Rating      |      Code Coverage      |        Style-CI         |         Release         |    API Documentation    |
+|:----------------------:|:-----------------------:|:-----------------------:|:-----------------------:|:-----------------------:|:-----------------------:|
+| [![Travis](https://src.run/augustus-utility-library/travis.svg)](https://src.run/augustus-utility-library/travis) | [![Codacy](https://src.run/augustus-utility-library/codacy.svg)](https://src.run/augustus-utility-library/codacy) | [![Coveralls](https://src.run/augustus-utility-library/coveralls.svg)](https://src.run/augustus-utility-library/coveralls) | [![Coveralls](https://src.run/augustus-utility-library/styleci.svg)](https://src.run/augustus-utility-library/styleci) | [![Packagist](https://src.run/augustus-utility-library/packagist.svg)](https://src.run/augustus-utility-library/packagist) | [![API Docs](https://src.run/augustus-utility-library/api.svg)](https://src.run/augustus-utility-library/api) | 
 
 
 ## Overview
@@ -11,7 +11,7 @@
 [Welcome](https://src.run/go/readme_welcome)!
 The `src-run/augustus-utility-library` package provides the following
 
-> collection of utility objects for strings, arrays, classes, etc
+> A simple collection of utilities for strings, arrays, objects, and more.
 
 ### Grouping
 
@@ -116,5 +116,4 @@ information.
 | __Stable Release__ | [![Packagist](https://src.run/augustus-utility-library/packagist.svg)](https://src.run/augustus-utility-library/packagist)     |
 | __Dev Release__    | [![Packagist](https://src.run/augustus-utility-library/packagist_pre.svg)](https://src.run/augustus-utility-library/packagist) |
 | __License__        | [![License](https://src.run/augustus-utility-library/license.svg)](https://src.run/augustus-utility-library/license)           |
-| __Reference__      | [![License](https://src.run/augustus-utility-library/api.svg)](https://src.run/augustus-utility-library/api)                   |
 

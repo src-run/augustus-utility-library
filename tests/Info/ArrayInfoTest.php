@@ -4,18 +4,16 @@
  * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
- * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace SR\Utility\Tests;
+namespace SR\Test\Info;
 
-/**
- * Class ArrayInspectTest.
- */
-class ArrayInspectTest extends AbstractTest
+use SR\Test\AbstractTest;
+
+class ArrayInfoTest extends AbstractTest
 {
     public static $fixtureData = [
         ['one', 'two', 'three'],
@@ -27,7 +25,7 @@ class ArrayInspectTest extends AbstractTest
     public function testIsAssociative()
     {
         $assertions = [
-            'ArrayInspect::isAssociative' => [
+            'ArrayInfo::isAssociative' => [
                 [false],
                 [true],
                 [true],
@@ -38,5 +36,3 @@ class ArrayInspectTest extends AbstractTest
         $this->runThroughAssertions($assertions);
     }
 }
-
-/* EOF */

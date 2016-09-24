@@ -4,13 +4,12 @@
  * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
- * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace SR\Utility\Tests;
+namespace SR\Test;
 
 /**
  * Class AbstractTest.
@@ -19,14 +18,14 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
     public static $fixtureData = [];
 
-    protected function runThroughAssertions(array $assertions, array $fixtureData = null)
+    protected function runThroughAssertions(array $assertions, array $fixtureData = null, $namespace = 'SR\Info\\')
     {
         foreach ($assertions as $call => $opts) {
-            $this->runThroughFixtureData($call, $opts, $fixtureData);
+            $this->runThroughFixtureData($call, $opts, $fixtureData, $namespace);
         }
     }
 
-    protected function runThroughFixtureData($callable, array $assert, array $fixtureData = null)
+    protected function runThroughFixtureData($callable, array $assert, array $fixtureData = null, $namespace = 'SR\Info\\')
     {
         if ($fixtureData === null && (!property_exists($this, 'fixtureData') || count(static::$fixtureData) === 0)) {
             $this->fail('Fixture data not defined at either the test class or test method call context.');
@@ -38,7 +37,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             $parameters = $assert[$i];
             array_unshift($parameters, $data);
             $expected = array_pop($parameters);
-            $received = call_user_func_array('SR\Utility\\'.$callable, $parameters);
+            $received = call_user_func_array($namespace.$callable, $parameters);
 
             $this->assertSame(
                 $expected,
@@ -53,7 +52,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             );
         }
     }
-
+    
     private function getArrayAsStringRecursive($array)
     {
         if (is_bool($array)) {

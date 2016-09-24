@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the `augustus-utility-library` project.
+ * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
  *
@@ -9,17 +9,36 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Utility;
+namespace SR\Util\Instance;
 
-/**
- * Class ClassInstantiator.
- */
-final class ClassInstantiator
+class StatelessRealizerFactory
 {
     /**
-     * @var object[]
+     * @var object|string
      */
-    private static $cachedInstances;
+    private $what;
+
+    /**
+     * @var mixed[]
+     */
+    private $with;
+
+    /**
+     * Provide the item to instantiate and any additonal arguments during construction.
+     *
+     * @param object|string $what
+     * @param mixed[]       ...$with
+     */
+    public function __construct($what, ...$with)
+    {
+        $this->conceiveItem = $what;
+        $this->conceiveWith = $with;
+    }
+
+    public function isSupported()
+    {
+        return $this->
+    }
 
     /**
      * @param string|object $what
@@ -27,7 +46,7 @@ final class ClassInstantiator
      *
      * @return object
      */
-    final public static function instantiate($what, ...$constructorArguments)
+    final public static function Incepter($what, ...$constructorArguments)
     {
         $classFqn = static::getQualifiedClassName($what);
 
@@ -45,11 +64,11 @@ final class ClassInstantiator
      */
     final private static function getQualifiedClassName($what)
     {
-        if (ClassInspect::isClass($what)) {
+        if (ClassInfo::isClass($what)) {
             return $what;
         }
 
-        return ClassInspect::getNameQualified($what);
+        return ClassInfo::getNameQualified($what);
     }
 
     /**
@@ -60,7 +79,7 @@ final class ClassInstantiator
      */
     final private static function buildAndCache($classFqn, ...$constructorArguments)
     {
-        $reflectionClass = ClassInspect::getReflection($classFqn);
+        $reflectionClass = ClassInfo::getReflection($classFqn);
 
         if (!static::isInstantiable($reflectionClass)) {
             throw new \InvalidArgumentException(sprintf('Class "%s" is not instantiable.', $classFqn));

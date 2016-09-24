@@ -1,52 +1,56 @@
 {
-  "name"        : "src-run/augustus-utility-library",
-  "license"     : "MIT",
-  "type"        : "library",
-  "homepage"    : "https://src.run/augustus-utility-library",
-  "description" : "collection of utility objects for strings, arrays, classes, etc",
-  "support" : {
-    "email"  : "rmf@src.run",
-    "source" : "https://src.run/augustus-utility-library/git",
-    "issues" : "https://src.run/augustus-utility-library/issues"
+  "name": "src-run/augustus-utility-library",
+  "license": "MIT",
+  "type": "library",
+  "homepage": "https://src.run/augustus-utility-library",
+  "description": "A simple collection of utilities for strings, arrays, objects, and more",
+  "support": {
+    "email": "rmf@src.run",
+    "source": "https://src.run/augustus-utility-library/git",
+    "issues": "https://src.run/augustus-utility-library/issues"
   },
-  "keywords" : [
+  "keywords": [
     "augustus-utility-library", "augustus", "utility", "library", "rmf", "src-run"
   ],
-  "authors" : [
+  "authors": [
     {
-      "name"     : "Rob Frawley 2nd",
-      "email"    : "rmf@src.run",
-      "homepage" : "https://src.run/rmf",
-      "role"     : "Project Lead"
+      "name": "Rob Frawley 2nd",
+      "email": "rmf@src.run",
+      "homepage": "https://src.run/rmf",
+      "role": "Project Lead"
     }
   ],
-  "require" : {
-    "php"                               : "^5.6||^7.0",
-    "src-run/augustus-polyfill-library" : "^0.6"
+  "require": {
+    "php": "~5.6 || ~7.0",
+    "src-run/augustus-silencer-library": "~0.6 || ~0.7",
+    "src-run/augustus-polyfill-library": "~0.6 || ~0.7"
   },
-  "require-dev" : {
-    "phpunit/phpunit"        : "^5.0",
-    "codacy/coverage"        : "^1.0",
-    "satooshi/php-coveralls" : "^1.0"
+  "require-dev": {
+    "codacy/coverage": "~1.0",
+    "friendsofphp/php-cs-fixer": "~2.0",
+    "phpunit/phpunit": "~5.4",
+    "satooshi/php-coveralls": "~1.0",
+    "sllh/php-cs-fixer-styleci-bridge": "~2.1"
   },
-  "autoload" : {
-    "psr-4" : {
-      "SR\\Utility\\" : "lib/"
+  "autoload": {
+    "psr-4": {
+      "SR\\Util\\": "lib/"
     }
   },
-  "autoload-dev" : {
-    "psr-4" : {
-      "SR\\Utility\\Tests\\" : "tests/"
+  "autoload-dev": {
+    "psr-4": {
+      "SR\\Test\\": "tests/"
     }
   },
-  "minimum-stability" : "dev",
-  "prefer-stable"     : true,
-  "config" : {
-    "bin-dir" : "bin"
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "bin-dir": "bin",
+    "sort-packages": true
   },
-  "extra" : {
-    "branch-alias" : {
-      "dev-master" : "0.6-dev"
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.7-dev"
     }
   }
 }

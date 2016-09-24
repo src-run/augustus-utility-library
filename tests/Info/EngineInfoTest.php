@@ -4,20 +4,17 @@
  * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
- * (c) Scribe Inc      <scr@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace SR\Utility\Tests;
+namespace SR\Test\Info;
 
-use SR\Utility\EngineInspect;
+use SR\Info\EngineInfo;
+use SR\Test\AbstractTest;
 
-/**
- * Class EngineInspectTest.
- */
-class EngineInspectTest extends AbstractTest
+class EngineInfoTest extends AbstractTest
 {
     public static $fixtureData = [
         'mysqli',
@@ -29,7 +26,7 @@ class EngineInspectTest extends AbstractTest
     public function testLoaded()
     {
         $assertions = [
-            'EngineInspect::extensionLoaded' => [
+            'EngineInfo::extensionLoaded' => [
                 [true],
                 [false],
                 [true],
@@ -42,8 +39,6 @@ class EngineInspectTest extends AbstractTest
         $this->expectException('\InvalidArgumentException');
         $this->expectExceptionMessage('No extensions provided for loaded check');
 
-        EngineInspect::extensionLoaded();
+        EngineInfo::extensionLoaded();
     }
 }
-
-/* EOF */

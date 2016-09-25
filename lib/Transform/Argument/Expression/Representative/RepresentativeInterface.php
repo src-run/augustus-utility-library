@@ -33,21 +33,6 @@ interface RepresentativeInterface
      * @return RepresentativeInterface
      */
     public function addSelectors(ArchetypeInterface ...$selectors) : RepresentativeInterface;
-
-    /**
-     * @param string $value
-     *
-     * @return RepresentativeInterface
-     */
-    public function addCharacterSelector(string $value) : RepresentativeInterface;
-
-    /**
-     * @param string $value
-     * @param bool   $negative
-     *
-     * @return RepresentativeInterface
-     */
-    public function addRangeSelector(string $value, bool $negative = false) : RepresentativeInterface;
 }
 
 /* EOF */

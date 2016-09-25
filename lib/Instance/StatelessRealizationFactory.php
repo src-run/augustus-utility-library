@@ -13,7 +13,7 @@ namespace SR\Util\Instance;
 
 use SR\Util\Info\ClassInfo;
 
-final class StatelessRealizerFactory extends AbstractRealizationFactory
+final class StatelessRealizationFactory extends AbstractRealizationFactory
 {
     /**
      * @var object[]

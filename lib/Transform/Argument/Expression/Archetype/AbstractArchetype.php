@@ -34,7 +34,7 @@ abstract class AbstractArchetype implements ArchetypeInterface
      */
     public function get() : string
     {
-        return null === $this->value ? '' : $this->value;
+        return empty($this->value) ? '' : $this->value;
     }
 
     /**

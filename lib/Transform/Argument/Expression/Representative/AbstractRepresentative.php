@@ -86,27 +86,6 @@ abstract class AbstractRepresentative implements RepresentativeInterface
     }
 
     /**
-     * @param string $value
-     *
-     * @return RepresentativeInterface
-     */
-    public function addCharacterSelector(string $value) : RepresentativeInterface
-    {
-        return $this->add(new StringArchetype($value));
-    }
-
-    /**
-     * @param string $value
-     * @param bool   $negative
-     *
-     * @return RepresentativeInterface
-     */
-    public function addRangeSelector(string $value, bool $negative = false) : RepresentativeInterface
-    {
-        return $this->add(new RangedArchetype($value, $negative));
-    }
-
-    /**
      * @param bool $enabled
      *
      * @return RepresentativeInterface
@@ -124,22 +103,6 @@ abstract class AbstractRepresentative implements RepresentativeInterface
     public function isCaseSensitive() : bool
     {
         return $this->caseSensitivity;
-    }
-
-    /**
-     * @return RepresentativeInterface
-     */
-    public function enableCaseSensitivity() : RepresentativeInterface
-    {
-        return $this->setCaseSentitivity(true);
-    }
-
-    /**
-     * @return RepresentativeInterface
-     */
-    public function disableCaseSensitivity() : RepresentativeInterface
-    {
-        return $this->setCaseSentitivity(false);
     }
 
     /**

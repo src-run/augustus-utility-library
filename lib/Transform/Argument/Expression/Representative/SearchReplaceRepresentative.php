@@ -29,10 +29,6 @@ class SearchReplaceRepresentative extends SearchRepresentative
     {
         parent::__construct(...$selectors);
 
-        if (null === $replacement) {
-            throw new \InvalidArgumentException('A replacement string must be provided as the first argument.');
-        }
-
         $this->setReplacement($replacement);
     }
 

@@ -12,8 +12,6 @@
 namespace SR\Util\Transform\Argument\Expression\Representative;
 
 use SR\Util\Transform\Argument\Expression\Archetype\ArchetypeInterface;
-use SR\Util\Transform\Argument\Expression\Archetype\RangedArchetype;
-use SR\Util\Transform\Argument\Expression\Archetype\StringArchetype;
 
 abstract class AbstractRepresentative implements RepresentativeInterface
 {

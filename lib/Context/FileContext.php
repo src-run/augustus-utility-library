@@ -284,8 +284,9 @@ class FileContext implements FileContextInterface
      */
     private function initContextReflectionMethod() : FileContext
     {
-        $search = array_filter($this->class->getMethods(), function (\ReflectionMethod $m) {
-            return $m->getStartLine() <= $this->line && $this->line <= $m->getEndLine();
+        $search = array_filter($this->class->getMethods(), function (\ReflectionMethod $method) {
+            return $method->getDeclaringClass()->getName() === $this->class->getName() &&
+                $method->getStartLine() <= $this->line && $this->line <= $method->getEndLine();
         });
 
         if (count($search) === 1) {

@@ -11,7 +11,7 @@
 
 namespace SR\Util\Transform\Argument\Expression\Archetype;
 
-use SR\Silencer\CallSilencer;
+use SR\Silencer\CallSilencerFactory;
 
 abstract class AbstractArchetype implements ArchetypeInterface
 {
@@ -54,15 +54,13 @@ abstract class AbstractArchetype implements ArchetypeInterface
             return false;
         }
 
-        return CallSilencer::create(
-            function () {
-                return preg_match(sprintf('{%s}', $this->get()), null);
-            },
-            function ($result) {
-                return $result !== false;
-            })
-            ->invoke()
-            ->isResultValid();
+        $return = CallSilencerFactory::create(function () {
+            return preg_match(sprintf('{%s}', $this->get()), null);
+        })->setValidator(function ($result) {
+            return $result !== false;
+        })->invoke();
+
+        return $return->isValid();
     }
 }
 

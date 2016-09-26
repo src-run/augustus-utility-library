@@ -11,7 +11,7 @@
 
 namespace SR\Util\Context;
 
-use SR\Silencer\CallSilencer;
+use SR\Silencer\CallSilencerFactory;
 
 /**
  * Get file context based on a file path and line number.
@@ -255,12 +255,12 @@ class FileContext implements FileContextInterface
      */
     private function initContextContents() : FileContext
     {
-        $silencer = CallSilencer::create(function () {
+        $return = CallSilencerFactory::create(function () {
             return @file_get_contents($this->file);
         })->invoke();
 
-        if (!$silencer->isResultFalse()) {
-            $this->contents = explode(PHP_EOL, $silencer->getResult());
+        if (!$return->isFalse()) {
+            $this->contents = explode(PHP_EOL, $return->getReturn());
         }
 
         return $this;

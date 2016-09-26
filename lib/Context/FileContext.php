@@ -109,7 +109,7 @@ class FileContext implements FileContextInterface
      */
     public function getFileContext(int $surroundingLines = 3) : array
     {
-        return $this->init()->createFileLineSnippet($surroundingLines);
+        return $this->init()->createFileContextSnippet($surroundingLines);
     }
 
     /**
@@ -201,17 +201,15 @@ class FileContext implements FileContextInterface
     }
 
     /**
-     * @param int $surroundingLines
+     * @param int $lines
      *
      * @return string[]
      */
-    private function createFileLineSnippet(int $surroundingLines) : array
+    private function createFileContextSnippet(int $lines) : array
     {
         $diff = [];
-        $min = $this->line - $surroundingLines - 1;
-        $max = $this->line + $surroundingLines;
 
-        for ($i = $min; $i < $max; ++$i) {
+        for ($i = $this->line - $lines - 1; $i < $this->line + $lines; ++$i) {
             if (isset($this->contents[$i])) {
                 $diff[] = $this->contents[$i];
             }

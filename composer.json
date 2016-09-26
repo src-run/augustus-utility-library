@@ -9,9 +9,7 @@
     "source": "https://src.run/augustus-utility-library/git",
     "issues": "https://src.run/augustus-utility-library/issues"
   },
-  "keywords": [
-    "augustus-utility-library", "augustus", "utility", "library", "rmf", "src-run"
-  ],
+  "keywords": [ "augustus-utility-library", "augustus", "utility", "library", "rmf", "src-run" ],
   "authors": [
     {
       "name": "Rob Frawley 2nd",

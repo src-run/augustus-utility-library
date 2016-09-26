@@ -280,7 +280,7 @@ class FileContext implements FileContextInterface
 
         return $this;
     }
-    
+
     /**
      * @return FileContext
      */

@@ -131,4 +131,14 @@ class FileContextTest extends \PHPUnit_Framework_TestCase
 
         $context->getClass();
     }
+
+    public function testThrowsExceptionOnNotFoundNamespaceOrClass()
+    {
+        $context = $this->instantiateFileContext(__DIR__.'/../Fixture/NoClass.php');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Could not initialize file context');
+
+        $context->getClass();
+    }
 }

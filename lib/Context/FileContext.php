@@ -273,8 +273,13 @@ class FileContext implements FileContextInterface
     {
         $namespace = $this->searchFileForNamespace();
         $className = $this->searchFileForClassName();
+        $qualified = $namespace . '\\' . $className;
 
-        $this->class = new \ReflectionClass($namespace.'\\'.$className);
+        if (empty($className) || (!class_exists($qualified) && !trait_exists($qualified) && !interface_exists($qualified))) {
+            throw new \RuntimeException(sprintf('Could not find class "%s"', $qualified));
+        }
+
+        $this->class = new \ReflectionClass($qualified);
 
         return $this;
     }

@@ -88,8 +88,8 @@ class ClassInfoTest extends \PHPUnit_Framework_TestCase
         $classReflection = ClassInfo::getReflection(__CLASS__);
         $this->assertTrue($classReflection instanceof \ReflectionClass);
 
-        $invalidReflection = ClassInfo::getReflection('Invalud\Path\To\A\Namespaced\Class\Id\Really\Hope');
-        $this->assertNull($invalidReflection);
+        $this->expectException(\InvalidArgumentException::class);
+        ClassInfo::getReflection('Invalud\Path\To\A\Namespaced\Class\Id\Really\Hope');
     }
 
     public function testThrowableEquitable()

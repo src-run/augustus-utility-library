@@ -202,7 +202,7 @@ final class ClassInfo
             return new \ReflectionObject($for);
         }
 
-        return null;
+        throw new \InvalidArgumentException(sprintf('Could not create reflection object for "%s"', var_export($for, true)));
     }
 
     /**

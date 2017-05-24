@@ -13,9 +13,6 @@ enabled:
   - php_unit_strict
   - short_array_syntax
 
-disabled:
-  - simplified_null_return
-
 finder:
   exclude:
     - 'vendor'

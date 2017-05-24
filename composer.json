@@ -25,7 +25,7 @@
   },
   "require-dev": {
     "codacy/coverage": "~1.0",
-    "friendsofphp/php-cs-fixer": "~2.0",
+    "friendsofphp/php-cs-fixer": "~1.0",
     "phpunit/phpunit": "~5.4",
     "satooshi/php-coveralls": "~1.0",
     "sllh/php-cs-fixer-styleci-bridge": "~2.1"

@@ -38,6 +38,11 @@ class StringTransformTest extends AbstractTransformTest
         $this->initRunner(__FUNCTION__);
     }
 
+    public function testToAlphanumericAndSpacesToDashes()
+    {
+        $this->initRunner(__FUNCTION__);
+    }
+
     public function testToAlpha()
     {
         $this->initRunner(__FUNCTION__);

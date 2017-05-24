@@ -132,6 +132,18 @@ data:
       - "abcdEF"
       - "abcdefghijklmnopqrstuvwxyz0123456789"
 
+    toAlphanumericAndSpacesToDashes:
+      - "abcdef01234"
+      - "-"
+      - "abcd-1234"
+      - "-LMNOMQR1"
+      - "jdE030cc"
+      - "The-cow-looked-over-a-hill"
+      - "Sentence-containing-new-lines-and-return-and-other"
+      - "0123"
+      - "abcdEF"
+      - "abcdefghijklmnopqrstuvwxyz0123456789"
+
     spacesToDashes:
       - "abcdef01234"
       - "-----------"

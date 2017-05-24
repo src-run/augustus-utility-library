@@ -93,6 +93,19 @@ final class StringTransform extends AbstractTransform
     }
 
     /**
+     * Perform conversion to alphanumeric and spaces to dashes only.
+     *
+     * @return StringTransform|AbstractTransform
+     */
+    final public function toAlphanumericAndSpacesToDashes()
+    {
+        return $this
+            ->replace(new SearchReplaceRepresentative('-', new StringArchetype('[\s\n]+')))
+            ->toAlphanumericAndDashes()
+            ->replace(new SearchReplaceRepresentative('-', new StringArchetype('[-]+')));
+    }
+
+    /**
      * @return StringTransform|AbstractTransform
      */
     final public function dashesToSpaces()

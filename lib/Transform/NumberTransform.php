@@ -16,15 +16,40 @@ final class NumberTransform extends AbstractTransform
     /**
      * Construct by optionally setting the number to manipulate.
      *
-     * @param int|null $number
+     * @param int|float|null $number
+     * @param bool           $mutable
      */
-    public function __construct($number = null)
+    public function __construct($number = null, bool $mutable = false)
     {
-        if (null === $number) {
-            return;
+        if (null !== $number) {
+            parent::__construct($number, $mutable);
+        } else {
+            $this->setMutable($mutable);
+        }
+    }
+
+    /**
+     * @param int|float $value
+     *
+     * @throws \InvalidArgumentException If a non integer/float is provided.
+     *
+     * @return NumberTransform
+     */
+    public function set($value) : TransformInterface
+    {
+        if (false === static::isConsumable($value)) {
+            throw new \InvalidArgumentException('Value is not an integer or float and could not be coerced to either.');
         }
 
-        parent::__construct($number);
+        return parent::set(static::castToIntegerOrFloat($value));
+    }
+
+    /**
+     * @return int|float
+     */
+    public function get()
+    {
+        return parent::get();
     }
 
     /**
@@ -40,6 +65,14 @@ final class NumberTransform extends AbstractTransform
     }
 
     /**
+     * @return bool
+     */
+    final public function isInteger() : bool
+    {
+        return is_int($this->get());
+    }
+
+    /**
      * Convert number to float.
      *
      * @return NumberTransform|AbstractTransform
@@ -49,6 +82,14 @@ final class NumberTransform extends AbstractTransform
         return $this->apply(function () {
             return (float) $this->get();
         });
+    }
+
+    /**
+     * @return bool
+     */
+    final public function isFloat() : bool
+    {
+        return is_float($this->get());
     }
 
     /**
@@ -109,5 +150,18 @@ final class NumberTransform extends AbstractTransform
         return $this->apply(function () use ($by) {
             return $this->get() / $by;
         });
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return float|int
+     */
+    private static function castToIntegerOrFloat(string $value)
+    {
+        $i = (int) $value;
+        $f = (float) $value;
+
+        return $i == $f ? $i : $f;
     }
 }

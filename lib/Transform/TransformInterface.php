@@ -15,8 +15,17 @@ interface TransformInterface
 {
     /**
      * @param null|mixed $value
+     * @param bool       $mutable
      */
-    public function __construct($value = null);
+    public function __construct($value = null, bool $mutable = false);
+
+    /**
+     * @param null|mixed $value
+     * @param bool       $mutable
+     *
+     * @return static|TransformInterface|StringTransform|NumberTransform
+     */
+    public static function create($value = null, bool $mutable = false);
 
     /**
      * @return mixed
@@ -41,19 +50,44 @@ interface TransformInterface
     public function has() : bool;
 
     /**
+     * @param bool $mutable
+     *
      * @return TransformInterface
      */
-    public function enableMutable() : TransformInterface;
-
-    /**
-     * @return TransformInterface
-     */
-    public function disableMutable() : TransformInterface;
+    public function setMutable(bool $mutable) : TransformInterface;
 
     /**
      * @return bool
      */
     public function isMutable() : bool;
+
+    /**
+     * @param mixed $to
+     *
+     * @return bool
+     */
+    public function isSame($to) : bool;
+
+    /**
+     * @param mixed $to
+     *
+     * @return bool
+     */
+    public function isNotSame($to) : bool;
+
+    /**
+     * @param mixed $to
+     *
+     * @return bool
+     */
+    public function isEqual($to) : bool;
+
+    /**
+     * @param mixed $to
+     *
+     * @return bool
+     */
+    public function isNotEqual($to) : bool;
 
     /**
      * @return TransformInterface
@@ -66,18 +100,6 @@ interface TransformInterface
      * @return TransformInterface
      */
     public function apply(\Closure $closure) : TransformInterface;
-
-    /**
-     * @param int|float $comparison
-     *
-     * @return bool
-     */
-    public function isSame($comparison) : bool;
-
-    /**
-     * @return string[]
-     */
-    public function split() : array;
 }
 
 /* EOF */

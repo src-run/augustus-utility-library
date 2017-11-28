@@ -17,9 +17,9 @@ use SR\Util\Test\AbstractTest;
 class EngineInfoTest extends AbstractTest
 {
     public static $fixtureData = [
-        'mysqli',
+        'PDO',
         'invalid',
-        'mysqli',
+        'PDO',
         'invalid',
     ];
 

@@ -25,14 +25,26 @@ abstract class AbstractTransform implements TransformInterface
 
     /**
      * @param null|mixed $value
+     * @param bool       $mutable
      */
-    public function __construct($value = null)
+    public function __construct($value = null, bool $mutable = false)
     {
-        $this->mutable = false;
+        $this->setMutable($mutable);
 
         if (null !== $value) {
             $this->set($value);
         }
+    }
+
+    /**
+     * @param null|mixed $value
+     * @param bool       $mutable
+     *
+     * @return static|TransformInterface|StringTransform|NumberTransform
+     */
+    public static function create($value = null, bool $mutable = false)
+    {
+        return new static($value, $mutable);
     }
 
     /**
@@ -46,7 +58,7 @@ abstract class AbstractTransform implements TransformInterface
     /**
      * @param mixed $value
      *
-     * @return TransformInterface
+     * @return TransformInterface|StringTransform|NumberTransform
      */
     public function set($value) : TransformInterface
     {
@@ -68,25 +80,17 @@ abstract class AbstractTransform implements TransformInterface
      */
     public function has() : bool
     {
-        return $this->value !== null;
+        return null !== $this->value;
     }
 
     /**
-     * @return TransformInterface
+     * @param bool $mutable
+     *
+     * @return TransformInterface|StringTransform|NumberTransform
      */
-    public function enableMutable() : TransformInterface
+    public function setMutable(bool $mutable) : TransformInterface
     {
-        $this->mutable = true;
-
-        return $this;
-    }
-
-    /**
-     * @return TransformInterface
-     */
-    public function disableMutable() : TransformInterface
-    {
-        $this->mutable = false;
+        $this->mutable = $mutable;
 
         return $this;
     }
@@ -96,11 +100,51 @@ abstract class AbstractTransform implements TransformInterface
      */
     public function isMutable() : bool
     {
-        return $this->mutable === true;
+        return true === $this->mutable;
     }
 
     /**
-     * @return TransformInterface
+     * @param mixed $to
+     *
+     * @return bool
+     */
+    final public function isSame($to) : bool
+    {
+        return $this->get() === $to;
+    }
+
+    /**
+     * @param mixed $to
+     *
+     * @return bool
+     */
+    final public function isNotSame($to) : bool
+    {
+        return false === $this->isSame($to);
+    }
+
+    /**
+     * @param mixed $to
+     *
+     * @return bool
+     */
+    final public function isEqual($to) : bool
+    {
+        return $this->get() == $to;
+    }
+
+    /**
+     * @param mixed $to
+     *
+     * @return bool
+     */
+    final public function isNotEqual($to) : bool
+    {
+        return false === $this->isEqual($to);
+    }
+
+    /**
+     * @return TransformInterface|StringTransform|NumberTransform
      */
     final public function copy() : TransformInterface
     {
@@ -110,63 +154,43 @@ abstract class AbstractTransform implements TransformInterface
     /**
      * @param \Closure $closure
      *
-     * @return AbstractTransform|StringTransform|NumberTransform|TransformInterface
+     * @return TransformInterface|StringTransform|NumberTransform
      */
     final public function apply(\Closure $closure) : TransformInterface
     {
-        return $this->invokeClosure($closure);
+        return $this->returnInstance(
+            $closure->call($bindTo = $this->getWriteContext(), $bindTo)
+        );
     }
 
     /**
-     * @param \Closure $closure
+     * @param TransformInterface|string|int|float $value
      *
+     * @return TransformInterface|StringTransform|NumberTransform
+     */
+    final protected function returnInstance($value) : TransformInterface
+    {
+        return $this->getWriteContext()->set(
+            $value instanceof TransformInterface ? $value->get() : $value
+        );
+    }
+
+    /**
      * @return TransformInterface
      */
-    final protected function invokeClosure(\Closure $closure) : TransformInterface
+    private function getWriteContext() : TransformInterface
     {
-        $bindTo = $this->isMutable() ? $this : clone $this;
-        $result = $closure->call($bindTo, $bindTo);
-
-        return $this->readyResult($result);
+        return $this->isMutable() ? $this : $this->copy();
     }
 
     /**
-     * @param TransformInterface|mixed $value
-     *
-     * @return TransformInterface
-     */
-    final protected function readyResult($value) : TransformInterface
-    {
-        $result = $value instanceof TransformInterface ? $value->get() : $value;
-        $object = $this->isMutable() ? $this : $this->copy();
-
-        return $object->set($result);
-    }
-
-    /**
-     * @param int|float $comparison
+     * @param mixed $value
      *
      * @return bool
      */
-    final public function isSame($comparison) : bool
+    protected static function isConsumable($value) : bool
     {
-        return $this->get() === $comparison;
-    }
-
-    /**
-     * @return string[]
-     */
-    final public function split() : array
-    {
-        $string = $this->__toString();
-        $result = [];
-        $length = mb_strlen($string);
-
-        for ($i = 0; $i < $length; ++$i) {
-            $result[] = mb_substr($string, $i, 1);
-        }
-
-        return (array) $result;
+        return false === is_array($value) && (false === is_object($value) || is_callable([$value, '__toString']));
     }
 }
 

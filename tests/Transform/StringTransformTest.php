@@ -11,123 +11,236 @@
 
 namespace SR\Util\Test\Transform;
 
+use SR\Util\Test\Loader\Model\Package;
+
 class StringTransformTest extends AbstractTransformTest
 {
-    public function setUp()
+    /**
+     * @var string
+     */
+    protected const FIXTURE_FILE = 'fixture_transform-string.yml';
+
+    /**
+     * @return \Generator
+     */
+    public function provideTestMutatorAndAccessorData() : \Generator
     {
-        $this->providerYmlFilePath = __DIR__.'/../Fixture/data-provider_transform-string.yml';
+        yield ['string', 'string'];
+        yield [100, '100'];
+        yield [100.5, '100.5'];
+        yield [(new class {
+            public function __toString() : string
+            {
+                return 'string';
+            }
+        }), 'string'];
     }
 
-    public function testToUpper()
+    /**
+     * @return \Generator
+     */
+    public function provideTestConstructorExceptionOnInvalidValueData() : \Generator
+    {
+        yield [new class {}];
+    }
+
+    /* comparisons */
+
+
+    public function testIsSame(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testToLower()
+    public function testIsNotSame(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testToAlphanumeric()
+    public function testIsEqual(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testToAlphanumericAndDashes()
+    public function testIsNotEqual(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testToAlphanumericAndSpacesToDashes()
+    /* case */
+
+    public function testToUpper(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testToAlpha()
+    public function testToLower(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testToNumeric()
+    public function testToAlphanumeric(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testSpacesToDashes()
+    public function testToAlphanumericAndDashes(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testDashesToSpaces()
+    public function testToAlphanumericAndSpacesToDashes(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testSlugify()
+    public function testToAlpha(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testCamelToSnakeCase()
+    public function testToNumeric(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testCamelToPascalCase()
+    public function testSpacesToDashes(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testPascalToSnakeCase()
+    public function testDashesToSpaces(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testPascalToCamelCase()
+    public function testSlugify(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testSnakeToCamelCase()
+    /* camel case to ... */
+
+    public function testCamelToPascalCase(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testSnakeToPascalCase()
+    public function testCamelToSnakeCase(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testToPhoneNumber()
+    public function testCamelToSpinalCase(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    public function testToPhoneFormat()
+    /* pascal case to ... */
+
+    public function testPascalToCamelCase(): void
     {
         $this->initRunner(__FUNCTION__);
     }
 
-    protected function runnerAssertCustom($iteration, $input, $expect, $args, $target, $method, $instance, $callable)
+    public function testPascalToSnakeCase(): void
     {
-        $instance->set($input);
-        $this->assertTrue($instance->isSame($input));
+        $this->initRunner(__FUNCTION__);
+    }
 
-        $instance2 = $instance->copy();
-        $instance2
-            ->enableMutable()
+    public function testPascalToSpinalCase(): void
+    {
+        $this->initRunner(__FUNCTION__);
+    }
+
+    /* snake case to ... */
+
+    public function testSnakeToCamelCase(): void
+    {
+        $this->initRunner(__FUNCTION__);
+    }
+
+    public function testSnakeToPascalCase(): void
+    {
+        $this->initRunner(__FUNCTION__);
+    }
+
+    public function testSnakeToSpinalCase(): void
+    {
+        $this->initRunner(__FUNCTION__);
+    }
+
+    /* spinal case to ... */
+
+    public function testSpinalToCamelCase(): void
+    {
+        $this->initRunner(__FUNCTION__);
+    }
+
+    public function testSpinalToPascalCase(): void
+    {
+        $this->initRunner(__FUNCTION__);
+    }
+
+    public function testSpinalToSnakeCase(): void
+    {
+        $this->initRunner(__FUNCTION__);
+    }
+
+    /* phone numbers */
+
+    public function testToPhoneNumber(): void
+    {
+        $this->initRunner(__FUNCTION__);
+    }
+
+    public function testToPhoneFormat(): void
+    {
+        $this->initRunner(__FUNCTION__);
+    }
+
+    /**
+     * @param Package  $package
+     * @param int      $iteration
+     * @param mixed    $provided
+     * @param array    $expected
+     * @param array    $arguments
+     * @param string   $method
+     * @param callable $callable
+     *
+     * @return void
+     */
+    protected function runnerAssertCustom(Package $package, int $iteration, $provided, $expected, array $arguments, string $method, callable $callable): void
+    {
+        $this->runnerAssertStringTransform($provided);
+    }
+
+    /**
+     * @param mixed $provided
+     *
+     * @return void
+     */
+    protected function runnerAssertStringTransform($provided): void
+    {
+        $instance = $this->getTargetInstance();
+        $instance->set($provided);
+        $this->assertTrue($instance->isSame($provided));
+
+        $instanceTwo = $instance->copy();
+        $instanceTwo
+            ->setMutable(true)
             ->toUpper()
             ->spacesToDashes()
             ->toLower();
 
-        $instance3 = $instance->spacesToDashes()->toLower();
+        $instanceThree = $instance->spacesToDashes()->toLower();
 
-        $this->assertSame($instance2->get(), $instance3->get());
-        $this->assertTrue($instance2->isMutable());
+        $this->assertSame($instanceTwo->get(), $instanceThree->get());
+        $this->assertTrue($instanceTwo->isMutable());
 
-        $instance2->disableMutable();
+        $instanceTwo->setMutable(false);
 
-        $this->assertFalse($instance2->isMutable());
+        $this->assertFalse($instanceTwo->isMutable());
         $this->assertCount(strlen($instance->get()), $instance->split());
     }
 }

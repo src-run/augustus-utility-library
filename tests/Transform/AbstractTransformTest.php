@@ -12,59 +12,118 @@
 namespace SR\Util\Test\Transform;
 
 use SR\Util\Test\AbstractTest;
+use SR\Util\Test\Loader\FixtureLoader;
+use SR\Util\Test\Loader\Model\Fixture;
+use SR\Util\Test\Loader\Model\Package;
+use SR\Util\Test\Loader\Model\ValueList;
+use SR\Util\Transform\NumberTransform;
+use SR\Util\Transform\StringTransform;
 use SR\Util\Transform\TransformInterface;
 use Symfony\Component\Yaml\Yaml;
 
 abstract class AbstractTransformTest extends AbstractTest
 {
-    protected $providerYmlFilePath;
+    /**
+     * @var string
+     */
+    protected const FIXTURE_FILE = null;
+
+    /**
+     * @var FixtureLoader
+     */
+    protected static $fixtureLoader;
+
+    public static function setUpBeforeClass()
+    {
+        static::$fixtureLoader = new FixtureLoader();
+
+        if (defined('static::FIXTURE_FILE') && null !== $fixtureFile = static::FIXTURE_FILE) {
+            static::$fixtureLoader->load($fixtureFile);
+        }
+    }
+
+    public function testStaticConstruction()
+    {
+        $this->assertInstanceOf(TransformInterface::class, ($this->getTargetReflection()->getName())::create());
+    }
+
+    /**
+     * @dataProvider provideTestMutatorAndAccessorData
+     *
+     * @param mixed     $provided
+     * @param int|float $expected
+     *
+     * @return void
+     */
+    public function testMutatorAndAccessorAndType($provided, $expected)
+    {
+        $this->assertSame($expected, $this->getTargetInstance($provided)->get());
+    }
+
+    abstract function provideTestMutatorAndAccessorData() : \Generator;
+
+    /**
+     * @dataProvider provideTestConstructorExceptionOnInvalidValueData
+     * @expectedException \InvalidArgumentException
+     */
+    public function testConstructorExceptionOnInvalidValue($provided)
+    {
+        $this->getTargetInstance($provided);
+    }
+
+    abstract public function provideTestConstructorExceptionOnInvalidValueData() : \Generator;
+
+    /**
+     * @return Fixture
+     */
+    protected function getFixture() : Fixture
+    {
+        return static::$fixtureLoader->load(static::FIXTURE_FILE);
+    }
+
+    /**
+     * @return \ReflectionClass|null
+     */
+    protected function getTargetReflection() : ?\ReflectionClass
+    {
+        if (0 !== count($target = $this->getFixture()->getTargets())) {
+            return $target[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return object|TransformInterface|NumberTransform|StringTransform
+     */
+    protected function getTargetInstance(...$arguments) : TransformInterface
+    {
+        $target = $this->getTargetReflection()->getName();
+        return new $target(...$arguments);
+    }
 
     /**
      * Load YML data provider/config for test runner.
      *
      * @param string $method
      *
-     * @return mixed[]
+     * @return Package
      */
-    protected function loadYmlData($method)
+    protected function getPackageForMethod(string $method) : Package
     {
-        $method = lcfirst(str_replace('test', '', $method));
-        $config = Yaml::parse(file_get_contents($this->providerYmlFilePath))['data'];
+        $name = lcfirst(str_replace('test', '', $method));
 
-        $target = $config['target'];
+        $package = $this->getFixture()->findPackage($name);
 
-        if (!class_exists($target)) {
-            $this->fail(sprintf('Target class does not exist "%s"', $target));
+        if (!$package->hasProvided() || !$package->hasExpected()) {
+            $this->doFail($name, 'Missing either provided or expected fixture data.');
         }
 
-        $args = isset($config['argument'][$method]) ? $config['argument'][$method] : [];
-        $inputs = isset($config['provided'][$method]) ? $config['provided'][$method] : $config['provided']['global'];
-        $expect = isset($config['expected'][$method]) ? $config['expected'][$method] : null;
-
-        if ($inputs === null || $expect === null || count($inputs) !== count($expect)) {
-            $this->fail(sprintf('Incorrect fixture data for method "%s"', $method));
+        if ($package->getProvided()->count() !== $package->getExpected()->count()) {
+            $this->doFail($name, 'Provided and expected fixture data must contain equal list lengths!');
         }
 
-        return [$target, $method, $args, $expect, $inputs];
-    }
-
-    /**
-     * Instantiate runner target object.
-     *
-     * @param string  $name
-     * @param mixed[] $args
-     *
-     * @return object
-     */
-    protected function instantiateTarget($name, $args = [])
-    {
-        $reflect = new \ReflectionClass($name);
-
-        if (!$reflect->isInstantiable()) {
-            $this->fail(sprintf('Target is not instantiable "%s"', $target));
-        }
-
-        return $reflect->newInstanceArgs($args);
+        return $package;
     }
 
     /**
@@ -74,65 +133,167 @@ abstract class AbstractTransformTest extends AbstractTest
      */
     protected function initRunner($method)
     {
-        list($target, $method, $args, $expect, $inputs) = $this->loadYmlData($method);
-
-        foreach ($inputs as $i => $v) {
-            $this->runnerAssert($i, $v, $expect[$i], isset($args[$i]) ? $args[$i] : [], $target, $method);
+        foreach ($this->getPackageForMethod($method)->each() as $i => list($provided, $expected, $arguments, $name, $package)) {
+            $this->runnerAssert($package, $i, $provided, $expected, $arguments, $name);
         }
     }
 
     /**
      * Perform runner assertion tests.
      *
+     * @param Package $package
      * @param int     $iteration
-     * @param mixed[] $input
-     * @param mixed[] $expect
-     * @param string  $target
+     * @param mixed   $provided
+     * @param mixed   $expected
+     * @param array   $arguments
      * @param string  $method
-     * @param mixed[] $argument
      */
-    protected function runnerAssert($iteration, $input, $expect, $args, $target, $method)
+    protected function runnerAssert(Package $package, int $iteration, $provided, $expected, array $arguments, string $method): void
     {
         $template = sprintf('Set "%d" for "%s" context.', $iteration, $method);
 
-        $this->assertTransformConstruct($target, $input, $template, '1/4');
+        if (is_bool($expected)) {
+            $this->runBooleanCheck($provided, $expected, $arguments, $method);
+            return;
+        }
 
-        $instance = $this->instantiateTarget($target, [$input]);
+        $this->assertTransformConstruct($provided, $template, '1/4');
+        $instance = $this->getTargetInstance($provided);
         $callable = [$instance, $method];
 
-        $this->assertTransform($input, $instance->get(), $template, '2/4');
-        $this->assertTransform($expect, call_user_func_array($callable, $args)->get(), $template, '3/4');
-        $this->assertTransform($expect, call_user_func_array($callable, $args), $template, '3/4');
+        $this->assertTransform($instance, $provided, $instance->get(), $template, '2/4');
+        $this->assertTransform($instance, $expected, call_user_func_array($callable, $arguments), $template, '3/4');
+        $this->assertTransform($instance, $expected, call_user_func_array($callable, $arguments), $template, '3/4');
 
-        $this->runnerAssertCustom($iteration, $input, $expect, $args, $target, $method, $instance, $callable);
+        $this->runnerAssertCustom($package, $iteration, $provided, $expected, $arguments, $method, $callable);
     }
 
-    protected function assertTransformConstruct(string $target, $input, $message, $which)
+    /**
+     * @param $provided
+     * @param $expected
+     * @param $arguments
+     * @param $method
+     *
+     * @return void
+     */
+    protected function runBooleanCheck($provided, $expected, $arguments, $method)
     {
-        $instance = new $target();
+        $inst = $this->getTargetInstance($provided);
+        $call = [$inst, $method];
+        $ret  = call_user_func_array($call, $arguments);
+
+        $this->assertSame($expected, $ret);
+    }
+
+    /**
+     * @param Package  $package
+     * @param int      $iteration
+     * @param mixed    $provided
+     * @param array    $expected
+     * @param array    $arguments
+     * @param string   $method
+     * @param callable $callable
+     *
+     * @return void
+     */
+    protected function runnerAssertCustom(Package $package, int $iteration, $provided, $expected, array $arguments, string $method, callable $callable): void
+    {
+    }
+
+    /**
+     * @param string|int $expected
+     * @param string     $message
+     * @param string     $which
+     *
+     * @return void
+     */
+    protected function assertTransformConstruct($expected, string $message, string $which)
+    {
+        /** @var TransformInterface $instance */
+        $instance = $this->getTargetInstance();
 
         $this->assertFalse($instance->has());
 
-        $instance = new $target($input);
-        $recieved = $instance->get();
+        $instance = $this->getTargetInstance($expected);
+        $received = $instance->get();
+
+        if ($instance instanceof NumberTransform) {
+            $expected = $this->readyComparisonValueForNumberTransformResult($expected);
+            $received = $this->readyComparisonValueForNumberTransformResult($received);
+        }
 
         $this->assertInstanceOf(TransformInterface::class, $instance);
-        $this->assertSame($input, $recieved, $this->equalsMessage($message, $which, $input, $recieved));
+        $this->assertEquals($expected, $received, $this->equalsMessage($message, $which, $expected, $received));
     }
 
-    protected function assertTransform($expected, $recieved, $message, $which)
+    /**
+     * @param string|int $expected
+     * @param string|int $received
+     * @param string     $message
+     * @param string     $which
+     *
+     * @return void
+     */
+    protected function assertTransform($instance, $expected, $received, string $message, string $which): void
     {
-        $message = $this->equalsMessage($message, $which, $expected, $recieved);
+        $message = $this->equalsMessage($message, $which, $expected, $received);
 
-        $this->assertSame((string) $expected, (string) $recieved, $message);
+        if ($received instanceof TransformInterface) {
+            $received = $received->get();
+        }
+
+        if ($instance instanceof NumberTransform) {
+            $expected = $this->readyComparisonValueForNumberTransformResult($expected);
+            $received = $this->readyComparisonValueForNumberTransformResult($received);
+        }
+
+        $this->assertEquals($expected, $received, $message);
     }
 
-    protected function equalsMessage($message, $which, $expected, $recieved)
+    /**
+     * @param string $message
+     * @param string $which
+     * @param string $expected
+     * @param string $received
+     *
+     * @return string
+     */
+    protected function equalsMessage(string $message, string $which, string $expected, string $received): string
     {
-        return sprintf('%s (test %s) [asserting "%s" === "%s"]', $message, $which, $expected, $recieved);
+        return sprintf('%s (test %s) [asserting "%s" === "%s"]', $message, $which, $expected, $received);
     }
 
-    protected function runnerAssertCustom($iteration, $input, $expect, $args, $target, $method, $instance, $callable)
+    /**
+     * @param string|null $context
+     * @param string      $message
+     * @param array       ...$replacements
+     *
+     * @return void
+     */
+    protected function doFail(string $context = null, string $message, ...$replacements): void
     {
+        if (0 !== count($replacements)) {
+            $message = vsprintf($message, $replacements);
+        }
+
+        if (null !== $context) {
+            $message .= sprintf(' ("%s" test case)', $context);
+        }
+
+        $this->fail($message);
+    }
+
+    /**
+     * @param string|float|int $value
+     *
+     * @return float|int
+     */
+    private function readyComparisonValueForNumberTransformResult($value)
+    {
+        $i = $f = $value;
+        settype($i, 'int');
+        settype($f, 'float');
+
+        return $i == $f ? $i : $f;
     }
 }

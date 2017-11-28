@@ -124,7 +124,7 @@ class FileContextTest extends \PHPUnit_Framework_TestCase
 
     public function testThrowsExceptionOnNotFoundClass()
     {
-        $context = $this->instantiateFileContext(__DIR__.'/../Fixture/data-provider_transform-string.yml');
+        $context = $this->instantiateFileContext(__DIR__ . '/../Fixture/data-provider_transform-string.yml');
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Could not initialize file context');

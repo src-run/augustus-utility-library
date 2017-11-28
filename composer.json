@@ -28,17 +28,17 @@
     "friendsofphp/php-cs-fixer": "~1.0",
     "phpunit/phpunit": "~5.4",
     "satooshi/php-coveralls": "~1.0",
-    "sllh/php-cs-fixer-styleci-bridge": "~2.1"
+    "sllh/php-cs-fixer-styleci-bridge": "~2.1",
+    "symfony/var-dumper": "^3.4",
+    "symfony/stopwatch": "^3.4",
+    "symfony/cache": "^3.4"
   },
   "autoload": {
-    "psr-4": {
-      "SR\\Util\\": "lib/"
-    }
+    "psr-4": { "SR\\Util\\": "lib/" }
   },
   "autoload-dev": {
-    "psr-4": {
-      "SR\\Util\\Test\\": "tests/"
-    }
+    "files": [ "tests/Resources/stubs/dump-logged.php" ],
+    "psr-4": { "SR\\Util\\Test\\": "tests/" }
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

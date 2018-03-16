@@ -1,16 +1,16 @@
-api_branch : origin/master
-api_parser : ~
-api_cfgmod : clone
-api_runner : ~
-api_paths  : lib
-env_make   : ~
-env_prep   : get-composer
-env_post   : ci-coveralls,ci-codacy
-php_conf   : timezone
-php_exts   : ~
-app_prep   : dep-composer
-app_post   : ~
-app_path   : ~
-pkg_name   : augustus-utility-library
-pkg_desc   : "A simple collection of utilities for strings, arrays, objects, and more"
-pkg_bndl   : false
+api_branch: origin/master
+api_parser: ~
+api_cfgmod: clone
+api_runner: ~
+api_paths: lib
+env_make: ~
+env_prep: composer-get
+php_conf: timezone
+php_exts: ~
+app_prep: composer-req
+app_post: ~
+env_post: composer-del,ci-coveralls,ci-codacy
+app_path: ~
+pkg_name: augustus-utility-library
+pkg_desc: "A simple collection of utilities for strings, arrays, objects, and more"
+pkg_bndl: false

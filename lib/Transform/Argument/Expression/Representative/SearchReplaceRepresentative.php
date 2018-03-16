@@ -25,7 +25,7 @@ class SearchReplaceRepresentative extends SearchRepresentative
      * @param bool   $caseSensitive
      * @param ArchetypeInterface[] ...$selectors
      */
-    public function __construct($replacement = false, ArchetypeInterface ...$selectors)
+    public function __construct($replacement = '', ArchetypeInterface ...$selectors)
     {
         parent::__construct(...$selectors);
 
@@ -37,7 +37,7 @@ class SearchReplaceRepresentative extends SearchRepresentative
      */
     public function hasReplacement() : bool
     {
-        return $this->replacement !== null && count($this->replacement) > 0;
+        return $this->replacement !== null && strlen($this->replacement) > 0;
     }
 
     /**

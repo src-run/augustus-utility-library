@@ -42,7 +42,7 @@ abstract class AbstractArchetype implements ArchetypeInterface
      */
     public function has() : bool
     {
-        return $this->value !== null && count($this->value) > 0;
+        return $this->value !== null && strlen($this->value) > 0;
     }
 
     /**

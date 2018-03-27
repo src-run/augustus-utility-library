@@ -1,0 +1,339 @@
+<?php
+
+/*
+ * This file is part of the `src-run/augustus-utility-library` project.
+ *
+ * (c) Rob Frawley 2nd <rmf@src.run>
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
+namespace SR\Utilities\Context;
+
+use SR\Silencer\CallSilencerFactory;
+
+/**
+ * Get file context based on a file path and line number.
+ */
+class FileContext implements FileContextInterface
+{
+    /**
+     * @var bool
+     */
+    protected $initialized = false;
+
+    /**
+     * @var \SplFileInfo
+     */
+    protected $file;
+
+    /**
+     * @var string[]
+     */
+    protected $contents;
+
+    /**
+     * @var int
+     */
+    protected $line;
+
+    /**
+     * @var \ReflectionClass
+     */
+    protected $class;
+
+    /**
+     * @var \ReflectionMethod
+     */
+    protected $method;
+
+    /**
+     * Define the context by specifying a file path and line number.
+     *
+     * @param string $file
+     * @param int    $line
+     */
+    public function __construct(string $file, int $line)
+    {
+        $this->file = new \SplFileInfo($file);
+        $this->line = (int) $line;
+    }
+
+    /**
+     * Get the file line number for the defined context.
+     *
+     * @return int
+     */
+    public function getLine() : int
+    {
+        return $this->line;
+    }
+
+    /**
+     * Get a \SplFileInfo instance for the defined context.
+     *
+     * @return \SplFileInfo
+     */
+    public function getFile() : \SplFileInfo
+    {
+        return $this->file;
+    }
+
+    /**
+     * Get the file path name for the defined context.
+     *
+     * @return string
+     */
+    public function getFilePathname() : string
+    {
+        return $this->file->getPathname();
+    }
+
+    /**
+     * Get the file contents for the defined context.
+     *
+     * @return string[]
+     */
+    public function getFileContents() : array
+    {
+        return $this->init()->contents;
+    }
+
+    /**
+     * Get an array of file lines surrounding defined context.
+     *
+     * @param int $surroundingLines
+     *
+     * @return string[]
+     */
+    public function getFileContext(int $surroundingLines = 3) : array
+    {
+        return $this->init()->createFileContextSnippet($surroundingLines);
+    }
+
+    /**
+     * Get the file line content for the defined context.
+     *
+     * @return string
+     */
+    public function getFileContextLine() : string
+    {
+        $line = $this->getFileContext(1);
+
+        return count($line) === 1 ? array_shift($line) : '';
+    }
+
+    /**
+     * Returns the context type (trait, interface, or class).
+     *
+     * @return string
+     */
+    public function getType() : string
+    {
+        if ($this->getClass()->isTrait()) {
+            return 'trait';
+        } elseif ($this->getClass()->isInterface()) {
+            return 'interface';
+        }
+
+        return 'class';
+    }
+
+    /**
+     * Get a \ReflectionClass instance for the defined context.
+     *
+     * @return \ReflectionClass
+     */
+    public function getClass() : \ReflectionClass
+    {
+        return $this->init()->class;
+    }
+
+    /**
+     * Get the class name (as qualified or unqualified) for the defined context.
+     *
+     * @param bool $qualified
+     *
+     * @return string
+     */
+    public function getClassName(bool $qualified = true) : string
+    {
+        return $qualified ? $this->getClass()->getName() : $this->getClass()->getShortName();
+    }
+
+    /**
+     * Returns true if a method exists for this context.
+     *
+     * @return bool
+     */
+    public function hasMethod() : bool
+    {
+        return $this->method !== null;
+    }
+
+    /**
+     * Get the method reflection instance.
+     *
+     * @return \ReflectionMethod
+     */
+    public function getMethod() : \ReflectionMethod
+    {
+        if (null === $method = $this->init()->method) {
+            throw new \RuntimeException('No method exists for context');
+        }
+
+        return $method;
+    }
+
+    /**
+     * Get the method name.
+     *
+     * @param bool $qualified
+     *
+     * @return string
+     */
+    public function getMethodName(bool $qualified = false) : string
+    {
+        $method = $this->getMethod()->getShortName();
+
+        return $qualified ? sprintf('%s::%s', $this->getClassName(true), $method) : $method;
+    }
+
+    /**
+     * @param int $lines
+     *
+     * @return string[]
+     */
+    private function createFileContextSnippet(int $lines) : array
+    {
+        $diff = [];
+
+        for ($i = $this->line - $lines - 1; $i < $this->line + $lines; ++$i) {
+            if (isset($this->contents[$i])) {
+                $diff[] = $this->contents[$i];
+            }
+        }
+
+        return $diff;
+    }
+
+    /**
+     * @throws \RuntimeException
+     *
+     * @return FileContext
+     */
+    private function init() : FileContext
+    {
+        if (true !== $this->initialized) {
+            return $this->initContext();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return FileContext
+     */
+    private function initContext() : FileContext
+    {
+        try {
+            $this->initContextContents();
+            $this->initContextReflectionClass();
+            $this->initContextReflectionMethod();
+        } catch (\RuntimeException $e) {
+            throw new \RuntimeException('Could not initialize file context!', null, $e);
+        }
+
+        $this->initialized = true;
+
+        return $this;
+    }
+
+    /**
+     * @return FileContext
+     */
+    private function initContextContents() : FileContext
+    {
+        $return = CallSilencerFactory::create(function () {
+            return @file_get_contents($this->file);
+        })->invoke();
+
+        if (!$return->isFalse()) {
+            $this->contents = explode(PHP_EOL, $return->getReturn());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return FileContext
+     */
+    private function initContextReflectionClass() : FileContext
+    {
+        $namespace = $this->searchFileForNamespace();
+        $className = $this->searchFileForClassName();
+        $qualified = $namespace.'\\'.$className;
+
+        if (empty($className) || (!class_exists($qualified) && !trait_exists($qualified) && !interface_exists($qualified))) {
+            throw new \RuntimeException(sprintf('Could not find class "%s"', $qualified));
+        }
+
+        $this->class = new \ReflectionClass($qualified);
+
+        return $this;
+    }
+
+    /**
+     * @return FileContext
+     */
+    private function initContextReflectionMethod() : FileContext
+    {
+        $methods = array_filter($this->class->getMethods(), function (\ReflectionMethod $method) {
+            return $method->getDeclaringClass()->getName() === $this->class->getName() &&
+                $method->getStartLine() <= $this->line && $this->line <= $method->getEndLine();
+        });
+
+        if (count($methods) === 1) {
+            $this->method = array_shift($methods);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    private function searchFileForNamespace() : string
+    {
+        return $this->searchFile('^(?:namespace[\s]+)([^\s\n]+);');
+    }
+
+    /**
+     * @return string
+     */
+    private function searchFileForClassName() : string
+    {
+        return $this->searchFile('^(?:abstract|final[\s]+)?(?:class|trait|interface)\s+([^\s\n\{]+)');
+    }
+
+    /**
+     * @param string $regex
+     *
+     * @return string
+     */
+    private function searchFile(string $regex) : string
+    {
+        if (null === $this->contents || count($this->contents) === 0) {
+            return '';
+        }
+
+        if (1 !== @preg_match(sprintf('{%s}mi', $regex), implode(PHP_EOL, $this->contents), $matches)) {
+            return '';
+        }
+
+        return array_pop($matches);
+    }
+}
+
+/* EOF */

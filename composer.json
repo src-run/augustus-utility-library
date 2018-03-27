@@ -3,7 +3,7 @@
   "license": "MIT",
   "type": "library",
   "homepage": "https://src.run/augustus-utility-library",
-  "description": "A simple collection of utilities for strings, arrays, objects, and more",
+  "description": "A simple collection of utilities for strings, arrays, objects, buffering, and more",
   "support": {
     "email": "rmf@src.run",
     "source": "https://src.run/augustus-utility-library/git",
@@ -20,23 +20,31 @@
   ],
   "require": {
     "php": "~7.1",
-    "src-run/augustus-silencer-library": "~0.7",
-    "src-run/augustus-polyfill-library": "~0.7"
+    "src-run/augustus-silencer-library": "~0.8"
   },
   "require-dev": {
     "codacy/coverage": "~1.0",
-    "friendsofphp/php-cs-fixer": "~1.0",
+    "friendsofphp/php-cs-fixer": "~2.0",
     "phpunit/phpunit": "~5.4",
-    "satooshi/php-coveralls": "~1.0",
-    "sllh/php-cs-fixer-styleci-bridge": "~2.1",
-    "symfony/var-dumper": "^3.4"
+    "satooshi/php-coveralls": "~2.0",
+    "symfony/var-dumper": "~3.4 | ~4.0"
   },
   "autoload": {
-    "psr-4": { "SR\\Util\\": "lib/" }
+    "files": [
+      "stubs/bc-aliases.php"
+    ],
+    "psr-4": {
+      "SR\\Interpreter\\": "lib/Interpreter/",
+      "SR\\Output\\Buffered\\": "lib/Output/Buffered/",
+      "SR\\Utilities\\": "lib/Utilities/"
+    }
   },
   "autoload-dev": {
-    "files": [ "tests/Resources/stubs/dump-logged.php" ],
-    "psr-4": { "SR\\Util\\Test\\": "tests/" }
+    "psr-4": {
+      "SR\\Interpreter\\Test\\": "tests/Interpreter/",
+      "SR\\Output\\Buffered\\Test\\": "tests/Output/Buffered/",
+      "SR\\Utilities\\Test\\": "tests/Utilities/"
+    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -46,7 +54,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "0.7-dev"
+      "dev-master": "0.8-dev"
     }
   }
 }

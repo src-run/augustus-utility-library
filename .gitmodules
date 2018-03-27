@@ -1,3 +1,4 @@
 [submodule ".bldr"]
 	path = .bldr
-	url = https://github.com/src-run/usr-src-builder.git
+	url = https://github.com/src-run/usr-src-builder-bash.git
+

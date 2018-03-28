@@ -11,7 +11,7 @@
 
 namespace SR\Utilities;
 
-final class EngineInfo
+final class EngineQuery
 {
     /**
      * @param string[] ...$extensions

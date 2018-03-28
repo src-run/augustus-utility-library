@@ -23,5 +23,5 @@ class ClassInfo
     /**
      * @var string
      */
-    public const REAL_CLASS = \SR\Utilities\ClassInfo::class;
+    public const REAL_CLASS = \SR\Utilities\ClassQuery::class;
 }

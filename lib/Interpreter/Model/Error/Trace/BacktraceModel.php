@@ -15,7 +15,7 @@ use SR\Interpreter\Interpreter;
 use SR\Interpreter\Model\Error\ErrorModel;
 use SR\Interpreter\Model\Error\ReportingModel;
 use SR\Interpreter\Model\Error\Trace\Record\BacktraceRecordModel;
-use SR\Utilities\ClassInfo;
+use SR\Utilities\ClassQuery;
 
 final class BacktraceModel implements \Countable, \IteratorAggregate
 {
@@ -163,8 +163,8 @@ final class BacktraceModel implements \Countable, \IteratorAggregate
      */
     private static function resolveClassFilePath(string $className): ?string
     {
-        return ClassInfo::isClass($className)
-            ? ClassInfo::getReflection($className)->getFileName()
+        return ClassQuery::isClass($className)
+            ? ClassQuery::getReflection($className)->getFileName()
             : null;
     }
 

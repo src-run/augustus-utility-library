@@ -12,9 +12,9 @@
 namespace SR\Utilities\Test;
 
 /**
- * @covers \SR\Utilities\StringInfo
+ * @covers \SR\Utilities\StringQuery
  */
-class StringInfoTest extends AbstractTest
+class StringQueryTest extends AbstractTest
 {
     public static $fixtureData = [
         'abcdef01234',
@@ -28,7 +28,7 @@ class StringInfoTest extends AbstractTest
     public function testSearchPositionLeft()
     {
         $assertions = [
-            'StringInfo::searchPositionFromLeft' => [
+            'StringQuery::searchPositionFromLeft' => [
                 ['bcdef', 1],
                 ['|', null],
                 ['4', 10],
@@ -44,7 +44,7 @@ class StringInfoTest extends AbstractTest
     public function testSearchPositionRight()
     {
         $assertions = [
-            'StringInfo::searchPositionFromRight' => [
+            'StringQuery::searchPositionFromRight' => [
                 ['bcdef', 1],
                 ['|', null],
                 ['4', 10],
@@ -60,7 +60,7 @@ class StringInfoTest extends AbstractTest
     public function testSearchContains()
     {
         $assertions = [
-            'StringInfo::contains' => [
+            'StringQuery::contains' => [
                 ['bcdef', true],
                 ['|', false],
                 ['4', true],

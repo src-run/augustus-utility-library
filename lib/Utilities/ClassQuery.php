@@ -11,7 +11,7 @@
 
 namespace SR\Utilities;
 
-final class ClassInfo
+final class ClassQuery
 {
     /**
      * @param string|mixed|object $for
@@ -191,15 +191,17 @@ final class ClassInfo
      */
     public static function getReflection($for): ?\ReflectionClass
     {
-        if (static::isInstance($for)) {
-            return new \ReflectionObject($for);
-        }
+        try {
+            if (static::isInstance($for)) {
+                return new \ReflectionObject($for);
+            }
 
-        if (static::isClass($for)) {
             return new \ReflectionClass($for);
-        }
+        } catch (\ReflectionException $e) {}
 
-        throw new \InvalidArgumentException(sprintf('Could not create reflection object for "%s"', @print_r($for, true)));
+        throw new \InvalidArgumentException(sprintf(
+            'Could not create reflection object for "%s"', @print_r($for, true)
+        ), 0, $e ?? null);
     }
 
     /**
@@ -210,15 +212,82 @@ final class ClassInfo
     public static function isThrowableEquitable($class): bool
     {
         if (static::isInstance($class)) {
-            return $class instanceof \Throwable || $class instanceof \Error || $class instanceof \Exception;
+            return $class instanceof \Throwable
+                || $class instanceof \Error
+                || $class instanceof \Exception;
         }
 
         if (static::isClass($class)) {
             $reflection = static::getReflection($class);
 
-            return $reflection->isSubclassOf('\Throwable') || $reflection->isSubclassOf('\Error') || $reflection->isSubclassOf('\Exception');
+            return $reflection->isSubclassOf('\Throwable')
+                || $reflection->isSubclassOf('\Error')
+                || $reflection->isSubclassOf('\Exception');
         }
 
         return false;
+    }
+
+    /**
+     * @param string        $method
+     * @param object|string $from
+     *
+     * @return \ReflectionMethod
+     */
+    public static function getNonAccessibleMethodReflection(string $method, $from): \ReflectionMethod
+    {
+        ($method = static::getReflection($from)->getMethod($method))
+            ->setAccessible(true);
+
+        return $method;
+    }
+
+    /**
+     * @param string        $method
+     * @param object|string $from
+     * @param array         ...$arguments
+     *
+     * @return mixed
+     */
+    public static function getNonAccessibleMethodInvokeReturn(string $method, $from, ...$arguments)
+    {
+        return static::getNonAccessibleMethodReflection($method, $from)->invokeArgs($from, $arguments);
+    }
+
+    /**
+     * @param string        $property
+     * @param object|string $from
+     *
+     * @return \ReflectionProperty
+     */
+    public static function getNonAccessiblePropertyReflection(string $property, $from): \ReflectionProperty
+    {
+        ($property = static::getReflection($from)->getProperty($property))
+            ->setAccessible(true);
+
+        return $property;
+    }
+
+    /**
+     * @param string        $property
+     * @param object|string $from
+     *
+     * @return mixed
+     */
+    public static function getNonAccessiblePropertyValue(string $property, $from)
+    {
+        return static::getNonAccessiblePropertyReflection($property, $from)->getValue($from);
+    }
+
+    /**
+     * @param string        $property
+     * @param object|string $from
+     * @param mixed         $value
+     *
+     * @return void
+     */
+    public static function setNonAccessiblePropertyValue(string $property, $from, $value): void
+    {
+        static::getNonAccessiblePropertyReflection($property, $from)->setValue($from, $value);
     }
 }

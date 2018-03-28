@@ -42,7 +42,8 @@
     "psr-4": {
       "SR\\Interpreter\\Test\\": "tests/Interpreter/",
       "SR\\Output\\Buffered\\Test\\": "tests/Output/Buffered/",
-      "SR\\Utilities\\Test\\": "tests/Utilities/"
+      "SR\\Utilities\\Test\\": "tests/Utilities/",
+      "SR\\Utilities\\Test\\Resources\\Fixtures\\": "tests/Resources/Fixtures/"
     }
   },
   "minimum-stability": "dev",

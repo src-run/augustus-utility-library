@@ -1,0 +1,170 @@
+<?php
+
+/*
+ * This file is part of the `src-run/augustus-utility-library` project.
+ *
+ * (c) Rob Frawley 2nd <rmf@src.run>
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
+namespace SR\Utilities\Test;
+
+use PHPUnit\Framework\TestCase;
+use SR\Utilities\ClassQuery;
+use SR\Utilities\Test\Fixture\FixtureInterface;
+use SR\Utilities\Test\Fixture\FixtureTrait;
+use SR\Utilities\Test\Fixture\IsInstanceOfThrowableFixture;
+use SR\Utilities\Test\Fixture\NotInstanceOfThrowableFixture;
+use SR\Utilities\Test\Resources\Fixtures\ClassFixture;
+
+/**
+ * @covers \SR\Utilities\ClassQuery
+ */
+class ClassQueryTest extends TestCase
+{
+    public function testGetInformation()
+    {
+        $instance = new ClassQuery();
+
+        static::assertSame(__CLASS__, ClassQuery::getName(__CLASS__));
+        static::assertSame(get_class($instance), ClassQuery::getName($instance));
+
+        static::assertSame('ClassQueryTest', ClassQuery::getNameShort(__CLASS__));
+        static::assertSame('ClassQuery', ClassQuery::getNameShort($instance));
+
+        static::assertSame(__NAMESPACE__, ClassQuery::getNamespace(__CLASS__));
+        static::assertSame('SR\Utilities', ClassQuery::getNamespace($instance));
+
+        static::assertSame(explode('\\', __NAMESPACE__), ClassQuery::getNamespaceArray(__CLASS__));
+        static::assertSame(explode('\\', 'SR\Utilities'), ClassQuery::getNamespaceArray($instance));
+    }
+
+    public function testClassTester()
+    {
+        $instance = new ClassQuery();
+
+        static::assertTrue(ClassQuery::assertClass(__CLASS__));
+        static::assertTrue(ClassQuery::isClass(__CLASS__));
+        static::assertFalse(ClassQuery::isClass($instance));
+
+        $this->expectException(\InvalidArgumentException::class);
+        ClassQuery::assertClass($instance);
+    }
+
+    public function testInstanceTester()
+    {
+        $instance = new ClassQuery();
+
+        static::assertTrue(ClassQuery::assertInstance($instance));
+        static::assertTrue(ClassQuery::isInstance($instance));
+        static::assertFalse(ClassQuery::isInstance(__CLASS__));
+
+        $this->expectException(\InvalidArgumentException::class);
+        ClassQuery::assertInstance(__CLASS__);
+    }
+
+    public function testInterfaceTester()
+    {
+        $interface = FixtureInterface::class;
+
+        static::assertTrue(ClassQuery::assertInterface($interface));
+        static::assertTrue(ClassQuery::isInterface($interface));
+        static::assertFalse(ClassQuery::isInterface(__CLASS__));
+
+        $this->expectException(\InvalidArgumentException::class);
+        ClassQuery::assertInterface(__CLASS__);
+    }
+
+    public function testTraitTester()
+    {
+        $trait = FixtureTrait::class;
+
+        static::assertTrue(ClassQuery::assertTrait($trait));
+        static::assertTrue(ClassQuery::isTrait($trait));
+        static::assertFalse(ClassQuery::isTrait(__CLASS__));
+
+        $this->expectException(\InvalidArgumentException::class);
+        ClassQuery::assertTrait(__CLASS__);
+    }
+
+    public function testNewClassReflection()
+    {
+        $instanceReflection = ClassQuery::getReflection(new ClassQuery());
+        $this->assertTrue($instanceReflection instanceof \ReflectionObject);
+
+        $classReflection = ClassQuery::getReflection(__CLASS__);
+        $this->assertTrue($classReflection instanceof \ReflectionClass);
+
+        $this->expectException(\InvalidArgumentException::class);
+        ClassQuery::getReflection('Invalud\Path\To\A\Namespaced\Class\Id\Really\Hope');
+    }
+
+    public function testThrowableEquitable()
+    {
+        $class = IsInstanceOfThrowableFixture::class;
+        $instance = new $class();
+        $this->assertTrue(ClassQuery::isThrowableEquitable($class));
+        $this->assertTrue(ClassQuery::isThrowableEquitable($instance));
+
+        $class = NotInstanceOfThrowableFixture::class;
+        $instance = new $class();
+        $this->assertFalse(ClassQuery::isThrowableEquitable($class));
+        $this->assertFalse(ClassQuery::isThrowableEquitable($instance));
+
+        $this->assertFalse(ClassQuery::isThrowableEquitable(__NAMESPACE__.'\This\Class\Does\Not\Exist'));
+    }
+
+    public function testNonAccessibleMethodAndPropertyAccess()
+    {
+        $classFixture = new ClassFixture();
+
+        $protectedProperty = ClassQuery::getNonAccessiblePropertyReflection('protectedProperty', $classFixture);
+        $privateProperty = ClassQuery::getNonAccessiblePropertyReflection('privateProperty', $classFixture);
+        $protectedMethod = ClassQuery::getNonAccessibleMethodReflection('getProtectedProperty', $classFixture);
+        $privateMethod = ClassQuery::getNonAccessibleMethodReflection('getPrivateProperty', $classFixture);
+
+        $this->assertInstanceOf(\ReflectionProperty::class, $protectedProperty);
+        $this->assertInstanceOf(\ReflectionProperty::class, $privateProperty);
+        $this->assertInstanceOf(\ReflectionMethod::class, $protectedMethod);
+        $this->assertInstanceOf(\ReflectionMethod::class, $privateMethod);
+
+        $this->assertSame(
+            $protectedProperty->getValue($classFixture),
+            $protectedPropVal = ClassQuery::getNonAccessiblePropertyValue('protectedProperty', $classFixture)
+        );
+        $this->assertSame(
+            $privateProperty->getValue($classFixture),
+            $privatePropVal = ClassQuery::getNonAccessiblePropertyValue('privateProperty', $classFixture)
+        );
+        $this->assertSame(
+            $protectedMethod->invoke($classFixture),
+            ClassQuery::getNonAccessibleMethodInvokeReturn('getProtectedProperty', $classFixture)
+        );
+        $this->assertSame(
+            $privateMethod->invoke($classFixture),
+            ClassQuery::getNonAccessibleMethodInvokeReturn('getPrivateProperty', $classFixture)
+        );
+
+        ClassQuery::setNonAccessiblePropertyValue('protectedProperty', $classFixture, 'foo');
+        ClassQuery::setNonAccessiblePropertyValue('privateProperty', $classFixture, 'bar');
+
+        $this->assertNotSame(
+            $protectedPropVal,
+            ClassQuery::getNonAccessiblePropertyValue('protectedProperty', $classFixture)
+        );
+        $this->assertSame(
+            'foo',
+            ClassQuery::getNonAccessiblePropertyValue('protectedProperty', $classFixture)
+        );
+        $this->assertNotSame(
+            $privatePropVal,
+            ClassQuery::getNonAccessiblePropertyValue('privateProperty', $classFixture)
+        );
+        $this->assertSame(
+            'bar',
+            ClassQuery::getNonAccessiblePropertyValue('privateProperty', $classFixture)
+        );
+    }
+}

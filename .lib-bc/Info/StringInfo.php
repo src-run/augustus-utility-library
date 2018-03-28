@@ -23,5 +23,5 @@ class StringInfo
     /**
      * @var string
      */
-    public const REAL_CLASS = \SR\Utilities\StringInfo::class;
+    public const REAL_CLASS = \SR\Utilities\StringQuery::class;
 }

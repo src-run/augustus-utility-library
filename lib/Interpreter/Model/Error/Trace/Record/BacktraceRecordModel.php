@@ -11,7 +11,7 @@
 
 namespace SR\Interpreter\Model\Error\Trace\Record;
 
-use SR\Utilities\ClassInfo;
+use SR\Utilities\ClassQuery;
 
 final class BacktraceRecordModel
 {
@@ -437,12 +437,12 @@ final class BacktraceRecordModel
      */
     private static function extractBacktraceNameReflection($object = null, string $class = null): ?\ReflectionClass
     {
-        if (ClassInfo::isInstance($object)) {
-            return ClassInfo::getReflection($object);
+        if (ClassQuery::isInstance($object)) {
+            return ClassQuery::getReflection($object);
         }
 
-        if (ClassInfo::isClass($class)) {
-            return ClassInfo::getReflection($class);
+        if (ClassQuery::isClass($class)) {
+            return ClassQuery::getReflection($class);
         }
 
         return null;

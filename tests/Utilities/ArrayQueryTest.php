@@ -11,36 +11,29 @@
 
 namespace SR\Utilities\Test;
 
-use SR\Utilities\EngineInfo;
-
 /**
- * @covers \SR\Utilities\EngineInfo
+ * @covers \SR\Utilities\ArrayQuery
  */
-class EngineInfoTest extends AbstractTest
+class ArrayQueryTest extends AbstractTest
 {
     public static $fixtureData = [
-        'PDO',
-        'invalid',
-        'PDO',
-        'invalid',
+        ['one', 'two', 'three'],
+        ['o' => 'one', 't' => 'two', 'h' => 'three'],
+        ['one', 'two', 'three-index' => 'three'],
+        [],
     ];
 
-    public function testLoaded()
+    public function testIsAssociative()
     {
         $assertions = [
-            'EngineInfo::extensionLoaded' => [
-                [true],
+            'ArrayQuery::isAssociative' => [
                 [false],
                 [true],
-                [false],
+                [true],
+                [null],
             ],
         ];
 
         $this->runThroughAssertions($assertions);
-
-        $this->expectException('\InvalidArgumentException');
-        $this->expectExceptionMessage('No extensions provided for loaded check');
-
-        EngineInfo::extensionLoaded();
     }
 }

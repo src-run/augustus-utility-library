@@ -11,7 +11,7 @@
 
 namespace SR\Utilities;
 
-final class StringInfo
+final class StringQuery
 {
     /**
      * @param string $string

@@ -23,5 +23,5 @@ class ArrayInfo
     /**
      * @var string
      */
-    public const REAL_CLASS = \SR\Utilities\ArrayInfo::class;
+    public const REAL_CLASS = \SR\Utilities\ArrayQuery::class;
 }

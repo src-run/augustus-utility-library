@@ -23,5 +23,5 @@ class EngineInfo
     /**
      * @var string
      */
-    public const REAL_CLASS = \SR\Utilities\EngineInfo::class;
+    public const REAL_CLASS = \SR\Utilities\EngineQuery::class;
 }

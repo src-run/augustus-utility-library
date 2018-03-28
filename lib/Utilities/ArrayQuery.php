@@ -11,7 +11,7 @@
 
 namespace SR\Utilities;
 
-final class ArrayInfo
+final class ArrayQuery
 {
     /**
      * @param mixed[] $array

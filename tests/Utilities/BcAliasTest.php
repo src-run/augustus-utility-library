@@ -30,10 +30,10 @@ class BcAliasTest extends TestCase
             [\SR\Utilities\Transform\NumberTransform::class, '\SR\Util\Transform\NumberTransform'],
             [\SR\Utilities\Transform\StringTransform::class, '\SR\Util\Transform\StringTransform'],
             [\SR\Utilities\Transform\TransformInterface::class, '\SR\Util\Transform\TransformInterface'],
-            [\SR\Utilities\ArrayInfo::class, '\SR\Util\Info\ArrayInfo'],
-            [\SR\Utilities\ClassInfo::class, '\SR\Util\Info\ClassInfo'],
-            [\SR\Utilities\EngineInfo::class, '\SR\Util\Info\EngineInfo'],
-            [\SR\Utilities\StringInfo::class, '\SR\Util\Info\StringInfo'],
+            [\SR\Utilities\ArrayQuery::class, '\SR\Util\Info\ArrayInfo'],
+            [\SR\Utilities\ClassQuery::class, '\SR\Util\Info\ClassInfo'],
+            [\SR\Utilities\EngineQuery::class, '\SR\Util\Info\EngineInfo'],
+            [\SR\Utilities\StringQuery::class, '\SR\Util\Info\StringInfo'],
             [\SR\Utilities\Context\FileContext::class, '\SR\Util\Context\FileContext'],
             [\SR\Utilities\Context\FileContextInterface::class, '\SR\Util\Context\FileContextInterface'],
         ];
@@ -70,7 +70,7 @@ class BcAliasTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Calling "SR\Util\Info\ArrayInfo" is deprecated and has been replaced with "SR\Utilities\ArrayInfo".
+     * @expectedDeprecation Calling "SR\Util\Info\ArrayInfo" is deprecated and has been replaced with "SR\Utilities\ArrayQuery".
      */
     public function testStaticDeprecationMessage()
     {

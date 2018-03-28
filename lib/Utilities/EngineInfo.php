@@ -18,9 +18,9 @@ final class EngineInfo
      *
      * @return bool
      */
-    final public static function extensionLoaded(string ...$extensions): bool
+    public static function extensionLoaded(string ...$extensions): bool
     {
-        if (count($extensions) === 0) {
+        if (0 === count($extensions)) {
             throw new \InvalidArgumentException('No extensions provided for loaded check');
         }
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the `src-run/augustus-silencer-library` project.
+ * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
  *
@@ -10,6 +10,8 @@
  */
 
 namespace SR\Interpreter\Model\Error\Trace\Record;
+
+use SR\Utilities\ClassInfo;
 
 final class BacktraceRecordModel
 {
@@ -68,10 +70,10 @@ final class BacktraceRecordModel
      */
     public function __construct(array $record)
     {
-        list(
+        [
             $this->arrayData, $this->line, $this->funcName, $this->funcCallType, $this->arguments, $this->className,
             $this->objectInstance, $this->objectReflection, $this->funcReflection, $this->file,
-        ) = self::extractBacktraceRecordData($record);
+        ] = self::extractBacktraceRecordData($record);
     }
 
     /**
@@ -360,8 +362,6 @@ final class BacktraceRecordModel
             $resolved = $data['file'];
         } elseif (null !== $class) {
             $resolved = $class->getFileName();
-        } elseif (null !== $function) {
-            $resolved = $function->getFileName();
         }
 
         return isset($resolved) ? new \SplFileInfo($resolved) : null;
@@ -437,15 +437,13 @@ final class BacktraceRecordModel
      */
     private static function extractBacktraceNameReflection($object = null, string $class = null): ?\ReflectionClass
     {
-        try {
-            if (null !== $object) {
-                return new \ReflectionObject($object);
-            }
+        if (ClassInfo::isInstance($object)) {
+            return ClassInfo::getReflection($object);
+        }
 
-            if (null !== $class) {
-                return new \ReflectionClass($class);
-            }
-        } catch (\ReflectionException $e) {}
+        if (ClassInfo::isClass($class)) {
+            return ClassInfo::getReflection($class);
+        }
 
         return null;
     }
@@ -462,10 +460,8 @@ final class BacktraceRecordModel
             return $classReflection->getMethod($function);
         }
 
-        try {
-            return new \ReflectionFunction($function);
-        } catch (\ReflectionException $e) {
-            return null;
-        }
+        return null !== $function
+            ? new \ReflectionFunction($function)
+            : null;
     }
 }

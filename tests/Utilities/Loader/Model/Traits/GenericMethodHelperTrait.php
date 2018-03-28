@@ -18,7 +18,7 @@ trait GenericMethodHelperTrait
      *
      * @return bool
      */
-    private static function has($elements) : bool
+    private static function has($elements): bool
     {
         return 0 !== count($elements);
     }
@@ -29,7 +29,7 @@ trait GenericMethodHelperTrait
      *
      * @return \Generator
      */
-    private static function runForEach(array $elements, string $index = null) : \Generator
+    private static function runForEach(array $elements, string $index = null): \Generator
     {
         foreach ($elements as $i => $v) {
             yield (null === $index ? $i : $index) => $v;
@@ -84,7 +84,7 @@ trait GenericMethodHelperTrait
      *
      * @return array
      */
-    private static function matchMultiple(array $elements, \Closure $search, string $name = null) : array
+    private static function matchMultiple(array $elements, \Closure $search, string $name = null): array
     {
         return array_values(array_filter($elements, function ($value, $index) use ($search, $name) {
             return $search($value, $index, $name);

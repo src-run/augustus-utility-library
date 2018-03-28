@@ -16,19 +16,11 @@ use SR\Utilities\Context\FileContext;
 use SR\Utilities\Test\Fixture\FixtureInterface;
 use SR\Utilities\Test\Fixture\FixtureTrait;
 
+/**
+ * @covers \SR\Utilities\Context\FileContext
+ */
 class FileContextTest extends TestCase
 {
-    /**
-     * @param string|null $file
-     * @param int|null    $line
-     *
-     * @return FileContext
-     */
-    protected function instantiateFileContext($file = null, $line = null)
-    {
-        return new FileContext($file ?: __FILE__, $line ?: __LINE__);
-    }
-
     public function testGetLine()
     {
         $context = $this->instantiateFileContext();
@@ -64,11 +56,51 @@ class FileContextTest extends TestCase
 
     public function testGetFileDiff()
     {
+        $reflected = (new \ReflectionObject($this))->getMethod(__FUNCTION__);
+        $linesFile = count(explode(PHP_EOL, file_get_contents($reflected->getFileName())));
+        $linesComp = min($reflected->getStartLine(), $linesFile - $reflected->getStartLine());
+
+        $context = $this->instantiateFileContext($reflected->getFileName(), $reflected->getStartLine());
+        $this->assertNotNull($context->getFileContextLine());
+
+        for ($i = 0; $i < $linesComp; ++$i) {
+            $this->assertCount(1 + ($i * 2), $context->getFileContext($i));
+        }
+    }
+
+    public static function provideGetFileDiffAtEndOrBeginningOfFileData(): \Iterator
+    {
+        yield ['testGetLine'];
+        yield ['instantiateFileContext'];
+    }
+
+    /**
+     * @dataProvider provideGetFileDiffAtEndOrBeginningOfFileData
+     *
+     * @param string $method
+     */
+    public function testGetFileDiffAtEndOrBeginningOfFile(string $method)
+    {
+        $reflected = (new \ReflectionObject($this))->getMethod($method);
+        $linesFile = count(explode(PHP_EOL, file_get_contents($reflected->getFileName())));
+        $linesGoDn = $linesFile - $reflected->getStartLine();
+        $linesGoUp = $reflected->getStartLine() - 1;
+
+        $context = $this->instantiateFileContext($reflected->getFileName(), $reflected->getStartLine());
+        $this->assertNotNull($context->getFileContextLine());
+
+        for ($i = 0; $i < $linesFile; ++$i) {
+            $this->assertCount(min(1 + $i + min($i, $linesGoDn, $linesGoUp), $linesFile), $context->getFileContext($i));
+        }
+    }
+
+    public function testGetFileDiffIgnoresNegativeInput()
+    {
         $context = $this->instantiateFileContext();
 
-        $this->assertNotNull($context->getFileContextLine());
-        $this->assertCount(9, $context->getFileContext(4));
-        $this->assertCount(5, $context->getFileContext(2));
+        for ($i = -1; $i > -20; --$i) {
+            $this->assertCount(1, $context->getFileContext($i));
+        }
     }
 
     public function testGetFileContents()
@@ -125,7 +157,7 @@ class FileContextTest extends TestCase
 
     public function testThrowsExceptionOnNotFoundClass()
     {
-        $context = $this->instantiateFileContext(__DIR__ . '/../Fixture/data-provider_transform-string.yml');
+        $context = $this->instantiateFileContext(__DIR__.'/../Fixture/data-provider_transform-string.yml');
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Could not initialize file context');
@@ -141,5 +173,16 @@ class FileContextTest extends TestCase
         $this->expectExceptionMessage('Could not initialize file context');
 
         $context->getClass();
+    }
+
+    /**
+     * @param string|null $file
+     * @param int|null    $line
+     *
+     * @return FileContext
+     */
+    protected function instantiateFileContext($file = null, $line = null)
+    {
+        return new FileContext($file ?: __FILE__, $line ?: __LINE__);
     }
 }

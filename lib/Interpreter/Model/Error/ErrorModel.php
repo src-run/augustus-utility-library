@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the `src-run/augustus-silencer-library` project.
+ * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
  *
@@ -61,9 +61,9 @@ final class ErrorModel
      */
     public function __construct(bool $clearLastOnDestruct = true, int $debugBacktraceLimit = 10)
     {
-        list(
+        [
             $this->type, $this->text, $this->file, $this->line, $this->debugBacktrace, $this->real
-        ) = self::extractError($debugBacktraceLimit);
+        ] = self::extractError($debugBacktraceLimit);
 
         $this->clearLastOnDestruct = $clearLastOnDestruct;
         $this->clearLastCompleted = false;
@@ -181,7 +181,7 @@ final class ErrorModel
      */
     public function isEquitableToLast(): bool
     {
-        list($type, $text, $file, $line, $trace, $real) = self::extractError();
+        [$type, $text, $file, $line, $trace, $real] = self::extractError();
 
         return $this->isReal() === $real
             && $this->type() === $type

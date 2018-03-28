@@ -35,11 +35,11 @@ final class StringTransform extends AbstractTransform
     /**
      * @param string $value
      *
-     * @throws \InvalidArgumentException If a non string or non coercable string is provided.
+     * @throws \InvalidArgumentException if a non string or non coercable string is provided
      *
      * @return StringTransform
      */
-    public function set($value) : TransformInterface
+    public function set($value): TransformInterface
     {
         if (false === static::isConsumable($value)) {
             throw new \InvalidArgumentException('Value is not a string and could not be coerced to one.');
@@ -51,7 +51,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return string
      */
-    public function get() : string
+    public function get(): string
     {
         return parent::get();
     }
@@ -64,7 +64,7 @@ final class StringTransform extends AbstractTransform
      *
      * @return StringTransform|AbstractTransform
      */
-    final public function replace(SearchReplaceRepresentative $config)
+    public function replace(SearchReplaceRepresentative $config)
     {
         return $this->apply(function () use ($config) {
             return preg_replace($config->regex(), $config->replacement(), $this->get());
@@ -76,7 +76,7 @@ final class StringTransform extends AbstractTransform
      *
      * @return StringTransform|AbstractTransform
      */
-    final public function toAlpha()
+    public function toAlpha()
     {
         return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('a-z', true)));
     }
@@ -86,7 +86,7 @@ final class StringTransform extends AbstractTransform
      *
      * @return StringTransform|AbstractTransform
      */
-    final public function toNumeric()
+    public function toNumeric()
     {
         return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('0-9', true)));
     }
@@ -96,7 +96,7 @@ final class StringTransform extends AbstractTransform
      *
      * @return StringTransform|AbstractTransform
      */
-    final public function toAlphanumeric()
+    public function toAlphanumeric()
     {
         return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('a-z0-9', true)));
     }
@@ -106,7 +106,7 @@ final class StringTransform extends AbstractTransform
      *
      * @return StringTransform|AbstractTransform
      */
-    final public function toAlphanumericAndDashes()
+    public function toAlphanumericAndDashes()
     {
         return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('a-z0-9-', true)));
     }
@@ -114,7 +114,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function spacesToDashes()
+    public function spacesToDashes()
     {
         return $this->replace(new SearchReplaceRepresentative('-', new StringArchetype('[ ]+')));
     }
@@ -124,7 +124,7 @@ final class StringTransform extends AbstractTransform
      *
      * @return StringTransform|AbstractTransform
      */
-    final public function toAlphanumericAndSpacesToDashes()
+    public function toAlphanumericAndSpacesToDashes()
     {
         return $this
             ->replace(new SearchReplaceRepresentative('-', new StringArchetype('[\s\n]+')))
@@ -135,7 +135,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function dashesToSpaces()
+    public function dashesToSpaces()
     {
         return $this->replace(new SearchReplaceRepresentative(' ', new StringArchetype('[-]+')));
     }
@@ -145,7 +145,7 @@ final class StringTransform extends AbstractTransform
      *
      * @return StringTransform|AbstractTransform
      */
-    final public function slugify($lowercase = true)
+    public function slugify($lowercase = true)
     {
         return $this->apply(function (StringTransform $value) use ($lowercase) {
             $result = $value
@@ -163,27 +163,27 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function toLower()
+    public function toLower()
     {
         return $this->apply(function () {
-            return strtolower($this->get());
+            return mb_strtolower($this->get());
         });
     }
 
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function toUpper()
+    public function toUpper()
     {
         return $this->apply(function () {
-            return strtoupper($this->get());
+            return mb_strtoupper($this->get());
         });
     }
 
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function camelToPascalCase()
+    public function camelToPascalCase()
     {
         return $this->apply(function () {
             return ucfirst($this->get());
@@ -193,7 +193,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function camelToSnakeCase()
+    public function camelToSnakeCase()
     {
         return $this->apply(function () {
             return preg_replace('#(?<=\\w)(?=[A-Z])#', '_$1', $this->get());
@@ -203,7 +203,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function camelToSpinalCase()
+    public function camelToSpinalCase()
     {
         return $this->apply(function () {
             return preg_replace('#(?<=\\w)(?=[A-Z])#', '-$1', $this->get());
@@ -213,7 +213,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function pascalToCamelCase()
+    public function pascalToCamelCase()
     {
         return $this->apply(function () {
             return lcfirst($this->get());
@@ -223,7 +223,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function pascalToSnakeCase()
+    public function pascalToSnakeCase()
     {
         return $this->apply(function () {
             return $this->camelToSnakeCase();
@@ -233,7 +233,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function pascalToSpinalCase()
+    public function pascalToSpinalCase()
     {
         return $this->apply(function () {
             return $this->camelToSpinalCase();
@@ -243,11 +243,11 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function snakeToCamelCase()
+    public function snakeToCamelCase()
     {
         return $this->apply(function () {
             return preg_replace_callback('{(_)([a-z])}', function ($match) {
-                return strtoupper($match[2]);
+                return mb_strtoupper($match[2]);
             }, $this->get());
         });
     }
@@ -255,7 +255,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function snakeToPascalCase()
+    public function snakeToPascalCase()
     {
         return $this->apply(function () {
             return $this->snakeToCamelCase()->camelToPascalCase();
@@ -265,7 +265,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function snakeToSpinalCase()
+    public function snakeToSpinalCase()
     {
         return $this->apply(function () {
             return str_replace('_', '-', $this->get());
@@ -275,11 +275,11 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function spinalToCamelCase()
+    public function spinalToCamelCase()
     {
         return $this->apply(function () {
             return preg_replace_callback('{(-)([a-z])}', function ($match) {
-                return strtoupper($match[2]);
+                return mb_strtoupper($match[2]);
             }, $this->get());
         });
     }
@@ -287,7 +287,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function spinalToPascalCase()
+    public function spinalToPascalCase()
     {
         return $this->apply(function () {
             return $this->spinalToCamelCase()->camelToPascalCase();
@@ -297,7 +297,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return StringTransform|AbstractTransform
      */
-    final public function spinalToSnakeCase()
+    public function spinalToSnakeCase()
     {
         return $this->apply(function () {
             return str_replace('-', '_', $this->get());
@@ -309,33 +309,33 @@ final class StringTransform extends AbstractTransform
      *
      * @return StringTransform|AbstractTransform|TransformInterface
      */
-    final public function toPhoneNumber($regex = '~.*(\d{3})[^\d]*(\d{3})[^\d]*(\d{4}).*~')
+    public function toPhoneNumber($regex = '~.*(\d{3})[^\d]*(\d{3})[^\d]*(\d{4}).*~')
     {
         return $this->apply(function () use ($regex) {
             $number = preg_replace('/[^0-9]/', '', preg_replace($regex, '$1$2$3', $this->get()));
 
-            if (7 > strlen($number)) {
+            if (7 > mb_strlen($number)) {
                 return $this->get();
             }
 
-            return 10 === strlen($number) ? '1'.$number : $number;
+            return 10 === mb_strlen($number) ? '1'.$number : $number;
         });
     }
 
     /**
      * @return StringTransform|AbstractTransform|TransformInterface
      */
-    final public function toPhoneFormat()
+    public function toPhoneFormat()
     {
         return $this->apply(function () {
-            if (false === in_array(strlen($string = $this->copy()->toPhoneNumber()->get()), [11, 7])) {
+            if (false === in_array(mb_strlen($string = $this->copy()->toPhoneNumber()->get()), [11, 7], true)) {
                 return $this->get();
             }
 
-            $number = sprintf('%s-%s', substr($string, -7, 3), substr($string, -4, 4));
+            $number = sprintf('%s-%s', mb_substr($string, -7, 3), mb_substr($string, -4, 4));
 
-            if (11 === strlen($string)) {
-                $number = sprintf('+%s (%s) ', substr($string, 0, 1), substr($string, 1, 3)).$number;
+            if (11 === mb_strlen($string)) {
+                $number = sprintf('+%s (%s) ', mb_substr($string, 0, 1), mb_substr($string, 1, 3)).$number;
             }
 
             return $number;
@@ -345,7 +345,7 @@ final class StringTransform extends AbstractTransform
     /**
      * @return string[]
      */
-    final public function split() : array
+    public function split(): array
     {
         return str_split($this->__toString());
     }

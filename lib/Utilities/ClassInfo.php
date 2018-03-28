@@ -15,7 +15,7 @@ final class ClassInfo
 {
     /**
      * @param string|mixed|object $for
-     * @param bool          $qualified
+     * @param bool                $qualified
      *
      * @return string
      */
@@ -191,16 +191,12 @@ final class ClassInfo
      */
     public static function getReflection($for): ?\ReflectionClass
     {
-        try {
-            if (static::isInstance($for)) {
-                return new \ReflectionObject($for);
-            }
+        if (static::isInstance($for)) {
+            return new \ReflectionObject($for);
+        }
 
-            if (static::isClass($for)) {
-                return new \ReflectionClass($for);
-            }
-        } catch (\ReflectionException $e) {
-            return null;
+        if (static::isClass($for)) {
+            return new \ReflectionClass($for);
         }
 
         throw new \InvalidArgumentException(sprintf('Could not create reflection object for "%s"', @print_r($for, true)));

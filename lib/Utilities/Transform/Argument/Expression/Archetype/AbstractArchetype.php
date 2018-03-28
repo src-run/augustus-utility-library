@@ -32,7 +32,7 @@ abstract class AbstractArchetype implements ArchetypeInterface
     /**
      * @return string
      */
-    public function get() : string
+    public function get(): string
     {
         return empty($this->value) ? '' : $this->value;
     }
@@ -40,15 +40,15 @@ abstract class AbstractArchetype implements ArchetypeInterface
     /**
      * @return bool
      */
-    public function has() : bool
+    public function has(): bool
     {
-        return $this->value !== null && strlen($this->value) > 0;
+        return null !== $this->value && mb_strlen($this->value) > 0;
     }
 
     /**
      * @return bool
      */
-    public function isValid() : bool
+    public function isValid(): bool
     {
         if (!$this->has()) {
             return false;
@@ -57,7 +57,7 @@ abstract class AbstractArchetype implements ArchetypeInterface
         $return = CallSilencerFactory::create(function () {
             return preg_match(sprintf('{%s}', $this->get()), null);
         })->setValidator(function ($result) {
-            return $result !== false;
+            return false !== $result;
         })->invoke();
 
         return $return->isValid();

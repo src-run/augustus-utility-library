@@ -65,7 +65,7 @@ class Fixture
     /**
      * @return string
      */
-    public function getFile() : string
+    public function getFile(): string
     {
         return $this->file;
     }
@@ -73,7 +73,7 @@ class Fixture
     /**
      * @return string
      */
-    public function getSyntax() : string
+    public function getSyntax(): string
     {
         return $this->syntax;
     }
@@ -81,7 +81,7 @@ class Fixture
     /**
      * @return Package
      */
-    public function getGlobals() : Package
+    public function getGlobals(): Package
     {
         return $this->globals;
     }
@@ -89,7 +89,7 @@ class Fixture
     /**
      * @return bool
      */
-    public function hasTargets() : bool
+    public function hasTargets(): bool
     {
         return static::has($this->targets);
     }
@@ -97,7 +97,7 @@ class Fixture
     /**
      * @return \ReflectionClass[]
      */
-    public function getTargets() : array
+    public function getTargets(): array
     {
         return $this->targets;
     }
@@ -105,7 +105,7 @@ class Fixture
     /**
      * @return \Generator|\ReflectionClass[]|\ReflectionClass
      */
-    public function forEachTarget() : \Generator
+    public function forEachTarget(): \Generator
     {
         return static::runForEach($this->targets);
     }
@@ -115,7 +115,7 @@ class Fixture
      *
      * @return \ReflectionClass|null
      */
-    public function findTarget(string $name) : ?\ReflectionClass
+    public function findTarget(string $name): ?\ReflectionClass
     {
         return static::findByName($this->targets, $name);
     }
@@ -123,7 +123,7 @@ class Fixture
     /**
      * @return bool
      */
-    public function hasPackages() : bool
+    public function hasPackages(): bool
     {
         return static::has($this->packages);
     }
@@ -131,7 +131,7 @@ class Fixture
     /**
      * @return Package[]
      */
-    public function getPackages() : array
+    public function getPackages(): array
     {
         return $this->packages;
     }
@@ -139,7 +139,7 @@ class Fixture
     /**
      * @return \Generator|Package[]|Package
      */
-    public function forEachPackage() : \Generator
+    public function forEachPackage(): \Generator
     {
         return static::runForEach($this->packages);
     }
@@ -157,23 +157,21 @@ class Fixture
      *
      * @return Package|null
      */
-    public function findPackage(string $name) : ?Package
+    public function findPackage(string $name): ?Package
     {
         return static::findByName($this->packages, $name);
     }
 
     /**
      * @param array $data
-     *
-     * @return void
      */
-    private function extractSyntax(array $data) : void
+    private function extractSyntax(array $data): void
     {
         if (false === isset($data['syntax_version'])) {
             throw new \RuntimeException(sprintf('Fixture "%s" must contain a root "syntax_version" key.', $this->file));
         }
 
-        if (false === in_array($syntaxVersion = $data['syntax_version'], static::$syntaxVersionsSupported)) {
+        if (false === in_array($syntaxVersion = $data['syntax_version'], static::$syntaxVersionsSupported, false)) {
             throw new \RuntimeException(sprintf('Fixture "%s" has unsupported version "%s" (requires: %s).', $this->file, $syntaxVersion, implode(', ', static::$syntaxVersionsSupported)));
         }
 
@@ -182,10 +180,8 @@ class Fixture
 
     /**
      * @param array $data
-     *
-     * @return void
      */
-    private function extractTargets(array $data) : void
+    private function extractTargets(array $data): void
     {
         $this->targets = array_map(function (string $targetClass) {
             return $this->processTargetClass($targetClass);
@@ -197,7 +193,7 @@ class Fixture
      *
      * @return \ReflectionClass
      */
-    private function processTargetClass(string $targetClass) : \ReflectionClass
+    private function processTargetClass(string $targetClass): \ReflectionClass
     {
         try {
             return new \ReflectionClass($targetClass);
@@ -210,13 +206,11 @@ class Fixture
 
     /**
      * @param array $data
-     *
-     * @return void
      */
-    private function extractPackages(array $data) : void
+    private function extractPackages(array $data): void
     {
         $root = isset($data['instructions']) ? $data['instructions'] : [];
-        $this->globals  = $this->processGlobalInstructions(isset($root['globals']) ? $root['globals'] : []);
+        $this->globals = $this->processGlobalInstructions(isset($root['globals']) ? $root['globals'] : []);
         $this->packages = $this->processMethodInstructions(isset($root['methods']) ? $root['methods'] : []);
     }
 
@@ -225,7 +219,7 @@ class Fixture
      *
      * @return Package
      */
-    private function processGlobalInstructions(array $globals) : Package
+    private function processGlobalInstructions(array $globals): Package
     {
         return $this->processInstruction('globals', $globals);
     }
@@ -235,7 +229,7 @@ class Fixture
      *
      * @return Package[]
      */
-    private function processMethodInstructions(array $methods) : array
+    private function processMethodInstructions(array $methods): array
     {
         if (0 < count($methods)) {
             array_walk($methods, function (array &$data, string $name) {
@@ -252,7 +246,7 @@ class Fixture
      *
      * @return Package
      */
-    private function processInstruction(string $name, array $data) : Package
+    private function processInstruction(string $name, array $data): Package
     {
         return new Package($name, $data, $this);
     }

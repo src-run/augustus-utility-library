@@ -31,11 +31,11 @@ final class NumberTransform extends AbstractTransform
     /**
      * @param int|float $value
      *
-     * @throws \InvalidArgumentException If a non integer/float is provided.
+     * @throws \InvalidArgumentException if a non integer/float is provided
      *
      * @return NumberTransform
      */
-    public function set($value) : TransformInterface
+    public function set($value): TransformInterface
     {
         if (false === static::isConsumable($value)) {
             throw new \InvalidArgumentException('Value is not an integer or float and could not be coerced to either.');
@@ -57,7 +57,7 @@ final class NumberTransform extends AbstractTransform
      *
      * @return NumberTransform|AbstractTransform
      */
-    final public function toInteger() : NumberTransform
+    public function toInteger(): self
     {
         return $this->apply(function () {
             return (int) $this->get();
@@ -67,7 +67,7 @@ final class NumberTransform extends AbstractTransform
     /**
      * @return bool
      */
-    final public function isInteger() : bool
+    public function isInteger(): bool
     {
         return is_int($this->get());
     }
@@ -77,7 +77,7 @@ final class NumberTransform extends AbstractTransform
      *
      * @return NumberTransform|AbstractTransform
      */
-    final public function toFloat() : NumberTransform
+    public function toFloat(): self
     {
         return $this->apply(function () {
             return (float) $this->get();
@@ -87,7 +87,7 @@ final class NumberTransform extends AbstractTransform
     /**
      * @return bool
      */
-    final public function isFloat() : bool
+    public function isFloat(): bool
     {
         return is_float($this->get());
     }
@@ -97,7 +97,7 @@ final class NumberTransform extends AbstractTransform
      *
      * @return NumberTransform|AbstractTransform
      */
-    final public function round($precision = 2)
+    public function round($precision = 2)
     {
         return $this->apply(function () {
             return round($this->get());
@@ -109,7 +109,7 @@ final class NumberTransform extends AbstractTransform
      *
      * @return NumberTransform|AbstractTransform
      */
-    final public function increment($by = 1)
+    public function increment($by = 1)
     {
         return $this->apply(function () use ($by) {
             return $this->get() + $by;
@@ -121,7 +121,7 @@ final class NumberTransform extends AbstractTransform
      *
      * @return NumberTransform|AbstractTransform
      */
-    final public function decrement($by = 1)
+    public function decrement($by = 1)
     {
         return $this->apply(function () use ($by) {
             return $this->get() - $by;
@@ -133,7 +133,7 @@ final class NumberTransform extends AbstractTransform
      *
      * @return NumberTransform|AbstractTransform
      */
-    final public function multiply($by)
+    public function multiply($by)
     {
         return $this->apply(function () use ($by) {
             return $this->get() * $by;
@@ -145,7 +145,7 @@ final class NumberTransform extends AbstractTransform
      *
      * @return NumberTransform|AbstractTransform
      */
-    final public function divide($by)
+    public function divide($by)
     {
         return $this->apply(function () use ($by) {
             return $this->get() / $by;
@@ -162,6 +162,6 @@ final class NumberTransform extends AbstractTransform
         $i = (int) $value;
         $f = (float) $value;
 
-        return $i == $f ? $i : $f;
+        return (float) $i === (float) $f ? $i : $f;
     }
 }

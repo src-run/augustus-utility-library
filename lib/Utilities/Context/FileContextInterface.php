@@ -21,28 +21,28 @@ interface FileContextInterface
      *
      * @return int
      */
-    public function getLine() : int;
+    public function getLine(): int;
 
     /**
      * Get a \SplFileInfo instance for the defined context.
      *
      * @return \SplFileInfo
      */
-    public function getFile() : \SplFileInfo;
+    public function getFile(): \SplFileInfo;
 
     /**
      * Get the file path name for the defined context.
      *
      * @return string
      */
-    public function getFilePathname() : string;
+    public function getFilePathname(): string;
 
     /**
      * Get the file contents for the defined context.
      *
      * @return string[]
      */
-    public function getFileContents() : array;
+    public function getFileContents(): array;
 
     /**
      * Get an array of file lines surrounding defined context.
@@ -51,21 +51,21 @@ interface FileContextInterface
      *
      * @return string[]
      */
-    public function getFileContext(int $surroundingLines = 3) : array;
+    public function getFileContext(int $surroundingLines = 3): array;
 
     /**
      * Get the file line content for the defined context.
      *
      * @return string
      */
-    public function getFileContextLine() : string;
+    public function getFileContextLine(): string;
 
     /**
      * Get a \ReflectionClass instance for the defined context.
      *
      * @return \ReflectionClass
      */
-    public function getClass() : \ReflectionClass;
+    public function getClass(): \ReflectionClass;
 
     /**
      * Get the class name (as qualified or unqualified) for the defined context.
@@ -74,28 +74,28 @@ interface FileContextInterface
      *
      * @return string
      */
-    public function getClassName(bool $qualified = true) : string;
+    public function getClassName(bool $qualified = true): string;
 
     /**
      * Returns the context type (trait, interface, or class).
      *
      * @return string
      */
-    public function getType() : string;
+    public function getType(): string;
 
     /**
      * Returns true if a method exists for this context.
      *
      * @return bool
      */
-    public function hasMethod() : bool;
+    public function hasMethod(): bool;
 
     /**
      * Get the method reflection instance.
      *
      * @return \ReflectionMethod
      */
-    public function getMethod() : \ReflectionMethod;
+    public function getMethod(): \ReflectionMethod;
 
     /**
      * Get the method name.
@@ -104,7 +104,7 @@ interface FileContextInterface
      *
      * @return string
      */
-    public function getMethodName(bool $qualified = false) : string;
+    public function getMethodName(bool $qualified = false): string;
 }
 
 /* EOF */

@@ -21,8 +21,8 @@ class SearchReplaceRepresentative extends SearchRepresentative
     protected $replacement;
 
     /**
-     * @param string $replacement
-     * @param bool   $caseSensitive
+     * @param string               $replacement
+     * @param bool                 $caseSensitive
      * @param ArchetypeInterface[] ...$selectors
      */
     public function __construct($replacement = '', ArchetypeInterface ...$selectors)
@@ -35,9 +35,9 @@ class SearchReplaceRepresentative extends SearchRepresentative
     /**
      * @return bool
      */
-    public function hasReplacement() : bool
+    public function hasReplacement(): bool
     {
-        return $this->replacement !== null && strlen($this->replacement) > 0;
+        return null !== $this->replacement && mb_strlen($this->replacement) > 0;
     }
 
     /**
@@ -45,7 +45,7 @@ class SearchReplaceRepresentative extends SearchRepresentative
      *
      * @return SearchReplaceRepresentative
      */
-    public function setReplacement(string $replacement = null) : SearchReplaceRepresentative
+    public function setReplacement(string $replacement = null): self
     {
         $this->replacement = $replacement;
 
@@ -55,7 +55,7 @@ class SearchReplaceRepresentative extends SearchRepresentative
     /**
      * @return string
      */
-    public function replacement() : string
+    public function replacement(): string
     {
         return $this->hasReplacement() ? $this->replacement : '';
     }

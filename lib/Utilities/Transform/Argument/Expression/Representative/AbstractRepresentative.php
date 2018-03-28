@@ -62,7 +62,7 @@ abstract class AbstractRepresentative implements RepresentativeInterface
      *
      * @return RepresentativeInterface
      */
-    public function add(ArchetypeInterface $selector) : RepresentativeInterface
+    public function add(ArchetypeInterface $selector): RepresentativeInterface
     {
         $this->selectors[] = $selector;
 
@@ -74,7 +74,7 @@ abstract class AbstractRepresentative implements RepresentativeInterface
      *
      * @return RepresentativeInterface
      */
-    public function addSelectors(ArchetypeInterface ...$selectors) : RepresentativeInterface
+    public function addSelectors(ArchetypeInterface ...$selectors): RepresentativeInterface
     {
         foreach ($selectors as $s) {
             $this->add($s);
@@ -88,7 +88,7 @@ abstract class AbstractRepresentative implements RepresentativeInterface
      *
      * @return RepresentativeInterface
      */
-    public function setCaseSensitivity($enabled = false) : RepresentativeInterface
+    public function setCaseSensitivity($enabled = false): RepresentativeInterface
     {
         $this->caseSensitivity = $enabled;
 
@@ -98,7 +98,7 @@ abstract class AbstractRepresentative implements RepresentativeInterface
     /**
      * @return bool
      */
-    public function isCaseSensitive() : bool
+    public function isCaseSensitive(): bool
     {
         return $this->caseSensitivity;
     }
@@ -106,7 +106,7 @@ abstract class AbstractRepresentative implements RepresentativeInterface
     /**
      * @return SearchReplaceRepresentative
      */
-    public function enableAnchorLeft() : SearchReplaceRepresentative
+    public function enableAnchorLeft(): SearchReplaceRepresentative
     {
         $this->anchorLeft = true;
 
@@ -116,7 +116,7 @@ abstract class AbstractRepresentative implements RepresentativeInterface
     /**
      * @return SearchReplaceRepresentative
      */
-    public function enableAnchorRight() : SearchReplaceRepresentative
+    public function enableAnchorRight(): SearchReplaceRepresentative
     {
         $this->anchorRight = true;
 
@@ -126,17 +126,17 @@ abstract class AbstractRepresentative implements RepresentativeInterface
     /**
      * @return bool
      */
-    public function isAnchoredLeft() : bool
+    public function isAnchoredLeft(): bool
     {
-        return $this->anchorLeft == true;
+        return true === $this->anchorLeft;
     }
 
     /**
      * @return bool
      */
-    public function isAnchoredRight() : bool
+    public function isAnchoredRight(): bool
     {
-        return $this->anchorRight == true;
+        return true === $this->anchorRight;
     }
 }
 

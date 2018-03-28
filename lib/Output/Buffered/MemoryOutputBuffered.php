@@ -33,18 +33,6 @@ final class MemoryOutputBuffered implements OutputBufferedInterface
     }
 
     /**
-     * @param int|null $maxMemoryUsage
-     *
-     * @return string
-     */
-    private static function buildStreamScheme(int $maxMemoryUsage = null): string
-    {
-        return null === $maxMemoryUsage
-            ? 'php://memory'
-            : sprintf('php://temp/maxmemory:%d', $maxMemoryUsage * 1024 * 1024);
-    }
-
-    /**
      * Ensure the file resource is closed.
      */
     public function __destruct()
@@ -79,7 +67,7 @@ final class MemoryOutputBuffered implements OutputBufferedInterface
         if (!$this->isResourceOpen()) {
             throw new \RuntimeException(sprintf(
                 'Failed to write "%s" data to closed buffer: re-open the buffer resource using the "%s::reset()" method.',
-                mb_strlen($content) > 40 ? sprintf('%s [...]', substr($content, 0, 40)) : $content, __CLASS__
+                mb_strlen($content) > 40 ? sprintf('%s [...]', mb_substr($content, 0, 40)) : $content, __CLASS__
             ));
         }
 
@@ -144,5 +132,17 @@ final class MemoryOutputBuffered implements OutputBufferedInterface
     public function isResourceOpen(): bool
     {
         return is_resource($this->buffer);
+    }
+
+    /**
+     * @param int|null $maxMemoryUsage
+     *
+     * @return string
+     */
+    private static function buildStreamScheme(int $maxMemoryUsage = null): string
+    {
+        return null === $maxMemoryUsage
+            ? 'php://memory'
+            : sprintf('php://temp/maxmemory:%d', $maxMemoryUsage * 1024 * 1024);
     }
 }

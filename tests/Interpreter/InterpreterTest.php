@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the `src-run/augustus-silencer-library` project.
+ * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
  *
@@ -17,9 +17,6 @@ use SR\Interpreter\Model\Error\ErrorModel;
 use SR\Interpreter\Model\Error\ReportingModel;
 use SR\Interpreter\Model\Error\Trace\BacktraceModel;
 use SR\Interpreter\Model\Error\Trace\Record\BacktraceRecordModel;
-use SR\Interpreter\Model\Error\Trace\Record\ClassTraceStepModel;
-use SR\Interpreter\Model\Error\Trace\Record\FunctionTraceStepModel;
-use SR\Interpreter\Model\Error\Trace\Record\ObjectTraceStepModel;
 
 /**
  * @covers \SR\Interpreter\Interpreter
@@ -172,7 +169,7 @@ class InterpreterTest extends TestCase
      */
     private function assertValidBacktraceRecord(BacktraceRecordModel $record): void
     {
-        if ($record->getType() === 'object' || $record->getType() === 'class') {
+        if ('object' === $record->getType() || 'class' === $record->getType()) {
             $this->assertStringMatchesFormat('%s [%s] (%s)', (string) $record);
             $this->assertStringMatchesFormat('%s [%s] (%s)', $record->stringify());
             $this->assertInstanceOf(\ReflectionClass::class, $record->getObjectReflection());

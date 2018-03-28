@@ -18,9 +18,9 @@ final class ArrayInfo
      *
      * @return bool|null
      */
-    final public static function isAssociative(array $array): ?bool
+    public static function isAssociative(array $array): ?bool
     {
-        if (count($array) === 0) {
+        if (0 === count($array)) {
             return null;
         }
 

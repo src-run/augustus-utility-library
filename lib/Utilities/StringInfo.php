@@ -43,7 +43,7 @@ final class StringInfo
      */
     public static function contains(string $string, string $search): bool
     {
-        return false !== strpos($string, $search);
+        return false !== mb_strpos($string, $search);
     }
 
     /**

@@ -33,7 +33,7 @@ class ValueListReference extends ValueList
     /**
      * @return int
      */
-    public function count() : int
+    public function count(): int
     {
         $this->initialize();
 
@@ -43,7 +43,7 @@ class ValueListReference extends ValueList
     /**
      * @return bool
      */
-    public function isEmpty() : bool
+    public function isEmpty(): bool
     {
         $this->initialize();
 
@@ -53,7 +53,7 @@ class ValueListReference extends ValueList
     /**
      * @return bool
      */
-    public function isNotEmpty() : bool
+    public function isNotEmpty(): bool
     {
         $this->initialize();
 
@@ -63,7 +63,7 @@ class ValueListReference extends ValueList
     /**
      * @return mixed[]
      */
-    public function get() : array
+    public function get(): array
     {
         $this->initialize();
 
@@ -73,17 +73,14 @@ class ValueListReference extends ValueList
     /**
      * @return \Generator
      */
-    public function each() : \Generator
+    public function each(): \Generator
     {
         $this->initialize();
 
         return parent::each();
     }
 
-    /**
-     * @return void
-     */
-    private function initialize() : void
+    private function initialize(): void
     {
         if (0 !== parent::count()) {
             return;

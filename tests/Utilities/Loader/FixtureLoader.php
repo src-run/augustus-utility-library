@@ -52,7 +52,7 @@ class FixtureLoader
      *
      * @return Fixture
      */
-    public function load(string $file) : Fixture
+    public function load(string $file): Fixture
     {
         if (!$this->isLoaded($file)) {
             $this->set($file, new Fixture($this->readData($file), $file));
@@ -66,7 +66,7 @@ class FixtureLoader
      *
      * @return bool
      */
-    public function isLoaded(string $file) : bool
+    public function isLoaded(string $file): bool
     {
         return isset(static::$cache[$this->getCacheIndex($file)]);
     }
@@ -74,10 +74,8 @@ class FixtureLoader
     /**
      * @param string  $file
      * @param Fixture $fixture
-     *
-     * @return void
      */
-    private function set(string $file, Fixture $fixture) : void
+    private function set(string $file, Fixture $fixture): void
     {
         static::$cache[$this->getCacheIndex($file)] = $fixture;
     }
@@ -87,7 +85,7 @@ class FixtureLoader
      *
      * @return Fixture
      */
-    private function get(string $file) : Fixture
+    private function get(string $file): Fixture
     {
         return static::$cache[$this->getCacheIndex($file)];
     }
@@ -97,9 +95,9 @@ class FixtureLoader
      *
      * @return string
      */
-    private function getCacheIndex(string $file) : string
+    private function getCacheIndex(string $file): string
     {
-        return md5(__CLASS__ . $this->rootPath . $file);
+        return md5(__CLASS__.$this->rootPath.$file);
     }
 
     /**
@@ -107,13 +105,13 @@ class FixtureLoader
      *
      * @return string
      */
-    private function buildFilePath(string $file) : string
+    private function buildFilePath(string $file): string
     {
         if (false === $real = realpath($this->rootPath ?? static::DEFAULT_ROOT)) {
             throw new \InvalidArgumentException(sprintf('Unable to resolve fixture root path "%s"', $root));
         }
 
-        $absolute = $real . DIRECTORY_SEPARATOR . $file;
+        $absolute = $real.DIRECTORY_SEPARATOR.$file;
 
         if (false === file_exists($absolute) || false === is_readable($absolute)) {
             throw new \InvalidArgumentException(sprintf('Fixture data file "%s" does not exist or is not readable!', $absolute));
@@ -127,7 +125,7 @@ class FixtureLoader
      *
      * @return mixed[]
      */
-    private function readData(string $file) : array
+    private function readData(string $file): array
     {
         if (false === $contents = file_get_contents($absolute = $this->buildFilePath($file))) {
             throw new \InvalidArgumentException(sprintf('Unable to read file contents of "%s"', $absolute));

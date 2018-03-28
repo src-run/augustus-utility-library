@@ -16,7 +16,7 @@ use SR\Utilities\Transform\Argument\Expression\Archetype\ArchetypeInterface;
 class SearchRepresentative extends AbstractRepresentative
 {
     /**
-     * @param bool $caseSensitive
+     * @param bool                 $caseSensitive
      * @param ArchetypeInterface[] ...$selectors
      */
     public function __construct(ArchetypeInterface ...$selectors)

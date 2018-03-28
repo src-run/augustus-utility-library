@@ -16,11 +16,11 @@ namespace SR\Utilities\Test\Fixture;
  */
 trait FixtureTrait
 {
-    private $propPrivate = 'propPrivate';
-    protected $propProtecte = 'propProtecte';
     public $propPublic = 'propPublic';
+    protected $propProtecte = 'propProtecte';
+    private $propPrivate = 'propPrivate';
 
-    private function methodPrivate()
+    public function methodPublic()
     {
         return __METHOD__;
     }
@@ -30,7 +30,7 @@ trait FixtureTrait
         return __METHOD__;
     }
 
-    public function methodPublic()
+    private function methodPrivate()
     {
         return __METHOD__;
     }

@@ -19,6 +19,11 @@ use SR\Utilities\Transform\Argument\Expression\Archetype\AbstractArchetype;
  */
 class AbstractArchetypeTest extends AbstractTest
 {
+    public function testSetAndGet()
+    {
+        $this->assertFalse($this->getMockForTarget()->isValid());
+    }
+
     /**
      * @return AbstractArchetype|\PHPUnit_Framework_MockObject_MockObject
      */
@@ -27,10 +32,5 @@ class AbstractArchetypeTest extends AbstractTest
         return $this
             ->getMockBuilder(AbstractArchetype::class)
             ->getMockForAbstractClass();
-    }
-
-    public function testSetAndGet()
-    {
-        $this->assertFalse($this->getMockForTarget()->isValid());
     }
 }

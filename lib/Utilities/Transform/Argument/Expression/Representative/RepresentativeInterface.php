@@ -25,14 +25,14 @@ interface RepresentativeInterface
      *
      * @return RepresentativeInterface
      */
-    public function add(ArchetypeInterface $selector) : RepresentativeInterface;
+    public function add(ArchetypeInterface $selector): self;
 
     /**
      * @param ArchetypeInterface[] ...$selectors
      *
      * @return RepresentativeInterface
      */
-    public function addSelectors(ArchetypeInterface ...$selectors) : RepresentativeInterface;
+    public function addSelectors(ArchetypeInterface ...$selectors): self;
 }
 
 /* EOF */

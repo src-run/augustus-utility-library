@@ -37,6 +37,14 @@ abstract class AbstractTransform implements TransformInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function __toString(): string
+    {
+        return (string) $this->get();
+    }
+
+    /**
      * @param null|mixed $value
      * @param bool       $mutable
      *
@@ -48,19 +56,11 @@ abstract class AbstractTransform implements TransformInterface
     }
 
     /**
-     * @return mixed
-     */
-    public function __toString() : string
-    {
-        return (string) $this->get();
-    }
-
-    /**
      * @param mixed $value
      *
      * @return TransformInterface|StringTransform|NumberTransform
      */
-    public function set($value) : TransformInterface
+    public function set($value): TransformInterface
     {
         $this->value = $value;
 
@@ -78,7 +78,7 @@ abstract class AbstractTransform implements TransformInterface
     /**
      * @return bool
      */
-    public function has() : bool
+    public function has(): bool
     {
         return null !== $this->value;
     }
@@ -88,7 +88,7 @@ abstract class AbstractTransform implements TransformInterface
      *
      * @return TransformInterface|StringTransform|NumberTransform
      */
-    public function setMutable(bool $mutable) : TransformInterface
+    public function setMutable(bool $mutable): TransformInterface
     {
         $this->mutable = $mutable;
 
@@ -98,7 +98,7 @@ abstract class AbstractTransform implements TransformInterface
     /**
      * @return bool
      */
-    public function isMutable() : bool
+    public function isMutable(): bool
     {
         return true === $this->mutable;
     }
@@ -108,7 +108,7 @@ abstract class AbstractTransform implements TransformInterface
      *
      * @return bool
      */
-    final public function isSame($to) : bool
+    final public function isSame($to): bool
     {
         return $this->get() === $to;
     }
@@ -118,7 +118,7 @@ abstract class AbstractTransform implements TransformInterface
      *
      * @return bool
      */
-    final public function isNotSame($to) : bool
+    final public function isNotSame($to): bool
     {
         return false === $this->isSame($to);
     }
@@ -128,9 +128,9 @@ abstract class AbstractTransform implements TransformInterface
      *
      * @return bool
      */
-    final public function isEqual($to) : bool
+    final public function isEqual($to): bool
     {
-        return $this->get() == $to;
+        return (string) $this->get() === (string) $to;
     }
 
     /**
@@ -138,7 +138,7 @@ abstract class AbstractTransform implements TransformInterface
      *
      * @return bool
      */
-    final public function isNotEqual($to) : bool
+    final public function isNotEqual($to): bool
     {
         return false === $this->isEqual($to);
     }
@@ -146,7 +146,7 @@ abstract class AbstractTransform implements TransformInterface
     /**
      * @return TransformInterface|StringTransform|NumberTransform
      */
-    final public function copy() : TransformInterface
+    final public function copy(): TransformInterface
     {
         return clone $this;
     }
@@ -156,7 +156,7 @@ abstract class AbstractTransform implements TransformInterface
      *
      * @return TransformInterface|StringTransform|NumberTransform
      */
-    final public function apply(\Closure $closure) : TransformInterface
+    final public function apply(\Closure $closure): TransformInterface
     {
         return $this->returnInstance(
             $closure->call($bindTo = $this->getWriteContext(), $bindTo)
@@ -168,7 +168,7 @@ abstract class AbstractTransform implements TransformInterface
      *
      * @return TransformInterface|StringTransform|NumberTransform
      */
-    final protected function returnInstance($value) : TransformInterface
+    final protected function returnInstance($value): TransformInterface
     {
         return $this->getWriteContext()->set(
             $value instanceof TransformInterface ? $value->get() : $value
@@ -176,21 +176,21 @@ abstract class AbstractTransform implements TransformInterface
     }
 
     /**
-     * @return TransformInterface
-     */
-    private function getWriteContext() : TransformInterface
-    {
-        return $this->isMutable() ? $this : $this->copy();
-    }
-
-    /**
      * @param mixed $value
      *
      * @return bool
      */
-    protected static function isConsumable($value) : bool
+    protected static function isConsumable($value): bool
     {
         return false === is_array($value) && (false === is_object($value) || is_callable([$value, '__toString']));
+    }
+
+    /**
+     * @return TransformInterface
+     */
+    private function getWriteContext(): TransformInterface
+    {
+        return $this->isMutable() ? $this : $this->copy();
     }
 }
 

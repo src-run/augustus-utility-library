@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the `src-run/augustus-silencer-library` project.
+ * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
  *

@@ -26,7 +26,7 @@ class NumberTransformTest extends AbstractTransformTest
     /**
      * @return \Generator
      */
-    public function provideTestNumberTypeData() : \Generator
+    public function provideTestNumberTypeData(): \Generator
     {
         yield [100, 'isInteger'];
         yield ['100', 'isInteger'];
@@ -39,8 +39,6 @@ class NumberTransformTest extends AbstractTransformTest
      *
      * @param int|float|string $provided
      * @param string           $method
-     *
-     * @return void
      */
     public function testNumberType($provided, string $method)
     {
@@ -50,7 +48,7 @@ class NumberTransformTest extends AbstractTransformTest
     /**
      * @return \Generator
      */
-    public function provideTestMutatorAndAccessorData() : \Generator
+    public function provideTestMutatorAndAccessorData(): \Generator
     {
         yield [100, 100];
         yield ['100', 100];
@@ -61,7 +59,7 @@ class NumberTransformTest extends AbstractTransformTest
     /**
      * @return \Generator
      */
-    public function provideTestConstructorExceptionOnInvalidValueData() : \Generator
+    public function provideTestConstructorExceptionOnInvalidValueData(): \Generator
     {
         yield [new \stdClass()];
     }

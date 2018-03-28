@@ -13,6 +13,9 @@ namespace SR\Utilities\Test;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversNothing
+ */
 class BcAliasTest extends TestCase
 {
     public static function provideAliasesData(): array

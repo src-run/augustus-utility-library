@@ -40,7 +40,7 @@ class ValueList implements ValueListInterface
     /**
      * @return Package
      */
-    public function getParent() : Package
+    public function getParent(): Package
     {
         return $this->parent;
     }
@@ -48,7 +48,7 @@ class ValueList implements ValueListInterface
     /**
      * @return int
      */
-    public function count() : int
+    public function count(): int
     {
         return count($this->data);
     }
@@ -56,7 +56,7 @@ class ValueList implements ValueListInterface
     /**
      * @return bool
      */
-    public function isEmpty() : bool
+    public function isEmpty(): bool
     {
         return 0 === $this->count();
     }
@@ -64,7 +64,7 @@ class ValueList implements ValueListInterface
     /**
      * @return bool
      */
-    public function isNotEmpty() : bool
+    public function isNotEmpty(): bool
     {
         return false === $this->isEmpty();
     }
@@ -72,7 +72,7 @@ class ValueList implements ValueListInterface
     /**
      * @return mixed[]
      */
-    public function get() : array
+    public function get(): array
     {
         return $this->data;
     }
@@ -80,7 +80,7 @@ class ValueList implements ValueListInterface
     /**
      * @return \Generator
      */
-    public function each() : \Generator
+    public function each(): \Generator
     {
         return static::runForEach($this->data);
     }
@@ -88,7 +88,7 @@ class ValueList implements ValueListInterface
     /**
      * @return \ArrayIterator
      */
-    public function getIterator() : \ArrayIterator
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->data);
     }
@@ -96,17 +96,15 @@ class ValueList implements ValueListInterface
     /**
      * @return bool
      */
-    public function isReference() : bool
+    public function isReference(): bool
     {
         return $this instanceof ValueListReference;
     }
 
     /**
      * @param array $data
-     *
-     * @return void
      */
-    protected function assignData(array $data) : void
+    protected function assignData(array $data): void
     {
         $this->data = $data;
     }

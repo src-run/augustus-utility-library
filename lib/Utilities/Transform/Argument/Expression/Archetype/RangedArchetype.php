@@ -34,7 +34,7 @@ class RangedArchetype extends AbstractArchetype
      *
      * @return ArchetypeInterface
      */
-    public function set(string $value = null, bool $negative = false) : ArchetypeInterface
+    public function set(string $value = null, bool $negative = false): ArchetypeInterface
     {
         $this->negative = $negative;
         $this->value = $value;
@@ -45,7 +45,7 @@ class RangedArchetype extends AbstractArchetype
     /**
      * @return string
      */
-    public function get() : string
+    public function get(): string
     {
         return sprintf('[%s%s]', $this->negative ? '^' : '', empty($this->value) ? '' : $this->value);
     }

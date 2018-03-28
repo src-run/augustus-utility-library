@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the `liip/LiipImagineBundle` project.
+ * This file is part of the `src-run/augustus-utility-library` project.
  *
- * (c) https://github.com/liip/LiipImagineBundle/graphs/contributors
+ * (c) Rob Frawley 2nd <rmf@src.run>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
@@ -11,8 +11,8 @@
 
 namespace SR\Utils\Tests\Output\Buffered\Buffer;
 
-use SR\Output\Buffered\MemoryOutputBuffered;
 use PHPUnit\Framework\TestCase;
+use SR\Output\Buffered\MemoryOutputBuffered;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -178,7 +178,6 @@ class MemoryOutputBufferedTest extends TestCase
     private function assertBufferIsOpen(MemoryOutputBuffered $buffer): void
     {
         $this->assertTrue($buffer->isResourceOpen());
-        $this->assertTrue(is_resource($buffer->getResource()));
         $this->assertInternalType('resource', $buffer->getResource());
     }
 
@@ -188,6 +187,6 @@ class MemoryOutputBufferedTest extends TestCase
     private function assertBufferIsNotOpen(MemoryOutputBuffered $buffer): void
     {
         $this->assertFalse($buffer->isResourceOpen());
-        $this->assertFalse(is_resource($buffer->getResource()));
+        $this->assertInternalType('resource', $buffer->getResource());
     }
 }

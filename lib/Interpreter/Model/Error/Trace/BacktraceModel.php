@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the `src-run/augustus-silencer-library` project.
+ * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
  *
@@ -15,6 +15,7 @@ use SR\Interpreter\Interpreter;
 use SR\Interpreter\Model\Error\ErrorModel;
 use SR\Interpreter\Model\Error\ReportingModel;
 use SR\Interpreter\Model\Error\Trace\Record\BacktraceRecordModel;
+use SR\Utilities\ClassInfo;
 
 final class BacktraceModel implements \Countable, \IteratorAggregate
 {
@@ -24,7 +25,7 @@ final class BacktraceModel implements \Countable, \IteratorAggregate
     private const BLACKLISTED_CLASSES = [
         Interpreter::class,
         ErrorModel::class,
-        BacktraceModel::class,
+        self::class,
         BacktraceRecordModel::class,
         ReportingModel::class,
     ];
@@ -135,7 +136,7 @@ final class BacktraceModel implements \Countable, \IteratorAggregate
         }
 
         foreach ($paths as $path) {
-            if (null !== $file && 0 === strpos($file, $path)) {
+            if (null !== $file && 0 === mb_strpos($file, $path)) {
                 return true;
             }
         }
@@ -162,11 +163,9 @@ final class BacktraceModel implements \Countable, \IteratorAggregate
      */
     private static function resolveClassFilePath(string $className): ?string
     {
-        try {
-            return (new \ReflectionClass($className))->getFileName();
-        } catch (\ReflectionException $e) {
-            return null;
-        }
+        return ClassInfo::isClass($className)
+            ? ClassInfo::getReflection($className)->getFileName()
+            : null;
     }
 
     /**

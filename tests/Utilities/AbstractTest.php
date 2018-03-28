@@ -29,11 +29,11 @@ abstract class AbstractTest extends TestCase
 
     protected function runThroughFixtureData($callable, array $assert, array $fixtureData = null, $namespace = 'SR\Utilities\\')
     {
-        if ($fixtureData === null && (!property_exists($this, 'fixtureData') || count(static::$fixtureData) === 0)) {
+        if (null === $fixtureData && (!property_exists($this, 'fixtureData') || 0 === count(static::$fixtureData))) {
             $this->fail('Fixture data not defined at either the test class or test method call context.');
         }
 
-        $fixtureData = $fixtureData === null ? static::$fixtureData : $fixtureData;
+        $fixtureData = null === $fixtureData ? static::$fixtureData : $fixtureData;
 
         foreach ($fixtureData as $i => $data) {
             $parameters = $assert[$i];
@@ -58,7 +58,7 @@ abstract class AbstractTest extends TestCase
     private function getArrayAsStringRecursive($array)
     {
         if (is_bool($array)) {
-            return $array === true ? 'bool:true' : 'bool:false';
+            return true === $array ? 'bool:true' : 'bool:false';
         }
 
         if (!is_array($array)) {
@@ -81,7 +81,7 @@ abstract class AbstractTest extends TestCase
 
         $string = implode('', $string);
 
-        return substr($string, 0, strlen($string) - 1);
+        return mb_substr($string, 0, mb_strlen($string) - 1);
     }
 }
 

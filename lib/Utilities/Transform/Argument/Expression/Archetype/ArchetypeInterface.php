@@ -16,15 +16,15 @@ interface ArchetypeInterface
     /**
      * @return string
      */
-    public function get() : string;
+    public function get(): string;
 
     /**
      * @return bool
      */
-    public function has() : bool;
+    public function has(): bool;
 
     /**
      * @return bool
      */
-    public function isValid() : bool;
+    public function isValid(): bool;
 }

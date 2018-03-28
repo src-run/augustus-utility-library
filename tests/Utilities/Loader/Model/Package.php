@@ -188,7 +188,7 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
      */
     public function each(): \Generator
     {
-        foreach ($this->getIterator() as list($provided, $expected, $arguments)) {
+        foreach ($this->getIterator() as [$provided, $expected, $arguments]) {
             yield [$provided, $expected, $arguments, $this->getName(), $this];
         }
     }
@@ -221,8 +221,6 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
 
     /**
      * @param array $data
-     *
-     * @return void
      */
     private function extractArguments(array $data): void
     {
@@ -231,8 +229,6 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
 
     /**
      * @param array $data
-     *
-     * @return void
      */
     private function extractProvidedAndExpected(array $data): void
     {
@@ -262,7 +258,7 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
             throw new \RuntimeException(sprintf('The "%s" instruction data for "%s" in "%s" is unrecignized!', $what, $this->name, $this->getParent()->getFile()));
         }
 
-        if (false === strpos($value, ':')) {
+        if (false === mb_strpos($value, ':')) {
             return new ValueListReference($what, $value, $this);
         }
 
@@ -299,7 +295,7 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
      */
     private static function isValidValueListName(string $name): bool
     {
-        return in_array($name, ['arguments', 'provided', 'expected']);
+        return in_array($name, ['arguments', 'provided', 'expected'], true);
     }
 
     /**
@@ -309,9 +305,9 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
      *
      * @return string[]Package[]
      */
-    private static function parseCustomReferencePointerArguments(string $valueListName, string $reference, Package $that): array
+    private static function parseCustomReferencePointerArguments(string $valueListName, string $reference, self $that): array
     {
-        list($customReference, $customValueListName) = explode(':', $reference);
+        [$customReference, $customValueListName] = explode(':', $reference);
 
         if (static::isValidValueListName($customValueListName)) {
             return [$customValueListName, $customReference, $that];

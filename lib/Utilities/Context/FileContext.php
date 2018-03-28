@@ -65,7 +65,7 @@ class FileContext implements FileContextInterface
      *
      * @return int
      */
-    public function getLine() : int
+    public function getLine(): int
     {
         return $this->line;
     }
@@ -75,7 +75,7 @@ class FileContext implements FileContextInterface
      *
      * @return \SplFileInfo
      */
-    public function getFile() : \SplFileInfo
+    public function getFile(): \SplFileInfo
     {
         return $this->file;
     }
@@ -85,7 +85,7 @@ class FileContext implements FileContextInterface
      *
      * @return string
      */
-    public function getFilePathname() : string
+    public function getFilePathname(): string
     {
         return $this->file->getPathname();
     }
@@ -95,7 +95,7 @@ class FileContext implements FileContextInterface
      *
      * @return string[]
      */
-    public function getFileContents() : array
+    public function getFileContents(): array
     {
         return $this->init()->contents;
     }
@@ -107,7 +107,7 @@ class FileContext implements FileContextInterface
      *
      * @return string[]
      */
-    public function getFileContext(int $surroundingLines = 3) : array
+    public function getFileContext(int $surroundingLines = 3): array
     {
         return $this->init()->createFileContextSnippet($surroundingLines);
     }
@@ -117,11 +117,11 @@ class FileContext implements FileContextInterface
      *
      * @return string
      */
-    public function getFileContextLine() : string
+    public function getFileContextLine(): string
     {
         $line = $this->getFileContext(1);
 
-        return count($line) === 1 ? array_shift($line) : '';
+        return 1 === count($line) ? array_shift($line) : '';
     }
 
     /**
@@ -129,7 +129,7 @@ class FileContext implements FileContextInterface
      *
      * @return string
      */
-    public function getType() : string
+    public function getType(): string
     {
         if ($this->getClass()->isTrait()) {
             return 'trait';
@@ -145,7 +145,7 @@ class FileContext implements FileContextInterface
      *
      * @return \ReflectionClass
      */
-    public function getClass() : \ReflectionClass
+    public function getClass(): \ReflectionClass
     {
         return $this->init()->class;
     }
@@ -157,7 +157,7 @@ class FileContext implements FileContextInterface
      *
      * @return string
      */
-    public function getClassName(bool $qualified = true) : string
+    public function getClassName(bool $qualified = true): string
     {
         return $qualified ? $this->getClass()->getName() : $this->getClass()->getShortName();
     }
@@ -167,9 +167,9 @@ class FileContext implements FileContextInterface
      *
      * @return bool
      */
-    public function hasMethod() : bool
+    public function hasMethod(): bool
     {
-        return $this->method !== null;
+        return null !== $this->method;
     }
 
     /**
@@ -177,7 +177,7 @@ class FileContext implements FileContextInterface
      *
      * @return \ReflectionMethod
      */
-    public function getMethod() : \ReflectionMethod
+    public function getMethod(): \ReflectionMethod
     {
         if (null === $method = $this->init()->method) {
             throw new \RuntimeException('No method exists for context');
@@ -193,7 +193,7 @@ class FileContext implements FileContextInterface
      *
      * @return string
      */
-    public function getMethodName(bool $qualified = false) : string
+    public function getMethodName(bool $qualified = false): string
     {
         $method = $this->getMethod()->getShortName();
 
@@ -205,9 +205,11 @@ class FileContext implements FileContextInterface
      *
      * @return string[]
      */
-    private function createFileContextSnippet(int $lines) : array
+    private function createFileContextSnippet(int $lines): array
     {
-        $diff = [];
+        if (0 > $lines) {
+            $lines = 0;
+        }
 
         for ($i = $this->line - $lines - 1; $i < $this->line + $lines; ++$i) {
             if (isset($this->contents[$i])) {
@@ -223,7 +225,7 @@ class FileContext implements FileContextInterface
      *
      * @return FileContext
      */
-    private function init() : FileContext
+    private function init(): self
     {
         if (true !== $this->initialized) {
             return $this->initContext();
@@ -235,7 +237,7 @@ class FileContext implements FileContextInterface
     /**
      * @return FileContext
      */
-    private function initContext() : FileContext
+    private function initContext(): self
     {
         try {
             $this->initContextContents();
@@ -253,7 +255,7 @@ class FileContext implements FileContextInterface
     /**
      * @return FileContext
      */
-    private function initContextContents() : FileContext
+    private function initContextContents(): self
     {
         $return = CallSilencerFactory::create(function () {
             return @file_get_contents($this->file);
@@ -269,7 +271,7 @@ class FileContext implements FileContextInterface
     /**
      * @return FileContext
      */
-    private function initContextReflectionClass() : FileContext
+    private function initContextReflectionClass(): self
     {
         $namespace = $this->searchFileForNamespace();
         $className = $this->searchFileForClassName();
@@ -287,14 +289,14 @@ class FileContext implements FileContextInterface
     /**
      * @return FileContext
      */
-    private function initContextReflectionMethod() : FileContext
+    private function initContextReflectionMethod(): self
     {
         $methods = array_filter($this->class->getMethods(), function (\ReflectionMethod $method) {
             return $method->getDeclaringClass()->getName() === $this->class->getName() &&
                 $method->getStartLine() <= $this->line && $this->line <= $method->getEndLine();
         });
 
-        if (count($methods) === 1) {
+        if (1 === count($methods)) {
             $this->method = array_shift($methods);
         }
 
@@ -304,7 +306,7 @@ class FileContext implements FileContextInterface
     /**
      * @return string
      */
-    private function searchFileForNamespace() : string
+    private function searchFileForNamespace(): string
     {
         return $this->searchFile('^(?:namespace[\s]+)([^\s\n]+);');
     }
@@ -312,7 +314,7 @@ class FileContext implements FileContextInterface
     /**
      * @return string
      */
-    private function searchFileForClassName() : string
+    private function searchFileForClassName(): string
     {
         return $this->searchFile('^(?:abstract|final[\s]+)?(?:class|trait|interface)\s+([^\s\n\{]+)');
     }
@@ -322,9 +324,9 @@ class FileContext implements FileContextInterface
      *
      * @return string
      */
-    private function searchFile(string $regex) : string
+    private function searchFile(string $regex): string
     {
-        if (null === $this->contents || count($this->contents) === 0) {
+        if (null === $this->contents || 0 === count($this->contents)) {
             return '';
         }
 

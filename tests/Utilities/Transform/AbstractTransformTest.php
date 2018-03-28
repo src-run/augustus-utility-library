@@ -53,31 +53,30 @@ abstract class AbstractTransformTest extends AbstractTest
      *
      * @param mixed     $provided
      * @param int|float $expected
-     *
-     * @return void
      */
     public function testMutatorAndAccessorAndType($provided, $expected)
     {
         $this->assertSame($expected, $this->getTargetInstance($provided)->get());
     }
 
-    abstract function provideTestMutatorAndAccessorData() : \Generator;
+    abstract public function provideTestMutatorAndAccessorData(): \Generator;
 
     /**
      * @dataProvider provideTestConstructorExceptionOnInvalidValueData
-     * @expectedException \InvalidArgumentException
      */
     public function testConstructorExceptionOnInvalidValue($provided)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->getTargetInstance($provided);
     }
 
-    abstract public function provideTestConstructorExceptionOnInvalidValueData() : \Generator;
+    abstract public function provideTestConstructorExceptionOnInvalidValueData(): \Generator;
 
     /**
      * @return Fixture
      */
-    protected function getFixture() : Fixture
+    protected function getFixture(): Fixture
     {
         return static::$fixtureLoader->load(static::FIXTURE_FILE);
     }
@@ -85,7 +84,7 @@ abstract class AbstractTransformTest extends AbstractTest
     /**
      * @return \ReflectionClass|null
      */
-    protected function getTargetReflection() : ?\ReflectionClass
+    protected function getTargetReflection(): ?\ReflectionClass
     {
         if (0 !== count($target = $this->getFixture()->getTargets())) {
             return $target[0];
@@ -97,9 +96,10 @@ abstract class AbstractTransformTest extends AbstractTest
     /**
      * @return object|TransformInterface|NumberTransform|StringTransform
      */
-    protected function getTargetInstance(...$arguments) : TransformInterface
+    protected function getTargetInstance(...$arguments): TransformInterface
     {
         $target = $this->getTargetReflection()->getName();
+
         return new $target(...$arguments);
     }
 
@@ -110,7 +110,7 @@ abstract class AbstractTransformTest extends AbstractTest
      *
      * @return Package
      */
-    protected function getPackageForMethod(string $method) : Package
+    protected function getPackageForMethod(string $method): Package
     {
         $name = lcfirst(str_replace('test', '', $method));
 
@@ -134,7 +134,7 @@ abstract class AbstractTransformTest extends AbstractTest
      */
     protected function initRunner($method)
     {
-        foreach ($this->getPackageForMethod($method)->each() as $i => list($provided, $expected, $arguments, $name, $package)) {
+        foreach ($this->getPackageForMethod($method)->each() as $i => [$provided, $expected, $arguments, $name, $package]) {
             $this->runnerAssert($package, $i, $provided, $expected, $arguments, $name);
         }
     }
@@ -155,6 +155,7 @@ abstract class AbstractTransformTest extends AbstractTest
 
         if (is_bool($expected)) {
             $this->runBooleanCheck($provided, $expected, $arguments, $method);
+
             return;
         }
 
@@ -174,14 +175,12 @@ abstract class AbstractTransformTest extends AbstractTest
      * @param $expected
      * @param $arguments
      * @param $method
-     *
-     * @return void
      */
     protected function runBooleanCheck($provided, $expected, $arguments, $method)
     {
         $inst = $this->getTargetInstance($provided);
         $call = [$inst, $method];
-        $ret  = call_user_func_array($call, $arguments);
+        $ret = call_user_func_array($call, $arguments);
 
         $this->assertSame($expected, $ret);
     }
@@ -194,8 +193,6 @@ abstract class AbstractTransformTest extends AbstractTest
      * @param array    $arguments
      * @param string   $method
      * @param callable $callable
-     *
-     * @return void
      */
     protected function runnerAssertCustom(Package $package, int $iteration, $provided, $expected, array $arguments, string $method, callable $callable): void
     {
@@ -205,8 +202,6 @@ abstract class AbstractTransformTest extends AbstractTest
      * @param string|int $expected
      * @param string     $message
      * @param string     $which
-     *
-     * @return void
      */
     protected function assertTransformConstruct($expected, string $message, string $which)
     {
@@ -224,7 +219,7 @@ abstract class AbstractTransformTest extends AbstractTest
         }
 
         $this->assertInstanceOf(TransformInterface::class, $instance);
-        $this->assertEquals($expected, $received, $this->equalsMessage($message, $which, $expected, $received));
+        $this->assertSame($expected, $received, $this->equalsMessage($message, $which, $expected, $received));
     }
 
     /**
@@ -232,8 +227,6 @@ abstract class AbstractTransformTest extends AbstractTest
      * @param string|int $received
      * @param string     $message
      * @param string     $which
-     *
-     * @return void
      */
     protected function assertTransform($instance, $expected, $received, string $message, string $which): void
     {
@@ -248,7 +241,7 @@ abstract class AbstractTransformTest extends AbstractTest
             $received = $this->readyComparisonValueForNumberTransformResult($received);
         }
 
-        $this->assertEquals($expected, $received, $message);
+        $this->assertSame($expected, $received, $message);
     }
 
     /**
@@ -268,8 +261,6 @@ abstract class AbstractTransformTest extends AbstractTest
      * @param string|null $context
      * @param string      $message
      * @param array       ...$replacements
-     *
-     * @return void
      */
     protected function doFail(string $context = null, string $message, ...$replacements): void
     {
@@ -295,6 +286,6 @@ abstract class AbstractTransformTest extends AbstractTest
         settype($i, 'int');
         settype($f, 'float');
 
-        return $i == $f ? $i : $f;
+        return $i === $f ? $i : $f;
     }
 }

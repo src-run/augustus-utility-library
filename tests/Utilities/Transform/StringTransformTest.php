@@ -33,13 +33,13 @@ class StringTransformTest extends AbstractTransformTest
     /**
      * @return \Generator
      */
-    public function provideTestMutatorAndAccessorData() : \Generator
+    public function provideTestMutatorAndAccessorData(): \Generator
     {
         yield ['string', 'string'];
         yield [100, '100'];
         yield [100.5, '100.5'];
-        yield [(new class {
-            public function __toString() : string
+        yield [(new class() {
+            public function __toString(): string
             {
                 return 'string';
             }
@@ -49,13 +49,13 @@ class StringTransformTest extends AbstractTransformTest
     /**
      * @return \Generator
      */
-    public function provideTestConstructorExceptionOnInvalidValueData() : \Generator
+    public function provideTestConstructorExceptionOnInvalidValueData(): \Generator
     {
-        yield [new class {}];
+        yield [new class() {
+        }];
     }
 
     /* comparisons */
-
 
     public function testIsSame(): void
     {
@@ -217,8 +217,6 @@ class StringTransformTest extends AbstractTransformTest
      * @param array    $arguments
      * @param string   $method
      * @param callable $callable
-     *
-     * @return void
      */
     protected function runnerAssertCustom(Package $package, int $iteration, $provided, $expected, array $arguments, string $method, callable $callable): void
     {
@@ -227,8 +225,6 @@ class StringTransformTest extends AbstractTransformTest
 
     /**
      * @param mixed $provided
-     *
-     * @return void
      */
     protected function runnerAssertStringTransform($provided): void
     {
@@ -251,6 +247,6 @@ class StringTransformTest extends AbstractTransformTest
         $instanceTwo->setMutable(false);
 
         $this->assertFalse($instanceTwo->isMutable());
-        $this->assertCount(strlen($instance->get()), $instance->split());
+        $this->assertCount(mb_strlen($instance->get()), $instance->split());
     }
 }

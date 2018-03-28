@@ -12,28 +12,36 @@
 namespace SR\Utilities\Test;
 
 use PHPUnit\Framework\TestCase;
+use SR\Util\Info\ArrayInfo;
 
 /**
  * @coversNothing
  */
 class BcAliasTest extends TestCase
 {
+    /**
+     * @group legacy
+     *
+     * @return array
+     */
     public static function provideAliasesData(): array
     {
         return [
-            [\SR\Utilities\Transform\NumberTransform::class, '\SR\Utils\Transform\NumberTransform'],
-            [\SR\Utilities\Transform\StringTransform::class, '\SR\Utils\Transform\StringTransform'],
-            [\SR\Utilities\Transform\TransformInterface::class, '\SR\Utils\Transform\TransformInterface'],
-            [\SR\Utilities\ArrayInfo::class, '\SR\Utils\Info\ArrayInfo'],
-            [\SR\Utilities\ArrayInfo::class, '\SR\Utils\Info\ClassInfo'],
-            [\SR\Utilities\ArrayInfo::class, '\SR\Utils\Info\EngineInfo'],
-            [\SR\Utilities\ArrayInfo::class, '\SR\Utils\Info\StringInfo'],
-            [\SR\Utilities\Context\FileContext::class, '\SR\Utils\Context\FileContext'],
-            [\SR\Utilities\Context\FileContextInterface::class, '\SR\Utils\Context\FileContextInterface'],
+            [\SR\Utilities\Transform\NumberTransform::class, '\SR\Util\Transform\NumberTransform'],
+            [\SR\Utilities\Transform\StringTransform::class, '\SR\Util\Transform\StringTransform'],
+            [\SR\Utilities\Transform\TransformInterface::class, '\SR\Util\Transform\TransformInterface'],
+            [\SR\Utilities\ArrayInfo::class, '\SR\Util\Info\ArrayInfo'],
+            [\SR\Utilities\ClassInfo::class, '\SR\Util\Info\ClassInfo'],
+            [\SR\Utilities\EngineInfo::class, '\SR\Util\Info\EngineInfo'],
+            [\SR\Utilities\StringInfo::class, '\SR\Util\Info\StringInfo'],
+            [\SR\Utilities\Context\FileContext::class, '\SR\Util\Context\FileContext'],
+            [\SR\Utilities\Context\FileContextInterface::class, '\SR\Util\Context\FileContextInterface'],
         ];
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider provideAliasesData
      *
      * @param string $new
@@ -41,10 +49,31 @@ class BcAliasTest extends TestCase
      */
     public function testAliases(string $new, string $old): void
     {
-        try {
-            $this->assertSame($new, (new \ReflectionClass($old))->getName());
-        } catch (\ReflectionException $e) {
-            $this->fail($e->getMessage());
+        if (false !== strpos($old, 'Interface')) {
+            try {
+                $this->assertTrue((new \ReflectionClass($old))->isSubclassOf($new));
+            } catch (\ReflectionException $e) {
+                $this->fail($e->getMessage());
+            }
+        } else {
+            try {
+                $this->assertTrue(
+                    (new \ReflectionClass($old))->isSubclassOf($new) ||
+                    false !== strpos(constant(sprintf('%s::REAL_CLASS', $old)), $new)
+                );
+            } catch (\ReflectionException $e) {
+                $this->fail($e->getMessage());
+            }
         }
+    }
+
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Calling "SR\Util\Info\ArrayInfo" is deprecated and has been replaced with "SR\Utilities\ArrayInfo".
+     */
+    public function testStaticDeprecationMessage()
+    {
+        ArrayInfo::isAssociative([]);
     }
 }

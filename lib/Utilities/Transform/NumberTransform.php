@@ -11,7 +11,7 @@
 
 namespace SR\Utilities\Transform;
 
-final class NumberTransform extends AbstractTransform
+class NumberTransform extends AbstractTransform
 {
     /**
      * Construct by optionally setting the number to manipulate.

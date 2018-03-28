@@ -15,7 +15,7 @@ use SR\Utilities\Transform\Argument\Expression\Archetype\RangedArchetype;
 use SR\Utilities\Transform\Argument\Expression\Archetype\StringArchetype;
 use SR\Utilities\Transform\Argument\Expression\Representative\SearchReplaceRepresentative;
 
-final class StringTransform extends AbstractTransform
+class StringTransform extends AbstractTransform
 {
     /**
      * Construct by optionally setting the string value to manipulate.

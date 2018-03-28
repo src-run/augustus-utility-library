@@ -460,8 +460,10 @@ final class BacktraceRecordModel
             return $classReflection->getMethod($function);
         }
 
-        return null !== $function
-            ? new \ReflectionFunction($function)
-            : null;
+        try {
+            return new \ReflectionFunction($function);
+        } catch (\ReflectionException $e) {
+            return null;
+        }
     }
 }

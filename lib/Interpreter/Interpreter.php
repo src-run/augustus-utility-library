@@ -11,20 +11,20 @@
 
 namespace SR\Interpreter;
 
-use SR\Interpreter\Model\Error\ErrorModel;
-use SR\Interpreter\Model\Error\ReportingModel;
-use SR\Interpreter\Model\Error\Trace\BacktraceModel;
+use SR\Interpreter\Error\Error;
+use SR\Interpreter\Reporting\ReportingLevel;
+use SR\Interpreter\Backtrace\Backtrace;
 
 final class Interpreter
 {
     /**
      * @param bool $clear
      *
-     * @return ErrorModel
+     * @return Error
      */
-    public static function error(bool $clear = true): ErrorModel
+    public static function error(bool $clear = true): Error
     {
-        return ErrorModel::create($clear);
+        return Error::create($clear);
     }
 
     /**
@@ -32,34 +32,34 @@ final class Interpreter
      */
     public static function hasError(): bool
     {
-        return ErrorModel::create(false)->isReal();
+        return Error::create(false)->isReal();
     }
 
     /**
      * Clear the last error
      */
-    public static function clearError(): ErrorModel
+    public static function clearError(): Error
     {
-        return ErrorModel::create(false)->clear();
+        return Error::create(false)->clear();
     }
 
     /**
      * @param int $level
      *
-     * @return BacktraceModel
+     * @return Backtrace
      */
-    public static function trace(int $level = 100): BacktraceModel
+    public static function trace(int $level = 100): Backtrace
     {
-        return BacktraceModel::create($level);
+        return Backtrace::create($level);
     }
 
     /**
      * @param int|null $level
      *
-     * @return ReportingModel
+     * @return \SR\Interpreter\Reporting\ReportingLevel
      */
-    public static function reporting(int $level = null): ReportingModel
+    public static function reporting(int $level = null): ReportingLevel
     {
-        return ReportingModel::create($level);
+        return ReportingLevel::create($level);
     }
 }

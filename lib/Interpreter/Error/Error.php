@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Interpreter\Model\Error;
+namespace SR\Interpreter\Error;
 
-use SR\Interpreter\Model\Error\Trace\BacktraceModel;
+use SR\Interpreter\Backtrace\Backtrace;
 
-final class ErrorModel
+final class Error
 {
     /**
      * @var int
@@ -41,7 +41,7 @@ final class ErrorModel
     private $real;
 
     /**
-     * @var BacktraceModel
+     * @var Backtrace
      */
     private $debugBacktrace;
 
@@ -131,9 +131,9 @@ final class ErrorModel
     }
 
     /**
-     * @return null|BacktraceModel
+     * @return null|Backtrace
      */
-    public function trace(): ?BacktraceModel
+    public function trace(): ?Backtrace
     {
         return $this->debugBacktrace;
     }
@@ -204,7 +204,7 @@ final class ErrorModel
             self::extractErrorText($data),
             self::extractErrorFile($data),
             self::extractErrorLine($data),
-            0 < $debugBacktraceLimit ? BacktraceModel::create($debugBacktraceLimit) : null,
+            0 < $debugBacktraceLimit ? Backtrace::create($debugBacktraceLimit) : null,
             0 < count($data),
         ];
     }

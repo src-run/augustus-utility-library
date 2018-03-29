@@ -13,37 +13,37 @@ namespace SR\Interpreter\Tests;
 
 use PHPUnit\Framework\TestCase;
 use SR\Interpreter\Interpreter;
-use SR\Interpreter\Model\Error\ErrorModel;
-use SR\Interpreter\Model\Error\ReportingModel;
-use SR\Interpreter\Model\Error\Trace\BacktraceModel;
-use SR\Interpreter\Model\Error\Trace\Record\BacktraceRecordModel;
+use SR\Interpreter\Error\Error;
+use SR\Interpreter\Reporting\ReportingLevel;
+use SR\Interpreter\Backtrace\Backtrace;
+use SR\Interpreter\Backtrace\BacktraceRecord;
 
 /**
  * @covers \SR\Interpreter\Interpreter
- * @covers \SR\Interpreter\Model\Error\ErrorModel
- * @covers \SR\Interpreter\Model\Error\Trace\BacktraceModel
- * @covers \SR\Interpreter\Model\Error\Trace\Record\BacktraceRecordModel
- * @covers \SR\Interpreter\Model\Error\ReportingModel
+ * @covers \SR\Interpreter\Error\Error
+ * @covers \SR\Interpreter\Backtrace\Backtrace
+ * @covers \SR\Interpreter\Backtrace\BacktraceRecord
+ * @covers \SR\Interpreter\Reporting\ReportingLevel
  */
 class InterpreterTest extends TestCase
 {
     public static function provideErrorData(): \Iterator
     {
-        yield ['file_get_contents(%s/foo/bar/baz.ext): failed to open stream: No such file or directory', function () {
+        yield [function () {
             @file_get_contents(sprintf('%s/foo/bar/baz.ext', sys_get_temp_dir()));
-        }];
-        yield ['unlink(%s/foo/bar/baz.ext): No such file or directory', function () {
+        }, 'file_get_contents(%s/foo/bar/baz.ext): failed to open stream: No such file or directory'];
+        yield [function () {
             @unlink(sprintf('%s/foo/bar/baz.ext', sys_get_temp_dir()));
-        }];
+        }, 'unlink(%s/foo/bar/baz.ext): No such file or directory'];
     }
 
     /**
      * @dataProvider provideErrorData
      *
-     * @param string   $expectedMessageFormat
      * @param \Closure $errorCauser
+     * @param string   $expectedMessageFormat
      */
-    public function testError(string $expectedMessageFormat, \Closure $errorCauser)
+    public function testError(\Closure $errorCauser, string $expectedMessageFormat)
     {
         $errorCauser();
 
@@ -70,7 +70,7 @@ class InterpreterTest extends TestCase
         $this->assertInternalType('int', $error->type());
         $this->assertInstanceOf(\SplFileInfo::class, $error->file());
         $this->assertInternalType('int', $error->line());
-        $this->assertInstanceOf(BacktraceModel::class, $error->trace());
+        $this->assertInstanceOf(Backtrace::class, $error->trace());
         $this->assertTrue($error->hasFile());
         $this->assertTrue($error->hasTrace());
         $this->assertTrue($error->isReal());
@@ -79,7 +79,7 @@ class InterpreterTest extends TestCase
         $this->assertFalse(Interpreter::hasError());
 
         $errorCauser();
-        $error = new ErrorModel(true, -1);
+        $error = new Error(true, -1);
         $this->assertFalse($error->hasTrace());
         unset($error);
         $this->assertFalse(Interpreter::hasError());
@@ -100,17 +100,41 @@ class InterpreterTest extends TestCase
     /**
      * @dataProvider provideErrorData
      *
-     * @param string   $expectedMessageFormat
      * @param \Closure $errorCauser
      */
-    public function testTrace(string $expectedMessageFormat, \Closure $errorCauser)
+    public function testTrace(\Closure $errorCauser)
     {
         $errorCauser();
 
-        $this->assertInstanceOf(BacktraceModel::class, $trace = Interpreter::trace());
+        $this->assertTrue(Interpreter::hasError());
+        $this->assertInstanceOf(Backtrace::class, $trace = Interpreter::trace());
         $this->assertTrue(Interpreter::hasError());
 
         $this->assertValidTrace($trace);
+    }
+
+    public function testTraceBlacklisting()
+    {
+        $resolveRecordClasses = function (Backtrace $trace): array {
+            return array_map(function (BacktraceRecord $record): string {
+                return $record->getClassName();
+            }, array_filter($trace->getRecords(), function (BacktraceRecord $record): bool {
+                return $record->hasClassName();
+            }));
+        };
+
+        $trace = Interpreter::trace();
+        $this->assertTrue(in_array(self::class, $resolveRecordClasses($trace)));
+
+        Backtrace::addBlacklistedClasses(self::class);
+
+        $trace = Interpreter::trace();
+        $this->assertFalse(in_array(self::class, $resolveRecordClasses($trace)));
+
+        Backtrace::resetBlacklistedClasses();
+
+        $trace = Interpreter::trace();
+        $this->assertTrue(in_array(self::class, $resolveRecordClasses($trace)));
     }
 
     public function testReporting()
@@ -118,7 +142,7 @@ class InterpreterTest extends TestCase
         $level = error_reporting();
         $reporting = Interpreter::reporting();
 
-        $this->assertInstanceOf(ReportingModel::class, $reporting);
+        $this->assertInstanceOf(ReportingLevel::class, $reporting);
         $this->assertSame($level, $reporting->level());
         $reporting->level(E_ALL);
         $reporting->level(E_ALL & E_STRICT);
@@ -146,12 +170,12 @@ class InterpreterTest extends TestCase
     }
 
     /**
-     * @param BacktraceModel $trace
+     * @param Backtrace $trace
      */
-    private function assertValidTrace(BacktraceModel $trace): void
+    private function assertValidTrace(Backtrace $trace): void
     {
-        $this->assertInternalType('array', $trace->getArrayData());
-        $this->assertTrue($trace->hasArrayData());
+        $this->assertInternalType('array', $trace->getRawData());
+        $this->assertTrue($trace->hasRawData());
         $this->assertCount(count($trace->getRecords()), $trace);
         $this->assertTrue($trace->hasRecords());
 
@@ -165,9 +189,9 @@ class InterpreterTest extends TestCase
     }
 
     /**
-     * @param BacktraceRecordModel $record
+     * @param BacktraceRecord $record
      */
-    private function assertValidBacktraceRecord(BacktraceRecordModel $record): void
+    private function assertValidBacktraceRecord(BacktraceRecord $record): void
     {
         if ('object' === $record->getType() || 'class' === $record->getType()) {
             $this->assertStringMatchesFormat('%s [%s] (%s)', (string) $record);

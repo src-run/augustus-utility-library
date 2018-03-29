@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Interpreter\Model\Error\Trace\Record;
+namespace SR\Interpreter\Backtrace;
 
 use SR\Utilities\ClassQuery;
 
-final class BacktraceRecordModel
+final class BacktraceRecord
 {
     /**
      * @var mixed[]

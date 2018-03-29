@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Interpreter\Model\Error;
+namespace SR\Interpreter\Reporting;
 
-final class ReportingModel
+final class ReportingLevel
 {
     /**
      * @var int[]
@@ -32,6 +32,8 @@ final class ReportingModel
     }
 
     /**
+     * @param int|null $level
+     *
      * @return self
      */
     public static function create(int $level = null): self

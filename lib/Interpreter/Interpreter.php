@@ -11,9 +11,9 @@
 
 namespace SR\Interpreter;
 
+use SR\Interpreter\Backtrace\Backtrace;
 use SR\Interpreter\Error\Error;
 use SR\Interpreter\Reporting\ReportingLevel;
-use SR\Interpreter\Backtrace\Backtrace;
 
 final class Interpreter
 {

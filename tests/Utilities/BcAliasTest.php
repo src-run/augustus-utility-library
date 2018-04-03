@@ -49,7 +49,7 @@ class BcAliasTest extends TestCase
      */
     public function testAliases(string $new, string $old): void
     {
-        if (false !== strpos($old, 'Interface')) {
+        if (false !== mb_strpos($old, 'Interface')) {
             try {
                 $this->assertTrue((new \ReflectionClass($old))->isSubclassOf($new));
             } catch (\ReflectionException $e) {
@@ -59,7 +59,7 @@ class BcAliasTest extends TestCase
             try {
                 $this->assertTrue(
                     (new \ReflectionClass($old))->isSubclassOf($new) ||
-                    false !== strpos(constant(sprintf('%s::REAL_CLASS', $old)), $new)
+                    false !== mb_strpos(constant(sprintf('%s::REAL_CLASS', $old)), $new)
                 );
             } catch (\ReflectionException $e) {
                 $this->fail($e->getMessage());

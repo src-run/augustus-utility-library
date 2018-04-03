@@ -11,8 +11,8 @@
 
 namespace SR\Interpreter\Backtrace;
 
-use SR\Interpreter\Interpreter;
 use SR\Interpreter\Error\Error;
+use SR\Interpreter\Interpreter;
 use SR\Utilities\ClassQuery;
 
 final class Backtrace implements \Countable, \IteratorAggregate

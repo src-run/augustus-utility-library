@@ -12,11 +12,11 @@
 namespace SR\Interpreter\Tests;
 
 use PHPUnit\Framework\TestCase;
-use SR\Interpreter\Interpreter;
-use SR\Interpreter\Error\Error;
-use SR\Interpreter\Reporting\ReportingLevel;
 use SR\Interpreter\Backtrace\Backtrace;
 use SR\Interpreter\Backtrace\BacktraceRecord;
+use SR\Interpreter\Error\Error;
+use SR\Interpreter\Interpreter;
+use SR\Interpreter\Reporting\ReportingLevel;
 
 /**
  * @covers \SR\Interpreter\Interpreter
@@ -124,17 +124,17 @@ class InterpreterTest extends TestCase
         };
 
         $trace = Interpreter::trace();
-        $this->assertTrue(in_array(self::class, $resolveRecordClasses($trace)));
+        $this->assertTrue(in_array(self::class, $resolveRecordClasses($trace), true));
 
         Backtrace::addBlacklistedClasses(self::class);
 
         $trace = Interpreter::trace();
-        $this->assertFalse(in_array(self::class, $resolveRecordClasses($trace)));
+        $this->assertFalse(in_array(self::class, $resolveRecordClasses($trace), true));
 
         Backtrace::resetBlacklistedClasses();
 
         $trace = Interpreter::trace();
-        $this->assertTrue(in_array(self::class, $resolveRecordClasses($trace)));
+        $this->assertTrue(in_array(self::class, $resolveRecordClasses($trace), true));
     }
 
     public function testReporting()

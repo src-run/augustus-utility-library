@@ -197,7 +197,8 @@ final class ClassQuery
             }
 
             return new \ReflectionClass($for);
-        } catch (\ReflectionException $e) {}
+        } catch (\ReflectionException $e) {
+        }
 
         throw new \InvalidArgumentException(sprintf(
             'Could not create reflection object for "%s"', @print_r($for, true)
@@ -283,8 +284,6 @@ final class ClassQuery
      * @param string        $property
      * @param object|string $from
      * @param mixed         $value
-     *
-     * @return void
      */
     public static function setNonAccessiblePropertyValue(string $property, $from, $value): void
     {

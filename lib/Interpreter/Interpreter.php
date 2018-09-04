@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Interpreter;
+namespace SR\Utilities\Interpreter;
 
-use SR\Interpreter\Backtrace\Backtrace;
-use SR\Interpreter\Error\Error;
-use SR\Interpreter\Reporting\ReportingLevel;
+use SR\Utilities\Interpreter\Backtrace\Backtrace;
+use SR\Utilities\Interpreter\Error\Error;
+use SR\Utilities\Interpreter\Reporting\ReportingLevel;
 
 final class Interpreter
 {
@@ -56,7 +56,7 @@ final class Interpreter
     /**
      * @param int|null $level
      *
-     * @return \SR\Interpreter\Reporting\ReportingLevel
+     * @return \SR\Utilities\Interpreter\Reporting\ReportingLevel
      */
     public static function reporting(int $level = null): ReportingLevel
     {

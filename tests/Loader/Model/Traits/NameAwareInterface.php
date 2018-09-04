@@ -9,7 +9,12 @@
  * file that was distributed with this source code.
  */
 
-function get_interpreter_error(bool $clear = true): \SR\Utilities\Interpreter\Error\Error
+namespace SR\Tests\Utilities\Loader\Model\Traits;
+
+interface NameAwareInterface
 {
-    return \SR\Utilities\Interpreter\Interpreter::error($clear);
+    /**
+     * @return string
+     */
+    public function getName(): string;
 }

@@ -9,7 +9,10 @@
  * file that was distributed with this source code.
  */
 
-function get_interpreter_error(bool $clear = true): \SR\Utilities\Interpreter\Error\Error
+namespace SR\Utilities\IO\Buffered\Input;
+
+use SR\Utilities\IO\Buffered\BufferedInterface;
+
+interface InputBufferedInterface extends BufferedInterface
 {
-    return \SR\Utilities\Interpreter\Interpreter::error($clear);
 }

@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Interpreter\Backtrace;
+namespace SR\Utilities\Interpreter\Backtrace;
 
-use SR\Interpreter\Error\Error;
-use SR\Interpreter\Interpreter;
-use SR\Utilities\ClassQuery;
+use SR\Utilities\Interpreter\Error\Error;
+use SR\Utilities\Interpreter\Interpreter;
+use SR\Utilities\Query\ClassQuery;
 
 final class Backtrace implements \Countable, \IteratorAggregate
 {

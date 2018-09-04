@@ -9,21 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Interpreter\Tests;
+namespace SR\Tests\Utilities\Interpreter;
 
 use PHPUnit\Framework\TestCase;
-use SR\Interpreter\Backtrace\Backtrace;
-use SR\Interpreter\Backtrace\BacktraceRecord;
-use SR\Interpreter\Error\Error;
-use SR\Interpreter\Interpreter;
-use SR\Interpreter\Reporting\ReportingLevel;
+use SR\Utilities\Interpreter\Backtrace\Backtrace;
+use SR\Utilities\Interpreter\Backtrace\BacktraceRecord;
+use SR\Utilities\Interpreter\Error\Error;
+use SR\Utilities\Interpreter\Interpreter;
+use SR\Utilities\Interpreter\Reporting\ReportingLevel;
 
 /**
- * @covers \SR\Interpreter\Interpreter
- * @covers \SR\Interpreter\Error\Error
- * @covers \SR\Interpreter\Backtrace\Backtrace
- * @covers \SR\Interpreter\Backtrace\BacktraceRecord
- * @covers \SR\Interpreter\Reporting\ReportingLevel
+ * @covers \SR\Utilities\Interpreter\Interpreter
+ * @covers \SR\Utilities\Interpreter\Error\Error
+ * @covers \SR\Utilities\Interpreter\Backtrace\Backtrace
+ * @covers \SR\Utilities\Interpreter\Backtrace\BacktraceRecord
+ * @covers \SR\Utilities\Interpreter\Reporting\ReportingLevel
  */
 class InterpreterTest extends TestCase
 {
@@ -167,6 +167,19 @@ class InterpreterTest extends TestCase
         $this->assertNull($reporting->prior());
         $reporting->revert();
         $this->assertNull($reporting->prior());
+    }
+
+    /**
+     * @group legacy
+     * @group bcl
+     */
+    public function testDeprecatedNamespace(): void
+    {
+        $this->assertInstanceOf(Interpreter::class, new \SR\Interpreter\Interpreter());
+        $this->assertInstanceOf(Backtrace::class, new \SR\Interpreter\Backtrace\Backtrace());
+        $this->assertInstanceOf(BacktraceRecord::class, new \SR\Interpreter\Backtrace\BacktraceRecord([]));
+        $this->assertInstanceOf(Error::class, new \SR\Interpreter\Error\Error());
+        $this->assertInstanceOf(ReportingLevel::class, new \SR\Interpreter\Reporting\ReportingLevel());
     }
 
     /**

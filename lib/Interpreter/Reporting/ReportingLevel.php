@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Interpreter\Reporting;
+namespace SR\Utilities\Interpreter\Reporting;
 
 final class ReportingLevel
 {

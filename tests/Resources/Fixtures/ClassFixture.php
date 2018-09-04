@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Utilities\Test\Resources\Fixtures;
+namespace SR\Tests\Utilities\Resources\Fixtures;
 
 class ClassFixture
 {

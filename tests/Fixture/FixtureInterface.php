@@ -9,7 +9,13 @@
  * file that was distributed with this source code.
  */
 
-function get_interpreter_error(bool $clear = true): \SR\Utilities\Interpreter\Error\Error
+namespace SR\Tests\Utilities\Fixture;
+
+/**
+ * Class FixtureInterface.
+ */
+interface FixtureInterface
 {
-    return \SR\Utilities\Interpreter\Interpreter::error($clear);
 }
+
+/* EOF */

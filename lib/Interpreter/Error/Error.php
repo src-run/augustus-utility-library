@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Interpreter\Error;
+namespace SR\Utilities\Interpreter\Error;
 
-use SR\Interpreter\Backtrace\Backtrace;
+use SR\Utilities\Interpreter\Backtrace\Backtrace;
 
 final class Error
 {
@@ -197,7 +197,7 @@ final class Error
      */
     private static function extractError(int $debugBacktraceLimit = null): array
     {
-        $data = error_get_last() ?: [];
+        $data = error_get_last() ?? [];
 
         return [
             self::extractErrorType($data),

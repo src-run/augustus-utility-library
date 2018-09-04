@@ -242,9 +242,7 @@ trait MemoryBufferedTrait
             return 'php://temp';
         }
 
-        return sprintf(
-            'php://temp/maxmemory:%d', self::convertMegabytesToBytes($megabytes)
-        );
+        return sprintf('php://temp/maxmemory:%d', self::convertMegabytesToBytes($megabytes)) ?: 'php://temp';
     }
 
     /**

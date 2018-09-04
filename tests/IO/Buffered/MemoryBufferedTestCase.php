@@ -35,7 +35,7 @@ abstract class MemoryBufferedTestCase extends TestCase
         };
 
         for ($megabytes = 0; $megabytes < 20480; $megabytes += $addRandomDecimal(mt_rand(1024, 2048))) {
-            yield [$megabytes, round($megabytes * 1024 * 1024, 0)];
+            yield [$megabytes, self::convertMegabytesToBytes($megabytes)];
         }
     }
 
@@ -47,8 +47,13 @@ abstract class MemoryBufferedTestCase extends TestCase
      */
     public function testMemory(?float $megabytes, ?int $bytes): void
     {
-        $this->assertSame($megabytes, ($buffer = $this->createMemoryBufferedInstance($megabytes))->memory());
-        $this->assertContains((string) $bytes, $buffer->scheme());
+        $this->assertSame($megabytes, ($buffer = static::createMemoryBufferedInstance($megabytes))->memory());
+
+        if (null !== $bytes) {
+            $this->assertContains((string) $bytes, $buffer->scheme());
+        } else {
+            $this->assertNotContains((string) self::convertMegabytesToBytes($megabytes ?? 0), $buffer->scheme());
+        }
     }
 
     /**
@@ -74,34 +79,7 @@ abstract class MemoryBufferedTestCase extends TestCase
      */
     public function testMode(?float $megabytes, ?string $providedMode, string $expectedMode = null): void
     {
-        $this->assertSame($expectedMode ?? $providedMode, ($this->createMemoryBufferedInstance($megabytes, $providedMode))->mode());
-    }
-
-    /**
-     * @param float|null $megabytes
-     * @param int|null   $bytes
-     *
-     * @return string
-     */
-    private static function createSchemeString(?float $megabytes, ?int $bytes): string
-    {
-        if (null === $megabytes) {
-            return 'php://memory';
-        }
-
-        if (0 > $megabytes) {
-            return 'php://temp';
-        }
-
-        if (null === $bytes) {
-            self::fail(vsprintf('Invalid parameters for "%s" provided: (%s, %s).', [
-                __METHOD__,
-                var_export($megabytes, true),
-                var_export($bytes, true),
-            ]));
-        }
-
-        return sprintf('php://temp/maxmemory:%d', $bytes);
+        $this->assertSame($expectedMode ?? $providedMode, (static::createMemoryBufferedInstance($megabytes, $providedMode))->mode());
     }
 
     /**
@@ -122,7 +100,7 @@ abstract class MemoryBufferedTestCase extends TestCase
      */
     public function testScheme(?float $megabytes, string $expectedScheme): void
     {
-        $this->assertSame($expectedScheme, ($this->createMemoryBufferedInstance($megabytes))->scheme());
+        $this->assertSame($expectedScheme, (static::createMemoryBufferedInstance($megabytes))->scheme());
     }
 
     /**
@@ -145,7 +123,7 @@ abstract class MemoryBufferedTestCase extends TestCase
      */
     public function testFullConstruction(?float $megabytes, ?string $providedMode, string $expectedMode, string $expectedSchema): void
     {
-        $buffer = $this->createMemoryBufferedInstance($megabytes, $providedMode);
+        $buffer = static::createMemoryBufferedInstance($megabytes, $providedMode);
 
         $this->assertSame($expectedMode, $buffer->mode());
         $this->assertSame($megabytes, $buffer->memory());
@@ -162,7 +140,7 @@ abstract class MemoryBufferedTestCase extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageRegExp('/Cannot set memory while resource is open. Close resource with .+Memory(Output|Input)Buffered::close()./');
 
-        $buffer = $this->createMemoryBufferedInstance($megabytes);
+        $buffer = static::createMemoryBufferedInstance($megabytes);
         $buffer->setMemory($megabytes - 1024);
     }
 
@@ -176,7 +154,7 @@ abstract class MemoryBufferedTestCase extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageRegExp('/Cannot set mode while resource is open. Close resource with .+Memory(Output|Input)Buffered::close()./');
 
-        $buffer = $this->createMemoryBufferedInstance($megabytes);
+        $buffer = static::createMemoryBufferedInstance($megabytes);
         $buffer->setMode('r+');
     }
 
@@ -185,7 +163,7 @@ abstract class MemoryBufferedTestCase extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageRegExp('/Failed to open "[^"]+" \(mode: "[^"]+"; limit: "[^\s]+ megabytes \/ [^\s]+ bytes"\): .+/i');
 
-        $b = $this->createMemoryBufferedInstance();
+        $b = static::createMemoryBufferedInstance();
         $b->close();
         $p = (new \ReflectionObject($b))->getProperty('scheme');
         $p->setAccessible(true);
@@ -201,7 +179,7 @@ abstract class MemoryBufferedTestCase extends TestCase
      */
     public function testChangingMemoryAndModeAllocationAfterClosingResource(?float $megabytes, string $expectedScheme): void
     {
-        $this->assertSame($expectedScheme, ($buffer = $this->createMemoryBufferedInstance($megabytes))->scheme());
+        $this->assertSame($expectedScheme, ($buffer = static::createMemoryBufferedInstance($megabytes))->scheme());
         $buffer->close();
         $buffer->setMode('r');
     }
@@ -238,8 +216,8 @@ abstract class MemoryBufferedTestCase extends TestCase
      */
     public function testSimultaneousReadAndWrite(string $fileOne, string $fileTwo, int $megabytes = null): void
     {
-        $bufferOne = $this->createMemoryBufferedInstance($megabytes);
-        $bufferTwo = $this->createMemoryBufferedInstance($megabytes);
+        $bufferOne = static::createMemoryBufferedInstance($megabytes);
+        $bufferTwo = static::createMemoryBufferedInstance($megabytes);
 
         $this->assertBufferIsOpen($bufferOne);
         $this->assertBufferIsOpen($bufferTwo);
@@ -283,7 +261,7 @@ abstract class MemoryBufferedTestCase extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageRegExp('{Failed to write "foobar" data to closed buffer: re-open the buffer resource using the "[^"]+Memory(Output|Input)Buffered::reset\(\)" method\.}');
 
-        $buffer = $this->createMemoryBufferedInstance();
+        $buffer = static::createMemoryBufferedInstance();
         $buffer->close();
         $buffer->add('foobar');
     }
@@ -293,7 +271,7 @@ abstract class MemoryBufferedTestCase extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageRegExp('{Failed to read "all" data from closed buffer: re-open the buffer resource using the "[^"]+Memory(Output|Input)Buffered::reset\(\)" method\.}');
 
-        $buffer = $this->createMemoryBufferedInstance();
+        $buffer = static::createMemoryBufferedInstance();
         $buffer->add('foobar');
         $buffer->close();
         $buffer->get();
@@ -305,7 +283,47 @@ abstract class MemoryBufferedTestCase extends TestCase
      *
      * @return BufferedInterface|MemoryOutputBuffered|MemoryInputBuffered
      */
-    abstract protected function createMemoryBufferedInstance(float $memory = null, string $mode = null): BufferedInterface;
+    abstract protected static function createMemoryBufferedInstance(float $memory = null, string $mode = null): BufferedInterface;
+
+    /**
+     * @param float $megabytes
+     *
+     * @return int
+     */
+    private static function convertMegabytesToBytes(float $megabytes): int
+    {
+        $m = (new \ReflectionObject(static::createMemoryBufferedInstance()))->getMethod(__FUNCTION__);
+        $m->setAccessible(true);
+
+        return $m->invoke(null, $megabytes);
+    }
+
+    /**
+     * @param float|null $megabytes
+     * @param int|null   $bytes
+     *
+     * @return string
+     */
+    private static function createSchemeString(?float $megabytes, ?int $bytes): string
+    {
+        if (null === $megabytes) {
+            return 'php://memory';
+        }
+
+        if (0 > $megabytes) {
+            return 'php://temp';
+        }
+
+        if (null === $bytes) {
+            self::fail(vsprintf('Invalid parameters for "%s" provided: (%s, %s).', [
+                __METHOD__,
+                var_export($megabytes, true),
+                var_export($bytes, true),
+            ]));
+        }
+
+        return sprintf('php://temp/maxmemory:%d', $bytes);
+    }
 
     /**
      * @param BufferedInterface $buffer

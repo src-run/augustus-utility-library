@@ -28,7 +28,7 @@ class MemoryInputBufferedTest extends MemoryBufferedTestCase
      *
      * @return BufferedInterface|MemoryOutputBuffered
      */
-    protected function createMemoryBufferedInstance(float $memory = null, string $mode = null): BufferedInterface
+    protected static function createMemoryBufferedInstance(float $memory = null, string $mode = null): BufferedInterface
     {
         return new MemoryInputBuffered($memory, $mode);
     }

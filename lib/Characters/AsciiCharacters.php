@@ -20,7 +20,7 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
     /**
      * @var CharactersGroup[]
      */
-    private $sets;
+    private static $sets;
 
     public function __construct()
     {
@@ -165,8 +165,8 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
      */
     private function cachedCharactersGroup(string $name, \Closure $provider): CharactersGroup
     {
-        return isset($this->sets[$name])
-            ? $this->sets[$name]
-            : $this->sets[$name] = $this->createCharacterGroup(...$provider());
+        return isset(static::$sets[$name])
+            ? static::$sets[$name]
+            : static::$sets[$name] = $this->createCharacterGroup(...$provider());
     }
 }

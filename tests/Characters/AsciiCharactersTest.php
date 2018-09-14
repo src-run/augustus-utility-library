@@ -296,6 +296,47 @@ class AsciiCharactersTest extends TestCase
     }
 
     /**
+     * @return \Generator|array
+     */
+    public static function providePasswordGroupData(): \Generator
+    {
+        foreach (self::getPassword() as $bytes) {
+            yield [$bytes, chr($bytes)];
+        }
+    }
+
+    /**
+     * @dataProvider providePasswordGroupData
+     *
+     * @param int    $byte
+     * @param string $char
+     */
+    public function testPasswordGroupEach(int $byte, string $char): void
+    {
+        $this->doTestGroupEach(
+            (new AsciiCharacters())->passwords(),
+            $byte,
+            $char,
+            self::getPassword(),
+            self::getPassword(true)
+        );
+    }
+
+    public function testPasswordGroup(): void
+    {
+        $this->doTestGroup(
+            $g = (new AsciiCharacters())->passwords(),
+            $b = self::getPassword(),
+            $c = self::getPassword(true)
+        );
+        $this->doTestGroupRandom(
+            $g,
+            $b,
+            $c
+        );
+    }
+
+    /**
      * @param CharactersGroup $group
      * @param int             $b
      * @param string          $c
@@ -468,6 +509,22 @@ class AsciiCharactersTest extends TestCase
             125,// curly bracket (closing)
             126 // tilde
         ];
+
+        return $chars ? self::mapBytesToChars($bytes) : $bytes;
+    }
+
+    /**
+     * @param bool $chars
+     *
+     * @return int[]
+     */
+    private static function getPassword(bool $chars = false): array
+    {
+        $bytes = array_merge(
+            self::getNumbers(),
+            self::getLetters(),
+            self::getSymbolsSel()
+        );
 
         return $chars ? self::mapBytesToChars($bytes) : $bytes;
     }

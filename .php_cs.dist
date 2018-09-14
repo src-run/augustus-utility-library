@@ -53,6 +53,8 @@ return Config::create()
         'multiline_whitespace_before_semicolons' => [
             'strategy' => 'no_multi_line',
         ],
+        'native_constant_invocation' => false,
+        'native_function_invocation' => false,
         'no_php4_constructor' => true,
         'no_short_echo_tag' => true,
         'no_unreachable_default_argument_value' => true,

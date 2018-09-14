@@ -283,8 +283,8 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
     private function readyComparisonValueForNumberTransformResult($value)
     {
         $i = $f = $value;
-        settype($i, 'int');
-        settype($f, 'float');
+        $i = (int) $i;
+        $f = (float) $f;
 
         return $i === $f ? $i : $f;
     }

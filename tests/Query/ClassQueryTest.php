@@ -12,12 +12,12 @@
 namespace SR\Tests\Utilities\Query;
 
 use PHPUnit\Framework\TestCase;
-use SR\Utilities\Query\ClassQuery;
 use SR\Tests\Utilities\Fixture\FixtureInterface;
 use SR\Tests\Utilities\Fixture\FixtureTrait;
 use SR\Tests\Utilities\Fixture\IsInstanceOfThrowableFixture;
 use SR\Tests\Utilities\Fixture\NotInstanceOfThrowableFixture;
 use SR\Tests\Utilities\Resources\Fixtures\ClassFixture;
+use SR\Utilities\Query\ClassQuery;
 
 /**
  * @covers \SR\Utilities\Query\ClassQuery

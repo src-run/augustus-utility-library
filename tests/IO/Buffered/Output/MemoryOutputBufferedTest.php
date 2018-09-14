@@ -11,9 +11,9 @@
 
 namespace SR\Tests\Utilities\IO\Buffered\Output;
 
+use SR\Tests\Utilities\IO\Buffered\MemoryBufferedTestCase;
 use SR\Utilities\IO\Buffered\BufferedInterface;
 use SR\Utilities\IO\Buffered\Output\MemoryOutputBuffered;
-use SR\Tests\Utilities\IO\Buffered\MemoryBufferedTestCase;
 
 /**
  * @covers \SR\Utilities\IO\Buffered\MemoryBufferedTrait

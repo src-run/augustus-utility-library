@@ -12,9 +12,9 @@
 namespace SR\Tests\Utilities\Context;
 
 use PHPUnit\Framework\TestCase;
-use SR\Utilities\Context\FileContext;
 use SR\Tests\Utilities\Fixture\FixtureInterface;
 use SR\Tests\Utilities\Fixture\FixtureTrait;
+use SR\Utilities\Context\FileContext;
 use SR\Utilities\Context\FileContextInterface;
 
 /**

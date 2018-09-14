@@ -26,7 +26,7 @@ abstract class MemoryBufferedTestCase extends TestCase
     {
         yield [null, null];
 
-        for ($negative = -1; $negative > -10240; $negative-= mt_rand(1024, 2048)) {
+        for ($negative = -1; $negative > -10240; $negative -= mt_rand(1024, 2048)) {
             yield [$negative, null];
         }
 
@@ -64,7 +64,7 @@ abstract class MemoryBufferedTestCase extends TestCase
         $modes = ['r', 'r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+', 'e'];
         shuffle($modes);
 
-        foreach (self::provideMemoryData() as list($megabytes, $bytes)) {
+        foreach (self::provideMemoryData() as [$megabytes, $bytes]) {
             yield [$megabytes, null, 'x+b', $bytes];
             yield [$megabytes, $modes[mt_rand(0, count($modes) - 1)], null, $bytes];
         }
@@ -87,7 +87,7 @@ abstract class MemoryBufferedTestCase extends TestCase
      */
     public static function provideSchemeData(): \Generator
     {
-        foreach (self::provideMemoryData() as list($megabytes, $bytes)) {
+        foreach (self::provideMemoryData() as [$megabytes, $bytes]) {
             yield [$megabytes, self::createSchemeString($megabytes, $bytes)];
         }
     }
@@ -108,7 +108,7 @@ abstract class MemoryBufferedTestCase extends TestCase
      */
     public static function provideFullConstructionData(): \Generator
     {
-        foreach (self::provideModeData() as list($megabytes, $providedMode, $expectedMode, $bytes)) {
+        foreach (self::provideModeData() as [$megabytes, $providedMode, $expectedMode, $bytes]) {
             yield [$megabytes, $providedMode, $expectedMode ?? $providedMode, self::createSchemeString($megabytes, $bytes)];
         }
     }

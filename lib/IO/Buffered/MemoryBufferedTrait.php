@@ -52,6 +52,28 @@ trait MemoryBufferedTrait
     }
 
     /**
+     * @throws \RuntimeException will throw on failure to open stream using `fopen`
+     *
+     * @return BufferedInterface|MemoryBufferedTrait
+     */
+    private function setup(): BufferedInterface
+    {
+        Interpreter::error();
+
+        if (false !== ($this->buffer = @fopen($this->scheme(), $this->mode())) && !Interpreter::hasError()) {
+            return $this;
+        }
+
+        throw new \RuntimeException(vsprintf('Failed to open "%s" (mode: "%s"; limit: "%.02f megabytes / %d bytes"): %s', [
+            $this->scheme(),
+            $this->mode(),
+            $this->memory() ?? 'null',
+            $this->memory() ? self::convertMegabytesToBytes($this->memory()) : 'null',
+            Interpreter::error()->text(),
+        ]));
+    }
+
+    /**
      * @return string
      */
     public function mode(): string
@@ -64,7 +86,7 @@ trait MemoryBufferedTrait
      *                     entry's "mode" argument documentation for acceptable values:
      *                     {@see http://php.net/manual/en/function.fopen.php#refsect1-function.fopen-parameters}.
      *
-     * @throws \RuntimeException Throws when setter method is called prior to the buffer being closed.
+     * @throws \RuntimeException throws when setter method is called prior to the buffer being closed
      *
      * @return BufferedInterface|MemoryBufferedTrait
      */
@@ -95,7 +117,7 @@ trait MemoryBufferedTrait
      *                           always be used, irregardless of the buffer size, and a value of -1 causes falling
      *                           over to an on-disk temporary file at the default memory limitation, as defined by PHP.
      *
-     * @throws \RuntimeException Throws when setter method is called prior to the buffer being closed.
+     * @throws \RuntimeException throws when setter method is called prior to the buffer being closed
      *
      * @return BufferedInterface|MemoryBufferedTrait
      */
@@ -164,7 +186,7 @@ trait MemoryBufferedTrait
     }
 
     /**
-     * @throws \RuntimeException Throws on failure to re-setup buffer during reset operation.
+     * @throws \RuntimeException throws on failure to re-setup buffer during reset operation
      *
      * @return BufferedInterface|MemoryBufferedTrait
      */
@@ -203,28 +225,6 @@ trait MemoryBufferedTrait
     public function isResourceOpen(): bool
     {
         return is_resource($this->buffer);
-    }
-
-    /**
-     * @throws \RuntimeException Will throw on failure to open stream using `fopen`.
-     *
-     * @return BufferedInterface|MemoryBufferedTrait
-     */
-    private function setup(): BufferedInterface
-    {
-        Interpreter::error();
-
-        if (false !== ($this->buffer = @fopen($this->scheme(), $this->mode())) && !Interpreter::hasError()) {
-            return $this;
-        }
-
-        throw new \RuntimeException(vsprintf('Failed to open "%s" (mode: "%s"; limit: "%.02f megabytes / %d bytes"): %s', [
-            $this->scheme(),
-            $this->mode(),
-            $this->memory() ?? 'null',
-            $this->memory() ? self::convertMegabytesToBytes($this->memory()) : 'null',
-            Interpreter::error()->text(),
-        ]));
     }
 
     /**

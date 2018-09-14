@@ -147,7 +147,7 @@ class StringTransform extends AbstractTransform
      */
     public function slugify($lowercase = true)
     {
-        return $this->apply(function (StringTransform $value) use ($lowercase) {
+        return $this->apply(function (self $value) use ($lowercase) {
             $result = $value
                 ->setMutable(true)
                 ->replace(new SearchReplaceRepresentative('-', new RangedArchetype('a-z0-9-', true)))

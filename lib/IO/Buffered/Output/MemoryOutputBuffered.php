@@ -18,8 +18,8 @@ final class MemoryOutputBuffered implements OutputBufferedInterface
     use MemoryBufferedTrait;
 
     /**
-     * @param float|null  $memory Reference documentation for {@see self::setMemory()}}.
-     * @param string|null $mode   Reference documentation for {@see self::setMode()}}.
+     * @param float|null  $memory reference documentation for {@see self::setMemory()}}
+     * @param string|null $mode   reference documentation for {@see self::setMode()}}
      */
     public function __construct(float $memory = null, string $mode = null)
     {

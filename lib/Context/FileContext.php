@@ -12,6 +12,7 @@
 namespace SR\Utilities\Context;
 
 use SR\Silencer\CallSilencerFactory;
+use SR\Utilities\Query\ClassQuery;
 
 /**
  * Get file context based on a file path and line number.
@@ -240,9 +241,9 @@ class FileContext implements FileContextInterface
     private function initContext(): self
     {
         try {
-            $this->initContextContents();
-            $this->initContextReflectionClass();
-            $this->initContextReflectionMethod();
+            $this->contents = $this->initContextContents();
+            $this->class    = $this->initContextReflectionClass();
+            $this->method   = $this->initContextReflectionMethod();
         } catch (\RuntimeException $e) {
             throw new \RuntimeException('Could not initialize file context!', null, $e);
         }
@@ -253,54 +254,38 @@ class FileContext implements FileContextInterface
     }
 
     /**
-     * @return FileContext
+     * @return string[]
      */
-    private function initContextContents(): self
+    private function initContextContents(): array
     {
-        $return = CallSilencerFactory::create(function () {
+        $contents = CallSilencerFactory::create(function () {
             return @file_get_contents($this->file);
+        }, function ($return, $raised): bool {
+            return null === $raised && $return;
         })->invoke();
 
-        if (!$return->isFalse()) {
-            $this->contents = explode(PHP_EOL, $return->getReturn());
-        }
-
-        return $this;
+        return $contents->isValid() ? explode(PHP_EOL, $contents->getReturn()) : [];
     }
 
     /**
-     * @return FileContext
+     * @return null|\ReflectionClass|\ReflectionObject
      */
-    private function initContextReflectionClass(): self
+    private function initContextReflectionClass(): ?\ReflectionClass
     {
-        $namespace = $this->searchFileForNamespace();
-        $className = $this->searchFileForClassName();
-        $qualified = $namespace.'\\'.$className;
-
-        if (empty($className) || (!class_exists($qualified) && !trait_exists($qualified) && !interface_exists($qualified))) {
-            throw new \RuntimeException(sprintf('Could not find class "%s"', $qualified));
-        }
-
-        $this->class = new \ReflectionClass($qualified);
-
-        return $this;
+        return ClassQuery::tryReflection(sprintf(
+            '%s\\%s', $this->searchFileForNamespace(), $this->searchFileForClassName()
+        ));
     }
 
     /**
-     * @return FileContext
+     * @return null|\ReflectionMethod
      */
-    private function initContextReflectionMethod(): self
+    private function initContextReflectionMethod(): ?\ReflectionMethod
     {
-        $methods = array_filter($this->class->getMethods(), function (\ReflectionMethod $method) {
+        return array_values(array_filter($this->class->getMethods(), function (\ReflectionMethod $method) {
             return $method->getDeclaringClass()->getName() === $this->class->getName() &&
                 $method->getStartLine() <= $this->line && $this->line <= $method->getEndLine();
-        });
-
-        if (1 === count($methods)) {
-            $this->method = array_shift($methods);
-        }
-
-        return $this;
+        }))[0] ?? null;
     }
 
     /**

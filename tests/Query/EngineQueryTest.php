@@ -42,7 +42,7 @@ class EngineQueryTest extends AbstractUtilitiesTest
         $this->expectException('\InvalidArgumentException');
         $this->expectExceptionMessage('No extensions provided for loaded check');
 
-        \SR\Utilities\Query\EngineQuery::extensionLoaded();
+        EngineQuery::extensionLoaded();
     }
 
     /**

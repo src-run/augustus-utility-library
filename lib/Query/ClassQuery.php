@@ -129,7 +129,7 @@ final class ClassQuery
      */
     public static function assertClass($class): bool
     {
-        if (is_string($class) && class_exists($class)) {
+        if (is_string($class) && @class_exists($class)) {
             return true;
         }
 
@@ -145,7 +145,7 @@ final class ClassQuery
      */
     public static function assertInstance($instance): bool
     {
-        if (is_object($instance)) {
+        if (!is_string($instance) && is_object($instance)) {
             return true;
         }
 
@@ -161,7 +161,7 @@ final class ClassQuery
      */
     public static function assertInterface($interface): bool
     {
-        if (interface_exists($interface)) {
+        if (is_string($interface) && @interface_exists($interface)) {
             return true;
         }
 
@@ -177,7 +177,7 @@ final class ClassQuery
      */
     public static function assertTrait($trait): bool
     {
-        if (is_string($trait) && trait_exists($trait)) {
+        if (is_string($trait) && @trait_exists($trait)) {
             return true;
         }
 
@@ -185,24 +185,45 @@ final class ClassQuery
     }
 
     /**
-     * @param string|mixed|object $for
+     * @param $target
      *
-     * @return null|\ReflectionClass|\ReflectionObject
+     * @return bool
      */
-    public static function getReflection($for): ?\ReflectionClass
+    public static function isReflectable($target): bool
     {
         try {
-            if (static::isInstance($for)) {
-                return new \ReflectionObject($for);
-            }
-
-            return new \ReflectionClass($for);
-        } catch (\ReflectionException $e) {
+            static::getReflection($target);
+        } catch (\InvalidArgumentException $e) {
+            return false;
         }
 
-        throw new \InvalidArgumentException(sprintf(
-            'Could not create reflection object for "%s"', @print_r($for, true)
-        ), 0, $e ?? null);
+        return true;
+    }
+
+    /**
+     * @param string|mixed|object $target
+     *
+     * @return null|\ReflectionClass
+     */
+    public static function tryReflection($target): ?\ReflectionClass
+    {
+        return static::isReflectable($target) ? static::getReflection($target) : null;
+    }
+
+    /**
+     * @param string|mixed|object $target
+     *
+     * @return \ReflectionClass|\ReflectionObject
+     */
+    public static function getReflection($target): \ReflectionClass
+    {
+        try {
+            return static::isInstance($target) ? new \ReflectionObject($target) : new \ReflectionClass($target);
+        } catch (\ReflectionException $e) {
+            throw new \InvalidArgumentException(sprintf(
+                'Could not create reflection object for "%s"', @print_r($target, true)
+            ), 0, $e);
+        }
     }
 
     /**

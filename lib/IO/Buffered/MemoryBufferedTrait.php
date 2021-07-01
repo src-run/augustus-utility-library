@@ -43,9 +43,6 @@ trait MemoryBufferedTrait
         $this->close();
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->get();
@@ -64,18 +61,9 @@ trait MemoryBufferedTrait
             return $this;
         }
 
-        throw new \RuntimeException(vsprintf('Failed to open "%s" (mode: "%s"; limit: "%.02f megabytes / %d bytes"): %s', [
-            $this->scheme(),
-            $this->mode(),
-            $this->memory() ?? 'null',
-            $this->memory() ? self::convertMegabytesToBytes($this->memory()) : 'null',
-            Interpreter::error()->text(),
-        ]));
+        throw new \RuntimeException(vsprintf('Failed to open "%s" (mode: "%s"; limit: "%.02f megabytes / %d bytes"): %s', [$this->scheme(), $this->mode(), $this->memory() ?? 'null', $this->memory() ? self::convertMegabytesToBytes($this->memory()) : 'null', Interpreter::error()->text()]));
     }
 
-    /**
-     * @return string
-     */
     public function mode(): string
     {
         return $this->mode;
@@ -93,9 +81,7 @@ trait MemoryBufferedTrait
     public function setMode(string $mode): BufferedInterface
     {
         if ($this->isResourceOpen()) {
-            throw new \RuntimeException(sprintf(
-                'Cannot set mode while resource is open. Close resource with %s::close().', get_called_class()
-            ));
+            throw new \RuntimeException(sprintf('Cannot set mode while resource is open. Close resource with %s::close().', static::class));
         }
 
         $this->mode = $mode;
@@ -103,9 +89,6 @@ trait MemoryBufferedTrait
         return $this;
     }
 
-    /**
-     * @return float|null
-     */
     public function memory(): ?float
     {
         return $this->memory;
@@ -124,9 +107,7 @@ trait MemoryBufferedTrait
     public function setMemory(float $memory = null): BufferedInterface
     {
         if ($this->isResourceOpen()) {
-            throw new \RuntimeException(sprintf(
-                'Cannot set memory while resource is open. Close resource with %s::close().', get_called_class()
-            ));
+            throw new \RuntimeException(sprintf('Cannot set memory while resource is open. Close resource with %s::close().', static::class));
         }
 
         $this->memory = $memory;
@@ -134,9 +115,6 @@ trait MemoryBufferedTrait
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function scheme(): string
     {
         if (null === $this->scheme) {
@@ -147,37 +125,23 @@ trait MemoryBufferedTrait
     }
 
     /**
-     * @param string $content
-     * @param bool   $newline
-     *
      * @return BufferedInterface|MemoryBufferedTrait
      */
     public function add(string $content, bool $newline = false): BufferedInterface
     {
         if (!$this->isResourceOpen()) {
-            throw new \RuntimeException(sprintf(
-                'Failed to write "%s" data to closed buffer: re-open the buffer resource using the "%s::reset()" method.',
-                mb_strlen($content) > 40 ? sprintf('%s [...]', mb_substr($content, 0, 40)) : $content, __CLASS__
-            ));
+            throw new \RuntimeException(sprintf('Failed to write "%s" data to closed buffer: re-open the buffer resource using the "%s::reset()" method.', mb_strlen($content) > 40 ? sprintf('%s [...]', mb_substr($content, 0, 40)) : $content, __CLASS__));
         }
 
-        fwrite($this->buffer, $newline ? $content.PHP_EOL : $content);
+        fwrite($this->buffer, $newline ? $content . PHP_EOL : $content);
 
         return $this;
     }
 
-    /**
-     * @param int|null $length
-     *
-     * @return string
-     */
     public function get(int $length = null): string
     {
         if (!$this->isResourceOpen()) {
-            throw new \RuntimeException(sprintf(
-                'Failed to read "%s" data from closed buffer: re-open the buffer resource using the "%s::reset()" method.',
-                $length ? sprintf('%d bytes', $length) : 'all', __CLASS__
-            ));
+            throw new \RuntimeException(sprintf('Failed to read "%s" data from closed buffer: re-open the buffer resource using the "%s::reset()" method.', $length ? sprintf('%d bytes', $length) : 'all', __CLASS__));
         }
 
         rewind($this->buffer);
@@ -219,19 +183,11 @@ trait MemoryBufferedTrait
         return $this->buffer;
     }
 
-    /**
-     * @return bool
-     */
     public function isResourceOpen(): bool
     {
         return is_resource($this->buffer);
     }
 
-    /**
-     * @param float|null $megabytes
-     *
-     * @return string
-     */
     private static function buildStreamScheme(?float $megabytes): string
     {
         if (null === $megabytes) {
@@ -245,11 +201,6 @@ trait MemoryBufferedTrait
         return sprintf('php://temp/maxmemory:%d', self::convertMegabytesToBytes($megabytes)) ?: 'php://temp';
     }
 
-    /**
-     * @param float $megabytes
-     *
-     * @return int
-     */
     private static function convertMegabytesToBytes(float $megabytes): int
     {
         return round($megabytes * 1024 * 1024, 0);

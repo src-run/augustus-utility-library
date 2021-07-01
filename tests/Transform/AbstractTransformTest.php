@@ -34,7 +34,7 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
      */
     protected static $fixtureLoader;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         static::$fixtureLoader = new FixtureLoader();
 
@@ -73,17 +73,11 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
 
     abstract public function provideTestConstructorExceptionOnInvalidValueData(): \Generator;
 
-    /**
-     * @return Fixture
-     */
     protected function getFixture(): Fixture
     {
         return static::$fixtureLoader->load(static::FIXTURE_FILE);
     }
 
-    /**
-     * @return \ReflectionClass|null
-     */
     protected function getTargetReflection(): ?\ReflectionClass
     {
         if (0 !== count($target = $this->getFixture()->getTargets())) {
@@ -105,10 +99,6 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
 
     /**
      * Load YML data provider/config for test runner.
-     *
-     * @param string $method
-     *
-     * @return Package
      */
     protected function getPackageForMethod(string $method): Package
     {
@@ -142,12 +132,8 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
     /**
      * Perform runner assertion tests.
      *
-     * @param Package $package
-     * @param int     $iteration
-     * @param mixed   $provided
-     * @param mixed   $expected
-     * @param array   $arguments
-     * @param string  $method
+     * @param mixed $provided
+     * @param mixed $expected
      */
     protected function runnerAssert(Package $package, int $iteration, $provided, $expected, array $arguments, string $method): void
     {
@@ -186,13 +172,8 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
     }
 
     /**
-     * @param Package  $package
-     * @param int      $iteration
-     * @param mixed    $provided
-     * @param array    $expected
-     * @param array    $arguments
-     * @param string   $method
-     * @param callable $callable
+     * @param mixed $provided
+     * @param array $expected
      */
     protected function runnerAssertCustom(Package $package, int $iteration, $provided, $expected, array $arguments, string $method, callable $callable): void
     {
@@ -200,8 +181,6 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
 
     /**
      * @param string|int $expected
-     * @param string     $message
-     * @param string     $which
      */
     protected function assertTransformConstruct($expected, string $message, string $which)
     {
@@ -225,8 +204,6 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
     /**
      * @param string|int $expected
      * @param string|int $received
-     * @param string     $message
-     * @param string     $which
      */
     protected function assertTransform($instance, $expected, $received, string $message, string $which): void
     {
@@ -244,23 +221,13 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
         $this->assertSame($expected, $received, $message);
     }
 
-    /**
-     * @param string $message
-     * @param string $which
-     * @param string $expected
-     * @param string $received
-     *
-     * @return string
-     */
     protected function equalsMessage(string $message, string $which, string $expected, string $received): string
     {
         return sprintf('%s (test %s) [asserting "%s" === "%s"]', $message, $which, $expected, $received);
     }
 
     /**
-     * @param string|null $context
-     * @param string      $message
-     * @param array       ...$replacements
+     * @param array ...$replacements
      */
     protected function doFail(string $context = null, string $message, ...$replacements): void
     {

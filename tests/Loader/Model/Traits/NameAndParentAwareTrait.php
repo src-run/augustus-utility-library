@@ -31,9 +31,6 @@ trait NameAndParentAwareTrait
      */
     private $data;
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;

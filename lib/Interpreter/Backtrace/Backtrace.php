@@ -47,9 +47,6 @@ final class Backtrace implements \Countable, \IteratorAggregate
      */
     private $records;
 
-    /**
-     * @param int $limit
-     */
     public function __construct(int $limit = 20)
     {
         $this->records = self::createBacktraceRecords(
@@ -57,11 +54,6 @@ final class Backtrace implements \Countable, \IteratorAggregate
         );
     }
 
-    /**
-     * @param int $limit
-     *
-     * @return self
-     */
     public static function create(int $limit = 20): self
     {
         return new static($limit);
@@ -95,9 +87,6 @@ final class Backtrace implements \Countable, \IteratorAggregate
         return self::$blacklistedClasses;
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return count($this->records);
@@ -111,9 +100,6 @@ final class Backtrace implements \Countable, \IteratorAggregate
         return $this->records;
     }
 
-    /**
-     * @return bool
-     */
     public function hasRecords(): bool
     {
         return $this->count() > 0;
@@ -127,9 +113,6 @@ final class Backtrace implements \Countable, \IteratorAggregate
         return $this->rawData;
     }
 
-    /**
-     * @return bool
-     */
     public function hasRawData(): bool
     {
         return null !== $this->rawData && 0 < count($this->rawData);
@@ -146,8 +129,6 @@ final class Backtrace implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @param int $limit
-     *
      * @return array[]
      */
     private static function filterBacktraceRecords(int $limit): array
@@ -159,11 +140,6 @@ final class Backtrace implements \Countable, \IteratorAggregate
         );
     }
 
-    /**
-     * @param string|null $class
-     *
-     * @return bool
-     */
     private static function isBacktraceRecordBlacklisted(string $class = null): bool
     {
         if (empty(self::$blacklistedPaths)) {
@@ -194,8 +170,6 @@ final class Backtrace implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @param array $trace
-     *
      * @return BacktraceRecord[]
      */
     private static function createBacktraceRecords(array $trace): array

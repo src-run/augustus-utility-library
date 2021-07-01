@@ -31,9 +31,6 @@ class StringTransformTest extends AbstractTransformTest
      */
     protected const FIXTURE_FILE = 'fixture_transform-string.yml';
 
-    /**
-     * @return \Generator
-     */
     public function provideTestMutatorAndAccessorData(): \Generator
     {
         yield ['string', 'string'];
@@ -47,9 +44,6 @@ class StringTransformTest extends AbstractTransformTest
         }), 'string'];
     }
 
-    /**
-     * @return \Generator
-     */
     public function provideTestConstructorExceptionOnInvalidValueData(): \Generator
     {
         yield [new class() {
@@ -220,13 +214,8 @@ class StringTransformTest extends AbstractTransformTest
     }
 
     /**
-     * @param Package  $package
-     * @param int      $iteration
-     * @param mixed    $provided
-     * @param array    $expected
-     * @param array    $arguments
-     * @param string   $method
-     * @param callable $callable
+     * @param mixed $provided
+     * @param array $expected
      */
     protected function runnerAssertCustom(Package $package, int $iteration, $provided, $expected, array $arguments, string $method, callable $callable): void
     {
@@ -247,7 +236,8 @@ class StringTransformTest extends AbstractTransformTest
             ->setMutable(true)
             ->toUpper()
             ->spacesToDashes()
-            ->toLower();
+            ->toLower()
+        ;
 
         $instanceThree = $instance->spacesToDashes()->toLower();
 

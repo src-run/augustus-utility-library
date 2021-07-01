@@ -21,7 +21,6 @@ class StringTransform extends AbstractTransform
      * Construct by optionally setting the string value to manipulate.
      *
      * @param string $string
-     * @param bool   $mutable
      */
     public function __construct($string = null, bool $mutable = false)
     {
@@ -48,9 +47,6 @@ class StringTransform extends AbstractTransform
         return parent::set((string) $value);
     }
 
-    /**
-     * @return string
-     */
     public function get(): string
     {
         return parent::get();
@@ -59,8 +55,6 @@ class StringTransform extends AbstractTransform
     /**
      * Perform string replacement using regular expression and replacement. Optionally turn regex inverse (negative)
      * and enforce case sensitivity.
-     *
-     * @param SearchReplaceRepresentative $config
      *
      * @return StringTransform|AbstractTransform
      */
@@ -129,7 +123,8 @@ class StringTransform extends AbstractTransform
         return $this
             ->replace(new SearchReplaceRepresentative('-', new StringArchetype('[\s\n]+')))
             ->toAlphanumericAndDashes()
-            ->replace(new SearchReplaceRepresentative('-', new StringArchetype('[-]+')));
+            ->replace(new SearchReplaceRepresentative('-', new StringArchetype('[-]+')))
+        ;
     }
 
     /**
@@ -147,14 +142,15 @@ class StringTransform extends AbstractTransform
      */
     public function slugify($lowercase = true)
     {
-        return $this->apply(function (self $value) use ($lowercase) {
+        return $this->apply(function (self $value) {
             $result = $value
                 ->setMutable(true)
                 ->replace(new SearchReplaceRepresentative('-', new RangedArchetype('a-z0-9-', true)))
                 ->replace(new SearchReplaceRepresentative('-', new StringArchetype('[-]+')))
                 ->replace((new SearchReplaceRepresentative('', new StringArchetype('[-]')))->enableAnchorLeft())
                 ->replace((new SearchReplaceRepresentative('', new StringArchetype('[-]')))->enableAnchorRight())
-                ->toLower();
+                ->toLower()
+            ;
 
             return $this->returnInstance($result->get());
         });
@@ -318,7 +314,7 @@ class StringTransform extends AbstractTransform
                 return $this->get();
             }
 
-            return 10 === mb_strlen($number) ? '1'.$number : $number;
+            return 10 === mb_strlen($number) ? '1' . $number : $number;
         });
     }
 
@@ -335,7 +331,7 @@ class StringTransform extends AbstractTransform
             $number = sprintf('%s-%s', mb_substr($string, -7, 3), mb_substr($string, -4, 4));
 
             if (11 === mb_strlen($string)) {
-                $number = sprintf('+%s (%s) ', mb_substr($string, 0, 1), mb_substr($string, 1, 3)).$number;
+                $number = sprintf('+%s (%s) ', mb_substr($string, 0, 1), mb_substr($string, 1, 3)) . $number;
             }
 
             return $number;
@@ -347,7 +343,7 @@ class StringTransform extends AbstractTransform
      */
     public function split(): array
     {
-        return str_split($this->__toString());
+        return mb_str_split($this->__toString());
     }
 }
 

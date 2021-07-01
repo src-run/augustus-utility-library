@@ -13,18 +13,9 @@ namespace SR\Utilities\Transform\Argument\Expression\Archetype;
 
 interface ArchetypeInterface
 {
-    /**
-     * @return string
-     */
     public function get(): string;
 
-    /**
-     * @return bool
-     */
     public function has(): bool;
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool;
 }

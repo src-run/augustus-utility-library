@@ -31,6 +31,7 @@ class AbstractArchetypeTest extends AbstractUtilitiesTest
     {
         return $this
             ->getMockBuilder(AbstractArchetype::class)
-            ->getMockForAbstractClass();
+            ->getMockForAbstractClass()
+        ;
     }
 }

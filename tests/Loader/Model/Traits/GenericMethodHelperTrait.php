@@ -15,20 +15,12 @@ trait GenericMethodHelperTrait
 {
     /**
      * @param array|\Countable $elements
-     *
-     * @return bool
      */
     private static function has($elements): bool
     {
         return 0 !== count($elements);
     }
 
-    /**
-     * @param array       $elements
-     * @param string|null $index
-     *
-     * @return \Generator
-     */
     private static function runForEach(array $elements, string $index = null): \Generator
     {
         foreach ($elements as $i => $v) {
@@ -37,9 +29,6 @@ trait GenericMethodHelperTrait
     }
 
     /**
-     * @param array  $elements
-     * @param string $name
-     *
      * @return mixed|null
      */
     private static function findByName(array $elements, string $name)
@@ -50,10 +39,6 @@ trait GenericMethodHelperTrait
     }
 
     /**
-     * @param array       $elements
-     * @param \Closure    $search
-     * @param string|null $name
-     *
      * @return mixed|null
      */
     private static function matchSingle(array $elements, \Closure $search, string $name = null)
@@ -62,8 +47,6 @@ trait GenericMethodHelperTrait
     }
 
     /**
-     * @param array $results
-     *
      * @return mixed|null
      */
     private static function sanitizeSingleMatch(array $results)
@@ -72,18 +55,9 @@ trait GenericMethodHelperTrait
             return 1 === $size ? $results[0] : null;
         }
 
-        throw new \InvalidArgumentException(
-            sprintf('Failed to narrow down items to a singular match (found %d); try refining your search closure.', $size)
-        );
+        throw new \InvalidArgumentException(sprintf('Failed to narrow down items to a singular match (found %d); try refining your search closure.', $size));
     }
 
-    /**
-     * @param array       $elements
-     * @param \Closure    $search
-     * @param string|null $name
-     *
-     * @return array
-     */
     private static function matchMultiple(array $elements, \Closure $search, string $name = null): array
     {
         return array_values(array_filter($elements, function ($value, $index) use ($search, $name) {

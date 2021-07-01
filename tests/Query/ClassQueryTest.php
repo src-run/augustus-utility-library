@@ -24,6 +24,18 @@ use SR\Utilities\Query\ClassQuery;
  */
 class ClassQueryTest extends TestCase
 {
+    public function testIsReflectable()
+    {
+        $this->assertFalse(ClassQuery::isReflectable('foobar'));
+        $this->assertTrue(ClassQuery::isReflectable(new \stdClass()));
+    }
+
+    public function testTryReflection()
+    {
+        $this->assertInstanceOf(\ReflectionObject::class, ClassQuery::tryReflection(new \stdClass()));
+        $this->assertNull(ClassQuery::tryReflection('foobar'));
+    }
+
     public function testSlashInputNoInterpreterError()
     {
         $this->assertFalse(ClassQuery::isInstance('\\'));
@@ -122,7 +134,7 @@ class ClassQueryTest extends TestCase
         $this->assertFalse(ClassQuery::isThrowableEquitable($instance));
 
         $this->assertFalse(
-            ClassQuery::isThrowableEquitable(__NAMESPACE__.'\This\Class\Does\Not\Exist'));
+            ClassQuery::isThrowableEquitable(__NAMESPACE__ . '\This\Class\Does\Not\Exist'));
     }
 
     public function testNonAccessibleMethodAndPropertyAccess()

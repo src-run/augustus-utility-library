@@ -17,7 +17,6 @@ class NumberTransform extends AbstractTransform
      * Construct by optionally setting the number to manipulate.
      *
      * @param int|float|null $number
-     * @param bool           $mutable
      */
     public function __construct($number = null, bool $mutable = false)
     {
@@ -64,9 +63,6 @@ class NumberTransform extends AbstractTransform
         });
     }
 
-    /**
-     * @return bool
-     */
     public function isInteger(): bool
     {
         return is_int($this->get());
@@ -84,9 +80,6 @@ class NumberTransform extends AbstractTransform
         });
     }
 
-    /**
-     * @return bool
-     */
     public function isFloat(): bool
     {
         return is_float($this->get());
@@ -153,8 +146,6 @@ class NumberTransform extends AbstractTransform
     }
 
     /**
-     * @param string $value
-     *
      * @return float|int
      */
     private static function castToIntegerOrFloat(string $value)

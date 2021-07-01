@@ -13,8 +13,5 @@ namespace SR\Tests\Utilities\Loader\Model\Traits;
 
 interface NameAwareInterface
 {
-    /**
-     * @return string
-     */
     public function getName(): string;
 }

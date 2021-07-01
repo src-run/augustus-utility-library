@@ -15,8 +15,6 @@ final class EngineQuery
 {
     /**
      * @param string[] ...$extensions
-     *
-     * @return bool
      */
     public static function extensionLoaded(string ...$extensions): bool
     {

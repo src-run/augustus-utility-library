@@ -23,9 +23,6 @@ class NumberTransformTest extends AbstractTransformTest
      */
     protected const FIXTURE_FILE = 'fixture_transform-number.yml';
 
-    /**
-     * @return \Generator
-     */
     public function provideTestNumberTypeData(): \Generator
     {
         yield [100, 'isInteger'];
@@ -38,16 +35,12 @@ class NumberTransformTest extends AbstractTransformTest
      * @dataProvider provideTestNumberTypeData
      *
      * @param int|float|string $provided
-     * @param string           $method
      */
     public function testNumberType($provided, string $method)
     {
         $this->assertTrue(call_user_func([new NumberTransform($provided), $method]));
     }
 
-    /**
-     * @return \Generator
-     */
     public function provideTestMutatorAndAccessorData(): \Generator
     {
         yield [100, 100];
@@ -56,9 +49,6 @@ class NumberTransformTest extends AbstractTransformTest
         yield ['100.50', 100.50];
     }
 
-    /**
-     * @return \Generator
-     */
     public function provideTestConstructorExceptionOnInvalidValueData(): \Generator
     {
         yield [new \stdClass()];

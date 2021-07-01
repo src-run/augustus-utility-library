@@ -14,8 +14,7 @@ namespace SR\Utilities\Transform;
 interface TransformInterface
 {
     /**
-     * @param null|mixed $value
-     * @param bool       $mutable
+     * @param mixed|null $value
      */
     public function __construct($value = null, bool $mutable = false);
 
@@ -25,8 +24,7 @@ interface TransformInterface
     public function __toString(): string;
 
     /**
-     * @param null|mixed $value
-     * @param bool       $mutable
+     * @param mixed|null $value
      *
      * @return static|TransformInterface|StringTransform|NumberTransform
      */
@@ -44,48 +42,32 @@ interface TransformInterface
      */
     public function get();
 
-    /**
-     * @return bool
-     */
     public function has(): bool;
 
     /**
-     * @param bool $mutable
-     *
      * @return TransformInterface
      */
     public function setMutable(bool $mutable): self;
 
-    /**
-     * @return bool
-     */
     public function isMutable(): bool;
 
     /**
      * @param mixed $to
-     *
-     * @return bool
      */
     public function isSame($to): bool;
 
     /**
      * @param mixed $to
-     *
-     * @return bool
      */
     public function isNotSame($to): bool;
 
     /**
      * @param mixed $to
-     *
-     * @return bool
      */
     public function isEqual($to): bool;
 
     /**
      * @param mixed $to
-     *
-     * @return bool
      */
     public function isNotEqual($to): bool;
 
@@ -95,8 +77,6 @@ interface TransformInterface
     public function copy(): self;
 
     /**
-     * @param \Closure $closure
-     *
      * @return TransformInterface
      */
     public function apply(\Closure $closure): self;

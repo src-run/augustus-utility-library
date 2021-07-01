@@ -17,7 +17,9 @@ namespace SR\Tests\Utilities\Fixture;
 trait FixtureTrait
 {
     public $propPublic = 'propPublic';
+
     protected $propProtecte = 'propProtecte';
+
     private $propPrivate = 'propPrivate';
 
     public function methodPublic()

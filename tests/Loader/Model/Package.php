@@ -35,11 +35,6 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
      */
     private $expected;
 
-    /**
-     * @param string  $name
-     * @param array   $data
-     * @param Fixture $root
-     */
     public function __construct(string $name, array $data, Fixture $root)
     {
         $this->name = $name;
@@ -49,35 +44,21 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
         $this->extractProvidedAndExpected($data);
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return $this->provided->count();
     }
 
-    /**
-     * @return bool
-     */
     public function isGlobal(): bool
     {
         return 'globals' === $this->name;
     }
 
-    /**
-     * @return Fixture
-     */
     public function getParent(): Fixture
     {
         return $this->parent;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return ValueListInterface
-     */
     public function get(string $name): ValueListInterface
     {
         if (static::isValidValueListName($name)) {
@@ -87,17 +68,11 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
         throw new \InvalidArgumentException(sprintf('Invalid get request of "%s" for "%s".', $name, $this->name));
     }
 
-    /**
-     * @return bool
-     */
     public function hasArguments(): bool
     {
         return static::has($this->arguments);
     }
 
-    /**
-     * @return ValueListInterface
-     */
     public function getArguments(): ValueListInterface
     {
         return $this->arguments;
@@ -119,17 +94,11 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
         return static::matchMultiple($this->arguments->get(), $search, $this->getName());
     }
 
-    /**
-     * @return bool
-     */
     public function hasProvided(): bool
     {
         return $this->provided->isNotEmpty();
     }
 
-    /**
-     * @return ValueListInterface
-     */
     public function getProvided(): ValueListInterface
     {
         return $this->provided;
@@ -151,17 +120,11 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
         return static::matchMultiple($this->provided->get(), $search, $this->getName());
     }
 
-    /**
-     * @return bool
-     */
     public function hasExpected(): bool
     {
         return $this->expected->isNotEmpty();
     }
 
-    /**
-     * @return ValueListInterface
-     */
     public function getExpected(): ValueListInterface
     {
         return $this->expected;
@@ -211,25 +174,16 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
         return $iterator;
     }
 
-    /**
-     * @return bool
-     */
     public function hasReference(): bool
     {
         return $this->arguments->isReference() || $this->provided->isReference() || $this->expected->isReference();
     }
 
-    /**
-     * @param array $data
-     */
     private function extractArguments(array $data): void
     {
         $this->arguments = $this->createInstructionValues($data, 'arguments');
     }
 
-    /**
-     * @param array $data
-     */
     private function extractProvidedAndExpected(array $data): void
     {
         $this->provided = $this->createInstructionValues($data, 'provided');
@@ -240,12 +194,6 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
         }
     }
 
-    /**
-     * @param array  $data
-     * @param string $what
-     *
-     * @return ValueListInterface
-     */
     private function createInstructionValues(array $data, string $what): ValueListInterface
     {
         $value = $this->getDataIndexOrGlobal($data, $what);
@@ -266,9 +214,6 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
     }
 
     /**
-     * @param array  $data
-     * @param string $what
-     *
      * @return array|string
      */
     private function getDataIndexOrGlobal(array $data, string $what)
@@ -288,19 +233,12 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
         }
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
     private static function isValidValueListName(string $name): bool
     {
         return in_array($name, ['arguments', 'provided', 'expected'], true);
     }
 
     /**
-     * @param string  $valueListName
-     * @param string  $reference
      * @param Package $that
      *
      * @return string[]Package[]

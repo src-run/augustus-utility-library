@@ -18,10 +18,6 @@ class RangedArchetype extends AbstractArchetype
      */
     protected $negative;
 
-    /**
-     * @param string|null $value
-     * @param bool        $negative
-     */
     public function __construct(string $value = null, bool $negative = false)
     {
         $this->negative = $negative;
@@ -29,11 +25,6 @@ class RangedArchetype extends AbstractArchetype
         parent::__construct($value);
     }
 
-    /**
-     * @param string|null $value
-     *
-     * @return ArchetypeInterface
-     */
     public function set(string $value = null, bool $negative = false): ArchetypeInterface
     {
         $this->negative = $negative;
@@ -42,9 +33,6 @@ class RangedArchetype extends AbstractArchetype
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function get(): string
     {
         return sprintf('[%s%s]', $this->negative ? '^' : '', empty($this->value) ? '' : $this->value);

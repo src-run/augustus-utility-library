@@ -15,9 +15,6 @@ final class ClassQuery
 {
     /**
      * @param string|mixed|object $for
-     * @param bool                $qualified
-     *
-     * @return string
      */
     public static function getName($for, bool $qualified = true): string
     {
@@ -26,8 +23,6 @@ final class ClassQuery
 
     /**
      * @param string|mixed|object $for
-     *
-     * @return string
      */
     public static function getNameQualified($for): string
     {
@@ -36,8 +31,6 @@ final class ClassQuery
 
     /**
      * @param string|mixed|object $for
-     *
-     * @return string
      */
     public static function getNameShort($for): string
     {
@@ -46,8 +39,6 @@ final class ClassQuery
 
     /**
      * @param string|mixed|object $for
-     *
-     * @return string
      */
     public static function getNamespace($for): string
     {
@@ -66,8 +57,6 @@ final class ClassQuery
 
     /**
      * @param mixed $class
-     *
-     * @return bool
      */
     public static function isClass($class): bool
     {
@@ -80,8 +69,6 @@ final class ClassQuery
 
     /**
      * @param mixed $instance
-     *
-     * @return bool
      */
     public static function isInstance($instance): bool
     {
@@ -94,8 +81,6 @@ final class ClassQuery
 
     /**
      * @param string|mixed $interface
-     *
-     * @return bool
      */
     public static function isInterface($interface): bool
     {
@@ -108,8 +93,6 @@ final class ClassQuery
 
     /**
      * @param string|mixed $trait
-     *
-     * @return bool
      */
     public static function isTrait($trait): bool
     {
@@ -124,8 +107,6 @@ final class ClassQuery
      * @param string|mixed $class
      *
      * @throws \InvalidArgumentException
-     *
-     * @return bool
      */
     public static function assertClass($class): bool
     {
@@ -140,8 +121,6 @@ final class ClassQuery
      * @param string|mixed|object $instance
      *
      * @throws \InvalidArgumentException
-     *
-     * @return bool
      */
     public static function assertInstance($instance): bool
     {
@@ -156,8 +135,6 @@ final class ClassQuery
      * @param string|mixed $interface
      *
      * @throws \InvalidArgumentException
-     *
-     * @return bool
      */
     public static function assertInterface($interface): bool
     {
@@ -172,8 +149,6 @@ final class ClassQuery
      * @param string|mixed $trait
      *
      * @throws \InvalidArgumentException
-     *
-     * @return bool
      */
     public static function assertTrait($trait): bool
     {
@@ -186,8 +161,6 @@ final class ClassQuery
 
     /**
      * @param $target
-     *
-     * @return bool
      */
     public static function isReflectable($target): bool
     {
@@ -202,8 +175,6 @@ final class ClassQuery
 
     /**
      * @param string|mixed|object $target
-     *
-     * @return null|\ReflectionClass
      */
     public static function tryReflection($target): ?\ReflectionClass
     {
@@ -220,16 +191,12 @@ final class ClassQuery
         try {
             return static::isInstance($target) ? new \ReflectionObject($target) : new \ReflectionClass($target);
         } catch (\ReflectionException $e) {
-            throw new \InvalidArgumentException(sprintf(
-                'Could not create reflection object for "%s"', @print_r($target, true)
-            ), 0, $e);
+            throw new \InvalidArgumentException(sprintf('Could not create reflection object for "%s"', @print_r($target, true)), 0, $e);
         }
     }
 
     /**
      * @param string|mixed|object $class
-     *
-     * @return bool
      */
     public static function isThrowableEquitable($class): bool
     {
@@ -251,21 +218,18 @@ final class ClassQuery
     }
 
     /**
-     * @param string        $method
      * @param object|string $from
-     *
-     * @return \ReflectionMethod
      */
     public static function getNonAccessibleMethodReflection(string $method, $from): \ReflectionMethod
     {
         ($method = static::getReflection($from)->getMethod($method))
-            ->setAccessible(true);
+            ->setAccessible(true)
+    ;
 
         return $method;
     }
 
     /**
-     * @param string        $method
      * @param object|string $from
      * @param array         ...$arguments
      *
@@ -277,21 +241,18 @@ final class ClassQuery
     }
 
     /**
-     * @param string        $property
      * @param object|string $from
-     *
-     * @return \ReflectionProperty
      */
     public static function getNonAccessiblePropertyReflection(string $property, $from): \ReflectionProperty
     {
         ($property = static::getReflection($from)->getProperty($property))
-            ->setAccessible(true);
+            ->setAccessible(true)
+    ;
 
         return $property;
     }
 
     /**
-     * @param string        $property
      * @param object|string $from
      *
      * @return mixed
@@ -302,7 +263,6 @@ final class ClassQuery
     }
 
     /**
-     * @param string        $property
      * @param object|string $from
      * @param mixed         $value
      */

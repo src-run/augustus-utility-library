@@ -24,11 +24,6 @@ class ValueList implements ValueListInterface
      */
     private $data;
 
-    /**
-     * @param string  $name
-     * @param Package $parent
-     * @param array   $data
-     */
     public function __construct(string $name, array $data, Package $parent)
     {
         $this->name = $name;
@@ -37,33 +32,21 @@ class ValueList implements ValueListInterface
         $this->assignData($data);
     }
 
-    /**
-     * @return Package
-     */
     public function getParent(): Package
     {
         return $this->parent;
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return count($this->data);
     }
 
-    /**
-     * @return bool
-     */
     public function isEmpty(): bool
     {
         return 0 === $this->count();
     }
 
-    /**
-     * @return bool
-     */
     public function isNotEmpty(): bool
     {
         return false === $this->isEmpty();
@@ -77,33 +60,21 @@ class ValueList implements ValueListInterface
         return $this->data;
     }
 
-    /**
-     * @return \Generator
-     */
     public function each(): \Generator
     {
         return static::runForEach($this->data);
     }
 
-    /**
-     * @return \ArrayIterator
-     */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->data);
     }
 
-    /**
-     * @return bool
-     */
     public function isReference(): bool
     {
         return $this instanceof ValueListReference;
     }
 
-    /**
-     * @param array $data
-     */
     protected function assignData(array $data): void
     {
         $this->data = $data;

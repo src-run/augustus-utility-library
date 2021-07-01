@@ -51,9 +51,6 @@ class FileContext implements FileContextInterface
 
     /**
      * Define the context by specifying a file path and line number.
-     *
-     * @param string $file
-     * @param int    $line
      */
     public function __construct(string $file, int $line)
     {
@@ -63,8 +60,6 @@ class FileContext implements FileContextInterface
 
     /**
      * Get the file line number for the defined context.
-     *
-     * @return int
      */
     public function getLine(): int
     {
@@ -73,8 +68,6 @@ class FileContext implements FileContextInterface
 
     /**
      * Get a \SplFileInfo instance for the defined context.
-     *
-     * @return \SplFileInfo
      */
     public function getFile(): \SplFileInfo
     {
@@ -83,8 +76,6 @@ class FileContext implements FileContextInterface
 
     /**
      * Get the file path name for the defined context.
-     *
-     * @return string
      */
     public function getFilePathname(): string
     {
@@ -104,8 +95,6 @@ class FileContext implements FileContextInterface
     /**
      * Get an array of file lines surrounding defined context.
      *
-     * @param int $surroundingLines
-     *
      * @return string[]
      */
     public function getFileContext(int $surroundingLines = 3): array
@@ -115,8 +104,6 @@ class FileContext implements FileContextInterface
 
     /**
      * Get the file line content for the defined context.
-     *
-     * @return string
      */
     public function getFileContextLine(): string
     {
@@ -127,8 +114,6 @@ class FileContext implements FileContextInterface
 
     /**
      * Returns the context type (trait, interface, or class).
-     *
-     * @return string
      */
     public function getType(): string
     {
@@ -143,8 +128,6 @@ class FileContext implements FileContextInterface
 
     /**
      * Get a \ReflectionClass instance for the defined context.
-     *
-     * @return \ReflectionClass
      */
     public function getClass(): \ReflectionClass
     {
@@ -153,10 +136,6 @@ class FileContext implements FileContextInterface
 
     /**
      * Get the class name (as qualified or unqualified) for the defined context.
-     *
-     * @param bool $qualified
-     *
-     * @return string
      */
     public function getClassName(bool $qualified = true): string
     {
@@ -165,8 +144,6 @@ class FileContext implements FileContextInterface
 
     /**
      * Returns true if a method exists for this context.
-     *
-     * @return bool
      */
     public function hasMethod(): bool
     {
@@ -175,8 +152,6 @@ class FileContext implements FileContextInterface
 
     /**
      * Get the method reflection instance.
-     *
-     * @return \ReflectionMethod
      */
     public function getMethod(): \ReflectionMethod
     {
@@ -189,10 +164,6 @@ class FileContext implements FileContextInterface
 
     /**
      * Get the method name.
-     *
-     * @param bool $qualified
-     *
-     * @return string
      */
     public function getMethodName(bool $qualified = false): string
     {
@@ -202,8 +173,6 @@ class FileContext implements FileContextInterface
     }
 
     /**
-     * @param int $lines
-     *
      * @return string[]
      */
     private function createFileContextSnippet(int $lines): array
@@ -242,8 +211,8 @@ class FileContext implements FileContextInterface
     {
         try {
             $this->contents = $this->initContextContents();
-            $this->class    = $this->initContextReflectionClass();
-            $this->method   = $this->initContextReflectionMethod();
+            $this->class = $this->initContextReflectionClass();
+            $this->method = $this->initContextReflectionMethod();
         } catch (\RuntimeException $e) {
             throw new \RuntimeException('Could not initialize file context!', null, $e);
         }
@@ -268,7 +237,7 @@ class FileContext implements FileContextInterface
     }
 
     /**
-     * @return null|\ReflectionClass|\ReflectionObject
+     * @return \ReflectionClass|\ReflectionObject|null
      */
     private function initContextReflectionClass(): ?\ReflectionClass
     {
@@ -277,9 +246,6 @@ class FileContext implements FileContextInterface
         ));
     }
 
-    /**
-     * @return null|\ReflectionMethod
-     */
     private function initContextReflectionMethod(): ?\ReflectionMethod
     {
         return array_values(array_filter($this->class->getMethods(), function (\ReflectionMethod $method) {
@@ -288,27 +254,16 @@ class FileContext implements FileContextInterface
         }))[0] ?? null;
     }
 
-    /**
-     * @return string
-     */
     private function searchFileForNamespace(): string
     {
         return $this->searchFile('^(?:namespace[\s]+)([^\s\n]+);');
     }
 
-    /**
-     * @return string
-     */
     private function searchFileForClassName(): string
     {
         return $this->searchFile('^(?:abstract|final[\s]+)?(?:class|trait|interface)\s+([^\s\n\{]+)');
     }
 
-    /**
-     * @param string $regex
-     *
-     * @return string
-     */
     private function searchFile(string $regex): string
     {
         if (null === $this->contents || 0 === count($this->contents)) {

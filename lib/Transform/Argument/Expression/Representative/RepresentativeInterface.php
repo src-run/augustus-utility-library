@@ -21,8 +21,6 @@ interface RepresentativeInterface
     public function regex();
 
     /**
-     * @param ArchetypeInterface $selector
-     *
      * @return RepresentativeInterface
      */
     public function add(ArchetypeInterface $selector): self;

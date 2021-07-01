@@ -41,24 +41,18 @@ abstract class MemoryBufferedTestCase extends TestCase
 
     /**
      * @dataProvider provideMemoryData
-     *
-     * @param float|null $megabytes
-     * @param int|null   $bytes
      */
     public function testMemory(?float $megabytes, ?int $bytes): void
     {
         $this->assertSame($megabytes, ($buffer = static::createMemoryBufferedInstance($megabytes))->memory());
 
         if (null !== $bytes) {
-            $this->assertContains((string) $bytes, $buffer->scheme());
+            $this->assertStringContainsString((string) $bytes, $buffer->scheme());
         } else {
-            $this->assertNotContains((string) self::convertMegabytesToBytes($megabytes ?? 0), $buffer->scheme());
+            $this->assertStringNotContainsString((string) self::convertMegabytesToBytes($megabytes ?? 0), $buffer->scheme());
         }
     }
 
-    /**
-     * @return \Generator
-     */
     public static function provideModeData(): \Generator
     {
         $modes = ['r', 'r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+', 'e'];
@@ -72,19 +66,12 @@ abstract class MemoryBufferedTestCase extends TestCase
 
     /**
      * @dataProvider provideModeData
-     *
-     * @param float|null  $megabytes
-     * @param null|string $providedMode
-     * @param null|string $expectedMode
      */
     public function testMode(?float $megabytes, ?string $providedMode, string $expectedMode = null): void
     {
         $this->assertSame($expectedMode ?? $providedMode, (static::createMemoryBufferedInstance($megabytes, $providedMode))->mode());
     }
 
-    /**
-     * @return \Generator
-     */
     public static function provideSchemeData(): \Generator
     {
         foreach (self::provideMemoryData() as [$megabytes, $bytes]) {
@@ -94,18 +81,12 @@ abstract class MemoryBufferedTestCase extends TestCase
 
     /**
      * @dataProvider provideSchemeData
-     *
-     * @param float|null $megabytes
-     * @param string     $expectedScheme
      */
     public function testScheme(?float $megabytes, string $expectedScheme): void
     {
         $this->assertSame($expectedScheme, (static::createMemoryBufferedInstance($megabytes))->scheme());
     }
 
-    /**
-     * @return \Generator
-     */
     public static function provideFullConstructionData(): \Generator
     {
         foreach (self::provideModeData() as [$megabytes, $providedMode, $expectedMode, $bytes]) {
@@ -115,11 +96,6 @@ abstract class MemoryBufferedTestCase extends TestCase
 
     /**
      * @dataProvider provideFullConstructionData
-     *
-     * @param float|null  $megabytes
-     * @param null|string $providedMode
-     * @param string      $expectedMode
-     * @param string      $expectedSchema
      */
     public function testFullConstruction(?float $megabytes, ?string $providedMode, string $expectedMode, string $expectedSchema): void
     {
@@ -132,13 +108,11 @@ abstract class MemoryBufferedTestCase extends TestCase
 
     /**
      * @dataProvider provideSchemeData
-     *
-     * @param float|null $megabytes
      */
     public function testThrowsOnSetMemoryWhileResourceActive(?float $megabytes): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessageRegExp('/Cannot set memory while resource is open. Close resource with .+Memory(Output|Input)Buffered::close()./');
+        $this->expectExceptionMessageMatches('/Cannot set memory while resource is open. Close resource with .+Memory(Output|Input)Buffered::close()./');
 
         $buffer = static::createMemoryBufferedInstance($megabytes);
         $buffer->setMemory($megabytes - 1024);
@@ -146,13 +120,11 @@ abstract class MemoryBufferedTestCase extends TestCase
 
     /**
      * @dataProvider provideSchemeData
-     *
-     * @param float|null $megabytes
      */
     public function testThrowsOnSetModeWhileResourceActive(?float $megabytes): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessageRegExp('/Cannot set mode while resource is open. Close resource with .+Memory(Output|Input)Buffered::close()./');
+        $this->expectExceptionMessageMatches('/Cannot set mode while resource is open. Close resource with .+Memory(Output|Input)Buffered::close()./');
 
         $buffer = static::createMemoryBufferedInstance($megabytes);
         $buffer->setMode('r+');
@@ -161,7 +133,7 @@ abstract class MemoryBufferedTestCase extends TestCase
     public function testThrowsOnFileOpenError(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessageRegExp('/Failed to open "[^"]+" \(mode: "[^"]+"; limit: "[^\s]+ megabytes \/ [^\s]+ bytes"\): .+/i');
+        $this->expectExceptionMessageMatches('/Failed to open "[^"]+" \(mode: "[^"]+"; limit: "[^\s]+ megabytes \/ [^\s]+ bytes"\): .+/i');
 
         $b = static::createMemoryBufferedInstance();
         $b->close();
@@ -173,9 +145,6 @@ abstract class MemoryBufferedTestCase extends TestCase
 
     /**
      * @dataProvider provideSchemeData
-     *
-     * @param float|null $megabytes
-     * @param string     $expectedScheme
      */
     public function testChangingMemoryAndModeAllocationAfterClosingResource(?float $megabytes, string $expectedScheme): void
     {
@@ -184,9 +153,6 @@ abstract class MemoryBufferedTestCase extends TestCase
         $buffer->setMode('r');
     }
 
-    /**
-     * @return \Generator
-     */
     public static function provideFileData(): \Generator
     {
         $files = array_map(function (\SplFileInfo $file): string {
@@ -209,10 +175,6 @@ abstract class MemoryBufferedTestCase extends TestCase
 
     /**
      * @dataProvider provideFileData
-     *
-     * @param string   $fileOne
-     * @param string   $fileTwo
-     * @param int|null $megabytes
      */
     public function testSimultaneousReadAndWrite(string $fileOne, string $fileTwo, int $megabytes = null): void
     {
@@ -234,7 +196,7 @@ abstract class MemoryBufferedTestCase extends TestCase
         $this->assertBufferIsOpen($bufferTwo);
 
         $this->assertBufferContains($bufferOne, '');
-        $this->assertBufferContains($bufferTwo, $contentsTwo.PHP_EOL);
+        $this->assertBufferContains($bufferTwo, $contentsTwo . PHP_EOL);
 
         $bufferTwo->reset();
 
@@ -259,7 +221,7 @@ abstract class MemoryBufferedTestCase extends TestCase
     public function testThrowsOnWriteWhenClosed(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessageRegExp('{Failed to write "foobar" data to closed buffer: re-open the buffer resource using the "[^"]+Memory(Output|Input)Buffered::reset\(\)" method\.}');
+        $this->expectExceptionMessageMatches('{Failed to write "foobar" data to closed buffer: re-open the buffer resource using the "[^"]+Memory(Output|Input)Buffered::reset\(\)" method\.}');
 
         $buffer = static::createMemoryBufferedInstance();
         $buffer->close();
@@ -269,7 +231,7 @@ abstract class MemoryBufferedTestCase extends TestCase
     public function testThrowsOnReadWhenClosed(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessageRegExp('{Failed to read "all" data from closed buffer: re-open the buffer resource using the "[^"]+Memory(Output|Input)Buffered::reset\(\)" method\.}');
+        $this->expectExceptionMessageMatches('{Failed to read "all" data from closed buffer: re-open the buffer resource using the "[^"]+Memory(Output|Input)Buffered::reset\(\)" method\.}');
 
         $buffer = static::createMemoryBufferedInstance();
         $buffer->add('foobar');
@@ -278,18 +240,10 @@ abstract class MemoryBufferedTestCase extends TestCase
     }
 
     /**
-     * @param float|null  $memory
-     * @param string|null $mode
-     *
      * @return BufferedInterface|MemoryOutputBuffered|MemoryInputBuffered
      */
     abstract protected static function createMemoryBufferedInstance(float $memory = null, string $mode = null): BufferedInterface;
 
-    /**
-     * @param float $megabytes
-     *
-     * @return int
-     */
     private static function convertMegabytesToBytes(float $megabytes): int
     {
         $m = (new \ReflectionObject(static::createMemoryBufferedInstance()))->getMethod(__FUNCTION__);
@@ -298,12 +252,6 @@ abstract class MemoryBufferedTestCase extends TestCase
         return $m->invoke(null, $megabytes);
     }
 
-    /**
-     * @param float|null $megabytes
-     * @param int|null   $bytes
-     *
-     * @return string
-     */
     private static function createSchemeString(?float $megabytes, ?int $bytes): string
     {
         if (null === $megabytes) {
@@ -325,58 +273,40 @@ abstract class MemoryBufferedTestCase extends TestCase
         return sprintf('php://temp/maxmemory:%d', $bytes);
     }
 
-    /**
-     * @param BufferedInterface $buffer
-     * @param string            $contents
-     */
     private function assertBufferCanWriteAndRead(BufferedInterface $buffer, string $contents): void
     {
         $this->assertEmpty($buffer->get());
 
         foreach (explode(PHP_EOL, $contents) as $line) {
             $buffer->add($line, true);
-            $this->assertContains($line.PHP_EOL, (string) $buffer);
-            $this->assertContains($line.PHP_EOL, $buffer->get());
+            $this->assertStringContainsString($line . PHP_EOL, (string) $buffer);
+            $this->assertStringContainsString($line . PHP_EOL, $buffer->get());
         }
 
-        $this->assertBufferContains($buffer, $contents.PHP_EOL);
+        $this->assertBufferContains($buffer, $contents . PHP_EOL);
     }
 
-    /**
-     * @param BufferedInterface $buffer
-     * @param string            $contents
-     */
     private function assertBufferNotContains(BufferedInterface $buffer, string $contents = ''): void
     {
         $this->assertNotSame($contents, $buffer->get());
         $this->assertNotSame($contents, (string) $buffer);
     }
 
-    /**
-     * @param BufferedInterface $buffer
-     * @param string            $contents
-     */
     private function assertBufferContains(BufferedInterface $buffer, string $contents = ''): void
     {
         $this->assertSame($contents, $buffer->get());
         $this->assertSame($contents, (string) $buffer);
     }
 
-    /**
-     * @param BufferedInterface $buffer
-     */
     private function assertBufferIsOpen(BufferedInterface $buffer): void
     {
         $this->assertTrue($buffer->isResourceOpen());
-        $this->assertInternalType('resource', $buffer->resource());
+        $this->assertIsResource($buffer->resource());
     }
 
-    /**
-     * @param BufferedInterface $buffer
-     */
     private function assertBufferIsNotOpen(BufferedInterface $buffer): void
     {
         $this->assertFalse($buffer->isResourceOpen());
-        $this->assertInternalType('resource', $buffer->resource());
+        $this->assertIsResource($buffer->resource());
     }
 }

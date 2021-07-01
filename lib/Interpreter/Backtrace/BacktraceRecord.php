@@ -36,7 +36,7 @@ final class BacktraceRecord
     private $funcName;
 
     /**
-     * @var null|\ReflectionFunctionAbstract|\ReflectionFunction|\ReflectionMethod
+     * @var \ReflectionFunctionAbstract|\ReflectionFunction|\ReflectionMethod|null
      */
     private $funcReflection;
 
@@ -61,13 +61,10 @@ final class BacktraceRecord
     private $objectInstance;
 
     /**
-     * @var null|\ReflectionClass|\ReflectionObject
+     * @var \ReflectionClass|\ReflectionObject|null
      */
     private $objectReflection;
 
-    /**
-     * @param array $record
-     */
     public function __construct(array $record)
     {
         [
@@ -76,9 +73,6 @@ final class BacktraceRecord
         ] = self::extractBacktraceRecordData($record);
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->stringify();
@@ -92,97 +86,64 @@ final class BacktraceRecord
         return $this->arrayData;
     }
 
-    /**
-     * @return null|\SplFileInfo
-     */
     public function getFile(): ?\SplFileInfo
     {
         return $this->file;
     }
 
-    /**
-     * @return bool
-     */
     public function hasFile(): bool
     {
         return null !== $this->getFile();
     }
 
-    /**
-     * @return null|int
-     */
     public function getLine(): ?int
     {
         return $this->line;
     }
 
-    /**
-     * @return bool
-     */
     public function hasLine(): bool
     {
         return null !== $this->getLine();
     }
 
-    /**
-     * @return null|string
-     */
     public function getFuncName(): ?string
     {
         return $this->funcName;
     }
 
-    /**
-     * @return bool
-     */
     public function hasFuncName(): bool
     {
         return null !== $this->getFuncName();
     }
 
     /**
-     * @return null|\ReflectionFunctionAbstract|\ReflectionFunction|\ReflectionMethod
+     * @return \ReflectionFunctionAbstract|\ReflectionFunction|\ReflectionMethod|null
      */
     public function getFuncReflection(): ?\ReflectionFunctionAbstract
     {
         return $this->funcReflection;
     }
 
-    /**
-     * @return bool
-     */
     public function hasFuncReflection(): bool
     {
         return null !== $this->getFuncReflection();
     }
 
-    /**
-     * @return null|string
-     */
     public function getFuncCallType(): ?string
     {
         return $this->funcCallType;
     }
 
-    /**
-     * @return bool
-     */
     public function hasFuncCallType(): bool
     {
         return null !== $this->getFuncCallType();
     }
 
-    /**
-     * @return bool
-     */
     public function isFuncCallTypeStatic(): bool
     {
         return '::' === $this->getFuncCallType();
     }
 
-    /**
-     * @return bool
-     */
     public function isFuncCallTypeInstance(): bool
     {
         return '->' === $this->getFuncCallType();
@@ -196,32 +157,23 @@ final class BacktraceRecord
         return $this->arguments;
     }
 
-    /**
-     * @return bool
-     */
     public function hasArguments(): bool
     {
         return 0 < count($this->getArguments());
     }
 
-    /**
-     * @return null|string
-     */
     public function getClassName(): ?string
     {
         return $this->className;
     }
 
-    /**
-     * @return bool
-     */
     public function hasClassName(): bool
     {
         return null !== $this->getClassName();
     }
 
     /**
-     * @return null|object
+     * @return object|null
      */
     public function getObjectInstance()
     {
@@ -237,24 +189,18 @@ final class BacktraceRecord
     }
 
     /**
-     * @return null|\ReflectionClass|\ReflectionObject
+     * @return \ReflectionClass|\ReflectionObject|null
      */
     public function getObjectReflection(): ?\ReflectionClass
     {
         return $this->objectReflection;
     }
 
-    /**
-     * @return bool
-     */
     public function hasObjectReflection(): bool
     {
         return null !== $this->getObjectReflection();
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         if ($this->hasObjectInstance()) {
@@ -268,9 +214,6 @@ final class BacktraceRecord
         return 'function';
     }
 
-    /**
-     * @return string
-     */
     public function stringify(): string
     {
         $s = '';
@@ -299,13 +242,11 @@ final class BacktraceRecord
             $s .= ']';
         }
 
-        return $s.sprintf(' (%s)', $this->getType());
+        return $s . sprintf(' (%s)', $this->getType());
     }
 
     /**
      * @param mixed $argument
-     *
-     * @return string
      */
     private static function stringifyArguments($argument): string
     {
@@ -320,8 +261,6 @@ final class BacktraceRecord
 
     /**
      * @param mixed $complex
-     *
-     * @return string
      */
     private static function stringifyComplex($complex): string
     {
@@ -330,11 +269,6 @@ final class BacktraceRecord
         ), ' ');
     }
 
-    /**
-     * @param array $record
-     *
-     * @return array
-     */
     private static function extractBacktraceRecordData(array $record): array
     {
         return array_merge([
@@ -351,55 +285,29 @@ final class BacktraceRecord
         ]);
     }
 
-    /**
-     * @param array $data
-     *
-     * @return null|\SplFileInfo
-     */
     private static function extractBacktraceFile(array $data, \ReflectionClass $class = null, \ReflectionFunctionAbstract $function = null): ?\SplFileInfo
     {
-        if (isset($data['file'])) {
-            $resolved = $data['file'];
-        } elseif (null !== $class) {
-            $resolved = $class->getFileName();
-        }
+        $resolved = $data['file'] ?? (null !== $class ? $class->getFileName() : null);
 
-        return isset($resolved) ? new \SplFileInfo($resolved) : null;
+        return $resolved ? new \SplFileInfo($resolved) : null;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return null|string
-     */
     private static function extractBacktraceLine(array $data): ?string
     {
         return $data['line'] ?? null;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return null|string
-     */
     private static function extractBacktraceFunc(array $data): ?string
     {
         return $data['function'] ?? null;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return null|string
-     */
     private static function extractBacktraceType(array $data): ?string
     {
         return $data['type'] ?? null;
     }
 
     /**
-     * @param array $data
-     *
      * @return mixed[]
      */
     private static function extractBacktraceArgs(array $data): array
@@ -409,20 +317,13 @@ final class BacktraceRecord
         }, $data['args'] ?? []);
     }
 
-    /**
-     * @param array $data
-     *
-     * @return null|string
-     */
     private static function extractBacktraceName(array $data): ?string
     {
         return $data['class'] ?? null;
     }
 
     /**
-     * @param array $data
-     *
-     * @return null|object
+     * @return object|null
      */
     private static function extractBacktraceInst(array $data)
     {
@@ -431,9 +332,8 @@ final class BacktraceRecord
 
     /**
      * @param object|null $object
-     * @param string|null $class
      *
-     * @return null|\ReflectionClass|\ReflectionObject
+     * @return \ReflectionClass|\ReflectionObject|null
      */
     private static function extractBacktraceNameReflection($object = null, string $class = null): ?\ReflectionClass
     {
@@ -448,12 +348,6 @@ final class BacktraceRecord
         return null;
     }
 
-    /**
-     * @param \ReflectionClass|null $classReflection
-     * @param string|null           $function
-     *
-     * @return null|\ReflectionFunctionAbstract
-     */
     private static function extractBacktraceFuncReflection(\ReflectionClass $classReflection = null, string $function = null): ?\ReflectionFunctionAbstract
     {
         if (null !== $classReflection && $classReflection->hasMethod($function)) {

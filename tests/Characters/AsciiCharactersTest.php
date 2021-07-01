@@ -61,9 +61,6 @@ class AsciiCharactersTest extends TestCase
 
     /**
      * @dataProvider provideNumbersGroupData
-     *
-     * @param int    $byte
-     * @param string $char
      */
     public function testNumbersGroupEach(int $byte, string $char): void
     {
@@ -102,9 +99,6 @@ class AsciiCharactersTest extends TestCase
 
     /**
      * @dataProvider provideLettersGroupData
-     *
-     * @param int    $byte
-     * @param string $char
      */
     public function testLettersGroupEach(int $byte, string $char): void
     {
@@ -143,9 +137,6 @@ class AsciiCharactersTest extends TestCase
 
     /**
      * @dataProvider provideLettersUpperGroupData
-     *
-     * @param int    $byte
-     * @param string $char
      */
     public function testLettersUpperGroupEach(int $byte, string $char): void
     {
@@ -184,9 +175,6 @@ class AsciiCharactersTest extends TestCase
 
     /**
      * @dataProvider provideLettersLowerGroupData
-     *
-     * @param int    $byte
-     * @param string $char
      */
     public function testLettersLowerGroupEach(int $byte, string $char): void
     {
@@ -225,9 +213,6 @@ class AsciiCharactersTest extends TestCase
 
     /**
      * @dataProvider provideSymbolsAllGroupData
-     *
-     * @param int    $byte
-     * @param string $char
      */
     public function testSymbolsAllGroupEach(int $byte, string $char): void
     {
@@ -266,9 +251,6 @@ class AsciiCharactersTest extends TestCase
 
     /**
      * @dataProvider provideSymbolsSelGroupData
-     *
-     * @param int    $byte
-     * @param string $char
      */
     public function testSymbolsSelGroupEach(int $byte, string $char): void
     {
@@ -307,9 +289,6 @@ class AsciiCharactersTest extends TestCase
 
     /**
      * @dataProvider providePasswordGroupData
-     *
-     * @param int    $byte
-     * @param string $char
      */
     public function testPasswordGroupEach(int $byte, string $char): void
     {
@@ -338,8 +317,6 @@ class AsciiCharactersTest extends TestCase
 
     /**
      * @param CharactersGroup $group
-     * @param int             $b
-     * @param string          $c
      * @param int[]           $bytes
      * @param string[]        $chars
      */
@@ -350,13 +327,13 @@ class AsciiCharactersTest extends TestCase
         $this->assertTrue($group->isValidChar($c));
         $this->assertSame($b, $group->charToByte($c));
         $this->assertSame($c, $group->byteToChar($b));
-        $this->assertContains($b, $group->bytes());
-        $this->assertContains($c, $group->chars());
+        $this->assertContains($b, new \ArrayIterator($group->bytes()));
+        $this->assertContains($c, new \ArrayIterator($group->chars()));
 
         $this->assertContains($group->randomChar(), $chars);
         $this->assertContains($group->randomByte(), $bytes);
 
-        for ($i = 0; $i < 25; $i++) {
+        for ($i = 0; $i < 25; ++$i) {
             $random = $group->randomGroup($i);
             $this->assertInstanceOf(CharactersGroup::class, $random);
             $this->assertCount($i, $random);
@@ -364,9 +341,8 @@ class AsciiCharactersTest extends TestCase
     }
 
     /**
-     * @param CharactersGroup $group
-     * @param int[]           $bytes
-     * @param string[]        $chars
+     * @param int[]    $bytes
+     * @param string[] $chars
      */
     private function doTestGroup(CharactersGroup $group, array $bytes, array $chars): void
     {
@@ -379,13 +355,12 @@ class AsciiCharactersTest extends TestCase
     }
 
     /**
-     * @param CharactersGroup $group
-     * @param int[]           $bytes
-     * @param string[]        $chars
+     * @param int[]    $bytes
+     * @param string[] $chars
      */
     private function doTestGroupRandom(CharactersGroup $group, array $bytes, array $chars): void
     {
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $random = $group->randomGroup($i);
             $this->assertInstanceOf(CharactersGroup::class, $random);
             $this->assertCount($i, $random);
@@ -401,7 +376,7 @@ class AsciiCharactersTest extends TestCase
                 continue;
             }
 
-            foreach (str_split($string) as $c) {
+            foreach (mb_str_split($string) as $c) {
                 $this->assertTrue($group->isValidChar($c));
                 $this->assertContains($c, $chars);
                 $this->assertContains($group->charToByte($c), $bytes);
@@ -410,8 +385,6 @@ class AsciiCharactersTest extends TestCase
     }
 
     /**
-     * @param bool $chars
-     *
      * @return int[]
      */
     private static function getNumbers(bool $chars = false): array
@@ -422,8 +395,6 @@ class AsciiCharactersTest extends TestCase
     }
 
     /**
-     * @param bool $chars
-     *
      * @return int[]
      */
     private static function getLetters(bool $chars = false): array
@@ -437,8 +408,6 @@ class AsciiCharactersTest extends TestCase
     }
 
     /**
-     * @param bool $chars
-     *
      * @return int[]
      */
     private static function getLettersUpper(bool $chars = false): array
@@ -449,8 +418,6 @@ class AsciiCharactersTest extends TestCase
     }
 
     /**
-     * @param bool $chars
-     *
      * @return int[]
      */
     private static function getLettersLower(bool $chars = false): array
@@ -461,8 +428,6 @@ class AsciiCharactersTest extends TestCase
     }
 
     /**
-     * @param bool $chars
-     *
      * @return int[]
      */
     private static function getSymbolsAll(bool $chars = false): array
@@ -478,8 +443,6 @@ class AsciiCharactersTest extends TestCase
     }
 
     /**
-     * @param bool $chars
-     *
      * @return int[]
      */
     private static function getSymbolsSel(bool $chars = false): array
@@ -504,18 +467,16 @@ class AsciiCharactersTest extends TestCase
             93, // square bracket (closing)
             94, // circumflex accent
             95, // underscore
-            123,// curly bracket (opening)
-            124,// vertical bar
-            125,// curly bracket (closing)
-            126 // tilde
+            123, // curly bracket (opening)
+            124, // vertical bar
+            125, // curly bracket (closing)
+            126, // tilde
         ];
 
         return $chars ? self::mapBytesToChars($bytes) : $bytes;
     }
 
     /**
-     * @param bool $chars
-     *
      * @return int[]
      */
     private static function getPassword(bool $chars = false): array

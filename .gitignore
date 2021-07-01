@@ -41,6 +41,7 @@
 
 # PHPUnit (Non-Dist)
 /phpunit.xml
+/.phpunit.result.cache
 
 # Build data
 /build/*
@@ -63,5 +64,6 @@ README
 
 # phpcsfixer cache
 .php_cs.cache
+.php-cs-fixer.cache
 
 # EOF

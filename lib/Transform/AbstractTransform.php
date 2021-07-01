@@ -24,8 +24,7 @@ abstract class AbstractTransform implements TransformInterface
     protected $mutable;
 
     /**
-     * @param null|mixed $value
-     * @param bool       $mutable
+     * @param mixed|null $value
      */
     public function __construct($value = null, bool $mutable = false)
     {
@@ -45,8 +44,7 @@ abstract class AbstractTransform implements TransformInterface
     }
 
     /**
-     * @param null|mixed $value
-     * @param bool       $mutable
+     * @param mixed|null $value
      *
      * @return static|TransformInterface|StringTransform|NumberTransform
      */
@@ -75,17 +73,12 @@ abstract class AbstractTransform implements TransformInterface
         return $this->value;
     }
 
-    /**
-     * @return bool
-     */
     public function has(): bool
     {
         return null !== $this->value;
     }
 
     /**
-     * @param bool $mutable
-     *
      * @return TransformInterface|StringTransform|NumberTransform
      */
     public function setMutable(bool $mutable): TransformInterface
@@ -95,9 +88,6 @@ abstract class AbstractTransform implements TransformInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isMutable(): bool
     {
         return true === $this->mutable;
@@ -105,8 +95,6 @@ abstract class AbstractTransform implements TransformInterface
 
     /**
      * @param mixed $to
-     *
-     * @return bool
      */
     final public function isSame($to): bool
     {
@@ -115,8 +103,6 @@ abstract class AbstractTransform implements TransformInterface
 
     /**
      * @param mixed $to
-     *
-     * @return bool
      */
     final public function isNotSame($to): bool
     {
@@ -125,8 +111,6 @@ abstract class AbstractTransform implements TransformInterface
 
     /**
      * @param mixed $to
-     *
-     * @return bool
      */
     final public function isEqual($to): bool
     {
@@ -135,8 +119,6 @@ abstract class AbstractTransform implements TransformInterface
 
     /**
      * @param mixed $to
-     *
-     * @return bool
      */
     final public function isNotEqual($to): bool
     {
@@ -152,8 +134,6 @@ abstract class AbstractTransform implements TransformInterface
     }
 
     /**
-     * @param \Closure $closure
-     *
      * @return TransformInterface|StringTransform|NumberTransform
      */
     final public function apply(\Closure $closure): TransformInterface
@@ -177,17 +157,12 @@ abstract class AbstractTransform implements TransformInterface
 
     /**
      * @param mixed $value
-     *
-     * @return bool
      */
     protected static function isConsumable($value): bool
     {
         return false === is_array($value) && (false === is_object($value) || is_callable([$value, '__toString']));
     }
 
-    /**
-     * @return TransformInterface
-     */
     private function getWriteContext(): TransformInterface
     {
         return $this->isMutable() ? $this : $this->copy();

@@ -13,24 +13,13 @@ namespace SR\Utilities\IO\Buffered;
 
 interface BufferedInterface
 {
-    /**
-     * @return string
-     */
     public function __toString(): string;
 
     /**
-     * @param string $content
-     * @param bool   $newline
-     *
      * @return self
      */
     public function add(string $content, bool $newline = false);
 
-    /**
-     * @param int|null $length
-     *
-     * @return string
-     */
     public function get(int $length = null): string;
 
     /**
@@ -48,13 +37,7 @@ interface BufferedInterface
      */
     public function resource();
 
-    /**
-     * @return bool
-     */
     public function isResourceOpen(): bool;
 
-    /**
-     * @return string
-     */
     public function scheme(): string;
 }

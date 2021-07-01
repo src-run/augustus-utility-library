@@ -57,11 +57,6 @@ abstract class AbstractRepresentative implements RepresentativeInterface
         );
     }
 
-    /**
-     * @param ArchetypeInterface $selector
-     *
-     * @return RepresentativeInterface
-     */
     public function add(ArchetypeInterface $selector): RepresentativeInterface
     {
         $this->selectors[] = $selector;
@@ -71,8 +66,6 @@ abstract class AbstractRepresentative implements RepresentativeInterface
 
     /**
      * @param ArchetypeInterface[] ...$selectors
-     *
-     * @return RepresentativeInterface
      */
     public function addSelectors(ArchetypeInterface ...$selectors): RepresentativeInterface
     {
@@ -85,8 +78,6 @@ abstract class AbstractRepresentative implements RepresentativeInterface
 
     /**
      * @param bool $enabled
-     *
-     * @return RepresentativeInterface
      */
     public function setCaseSensitivity($enabled = false): RepresentativeInterface
     {
@@ -95,17 +86,11 @@ abstract class AbstractRepresentative implements RepresentativeInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isCaseSensitive(): bool
     {
         return $this->caseSensitivity;
     }
 
-    /**
-     * @return SearchReplaceRepresentative
-     */
     public function enableAnchorLeft(): SearchReplaceRepresentative
     {
         $this->anchorLeft = true;
@@ -113,9 +98,6 @@ abstract class AbstractRepresentative implements RepresentativeInterface
         return $this;
     }
 
-    /**
-     * @return SearchReplaceRepresentative
-     */
     public function enableAnchorRight(): SearchReplaceRepresentative
     {
         $this->anchorRight = true;
@@ -123,17 +105,11 @@ abstract class AbstractRepresentative implements RepresentativeInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isAnchoredLeft(): bool
     {
         return true === $this->anchorLeft;
     }
 
-    /**
-     * @return bool
-     */
     public function isAnchoredRight(): bool
     {
         return true === $this->anchorRight;

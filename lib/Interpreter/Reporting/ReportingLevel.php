@@ -23,39 +23,21 @@ final class ReportingLevel
      */
     private $level;
 
-    /**
-     * @param int|null $level
-     */
     public function __construct(int $level = null)
     {
         $this->level($level);
     }
 
-    /**
-     * @param int|null $level
-     *
-     * @return self
-     */
     public static function create(int $level = null): self
     {
         return new self($level);
     }
 
-    /**
-     * @param int $position
-     *
-     * @return int|null
-     */
     public function prior(int $position = 0): ?int
     {
         return $this->prior[count($this->prior) - 1 - $position] ?? null;
     }
 
-    /**
-     * @param int|null $level
-     *
-     * @return int
-     */
     public function level(int $level = null): int
     {
         if (null === $level) {
@@ -69,9 +51,6 @@ final class ReportingLevel
         return $this->level;
     }
 
-    /**
-     * @return self
-     */
     public function revert(): self
     {
         if (0 < count($this->prior)) {

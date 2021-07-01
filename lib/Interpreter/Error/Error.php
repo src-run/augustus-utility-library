@@ -55,10 +55,6 @@ final class Error
      */
     private $clearLastCompleted;
 
-    /**
-     * @param bool $clearLastOnDestruct
-     * @param int  $debugBacktraceLimit
-     */
     public function __construct(bool $clearLastOnDestruct = true, int $debugBacktraceLimit = 10)
     {
         [
@@ -79,94 +75,56 @@ final class Error
         }
     }
 
-    /**
-     * @param bool $clearLastOnDestruct
-     * @param int  $debugBacktraceLimit
-     *
-     * @return self
-     */
     public static function create(bool $clearLastOnDestruct = true, int $debugBacktraceLimit = 10): self
     {
         return new self($clearLastOnDestruct, $debugBacktraceLimit);
     }
 
-    /**
-     * @return int
-     */
     public function type(): int
     {
         return $this->type;
     }
 
-    /**
-     * @return string
-     */
     public function text(): string
     {
         return $this->text;
     }
 
-    /**
-     * @return null|\SplFileInfo
-     */
     public function file(): ?\SplFileInfo
     {
         return $this->file;
     }
 
-    /**
-     * @return bool
-     */
     public function hasFile(): bool
     {
         return null !== $this->file;
     }
 
-    /**
-     * @return int|null
-     */
     public function line(): ?int
     {
         return $this->line;
     }
 
-    /**
-     * @return null|Backtrace
-     */
     public function trace(): ?Backtrace
     {
         return $this->debugBacktrace;
     }
 
-    /**
-     * @return bool
-     */
     public function hasTrace(): bool
     {
         return null !== $this->debugBacktrace;
     }
 
-    /**
-     * @return bool
-     */
     public function isReal(): bool
     {
         return true === $this->real;
     }
 
-    /**
-     * @return bool
-     */
     public function isMock(): bool
     {
         return true !== $this->real;
     }
 
-    /**
-     * @param bool $force
-     *
-     * @return self
-     */
     public function clear(bool $force = false): self
     {
         if ((true !== $this->clearLastCompleted && true === $this->isEquitableToLast()) || true === $force) {
@@ -176,9 +134,6 @@ final class Error
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isEquitableToLast(): bool
     {
         [$type, $text, $file, $line, $trace, $real] = self::extractError();
@@ -190,11 +145,6 @@ final class Error
             && (string) $this->file() === (string) $file;
     }
 
-    /**
-     * @param int|null $debugBacktraceLimit
-     *
-     * @return array
-     */
     private static function extractError(int $debugBacktraceLimit = null): array
     {
         $data = error_get_last() ?? [];
@@ -209,41 +159,21 @@ final class Error
         ];
     }
 
-    /**
-     * @param array $data
-     *
-     * @return int
-     */
     private static function extractErrorType(array $data): int
     {
         return $data['type'] ?? -1000;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return string
-     */
     private static function extractErrorText(array $data): string
     {
         return $data['message'] ?? 'No internal interpreter error occurred.';
     }
 
-    /**
-     * @param array $error
-     *
-     * @return null|\SplFileInfo
-     */
     private static function extractErrorFile(array $error): ?\SplFileInfo
     {
         return is_file($file = $error['file'] ?? null) ? new \SplFileInfo($file) : null;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return int
-     */
     private static function extractErrorLine(array $data): int
     {
         return $data['line'] ?? 0;

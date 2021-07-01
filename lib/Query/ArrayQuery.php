@@ -15,8 +15,6 @@ final class ArrayQuery
 {
     /**
      * @param mixed[] $array
-     *
-     * @return bool|null
      */
     public static function isAssociative(array $array): ?bool
     {

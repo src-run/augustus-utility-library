@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the `src-run/web-app-v1` project.
+ * This file is part of the `src-run/augustus-utility-library` project.
  *
  * (c) Rob Frawley 2nd <rmf@src.run>
  *
@@ -29,9 +29,6 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
         )->bytes();
     }
 
-    /**
-     * @return CharactersGroup
-     */
     public function numbers(): CharactersGroup
     {
         return $this->cachedCharactersGroup(__FUNCTION__, function (): array {
@@ -39,9 +36,6 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
         });
     }
 
-    /**
-     * @return CharactersGroup
-     */
     public function letters(): CharactersGroup
     {
         return $this->cachedCharactersGroup(__FUNCTION__, function (): array {
@@ -52,9 +46,6 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
         });
     }
 
-    /**
-     * @return CharactersGroup
-     */
     public function lettersUpper(): CharactersGroup
     {
         return $this->cachedCharactersGroup(__FUNCTION__, function (): array {
@@ -62,9 +53,6 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
         });
     }
 
-    /**
-     * @return CharactersGroup
-     */
     public function lettersLower(): CharactersGroup
     {
         return $this->cachedCharactersGroup(__FUNCTION__, function (): array {
@@ -72,19 +60,11 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
         });
     }
 
-    /**
-     * @param bool $readable
-     *
-     * @return CharactersGroup
-     */
     public function symbols(bool $readable = false): CharactersGroup
     {
         return $readable ? $this->symbolsSel() : $this->symbolsAll();
     }
 
-    /**
-     * @return CharactersGroup
-     */
     public function passwords(): CharactersGroup
     {
         return $this->cachedCharactersGroup(__FUNCTION__, function (): array {
@@ -96,9 +76,6 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
         });
     }
 
-    /**
-     * @return CharactersGroup
-     */
     private function symbolsAll(): CharactersGroup
     {
         return $this->cachedCharactersGroup(__FUNCTION__, function (): array {
@@ -111,9 +88,6 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
         });
     }
 
-    /**
-     * @return CharactersGroup
-     */
     private function symbolsSel(): CharactersGroup
     {
         return $this->cachedCharactersGroup(__FUNCTION__, function (): array {
@@ -137,18 +111,16 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
                 93, // square bracket (closing)
                 94, // circumflex accent
                 95, // underscore
-                123,// curly bracket (opening)
-                124,// vertical bar
-                125,// curly bracket (closing)
-                126 // tilde
+                123, // curly bracket (opening)
+                124, // vertical bar
+                125, // curly bracket (closing)
+                126, // tilde
             ]];
         });
     }
 
     /**
      * @param CharactersGroup ...$groups
-     *
-     * @return CharactersGroup
      */
     private function mergedCharactersGroup(CharactersGroup ...$groups): CharactersGroup
     {
@@ -157,12 +129,6 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
         }, $groups));
     }
 
-    /**
-     * @param string   $name
-     * @param \Closure $provider
-     *
-     * @return CharactersGroup
-     */
     private function cachedCharactersGroup(string $name, \Closure $provider): CharactersGroup
     {
         return isset(static::$sets[$name])

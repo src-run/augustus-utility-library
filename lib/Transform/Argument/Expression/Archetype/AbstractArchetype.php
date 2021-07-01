@@ -21,33 +21,23 @@ abstract class AbstractArchetype implements ArchetypeInterface
     protected $value;
 
     /**
-     * @param string|null $value
-     * @param bool        $negative
+     * @param bool $negative
      */
     public function __construct(string $value = null)
     {
         $this->value = $value;
     }
 
-    /**
-     * @return string
-     */
     public function get(): string
     {
         return empty($this->value) ? '' : $this->value;
     }
 
-    /**
-     * @return bool
-     */
     public function has(): bool
     {
         return null !== $this->value && mb_strlen($this->value) > 0;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         if (!$this->has()) {

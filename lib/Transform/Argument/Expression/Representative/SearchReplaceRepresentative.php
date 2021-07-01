@@ -16,7 +16,7 @@ use SR\Utilities\Transform\Argument\Expression\Archetype\ArchetypeInterface;
 class SearchReplaceRepresentative extends SearchRepresentative
 {
     /**
-     * @var null|string
+     * @var string|null
      */
     protected $replacement;
 
@@ -32,17 +32,12 @@ class SearchReplaceRepresentative extends SearchRepresentative
         $this->setReplacement($replacement);
     }
 
-    /**
-     * @return bool
-     */
     public function hasReplacement(): bool
     {
         return null !== $this->replacement && mb_strlen($this->replacement) > 0;
     }
 
     /**
-     * @param string|null $replacement
-     *
      * @return SearchReplaceRepresentative
      */
     public function setReplacement(string $replacement = null): self
@@ -52,9 +47,6 @@ class SearchReplaceRepresentative extends SearchRepresentative
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function replacement(): string
     {
         return $this->hasReplacement() ? $this->replacement : '';

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.0/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.4/phpunit.xsd"
          backupGlobals="true"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         syntaxCheck="true"
          bootstrap="./vendor/autoload.php">
 
     <testsuites>
@@ -16,18 +15,17 @@
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
-            <directory>lib</directory>
-        </whitelist>
-    </filter>
+    <coverage ignoreDeprecatedCodeUnits="true"
+              disableCodeCoverageIgnore="true">
+        <include>
+            <directory suffix=".php">lib</directory>
+        </include>
 
-    <logging>
-        <log type="coverage-html"
-             target="var/build/coverage/"/>
-        <log type="coverage-clover"
-             target="var/build/clover.xml"/>
-    </logging>
+        <report>
+            <clover outputFile="var/build/clover.xml"/>
+            <html outputDirectory="var/build/coverage/" lowUpperBound="50" highLowerBound="90"/>
+        </report>
+    </coverage>
 
     <php>
         <ini name="error_reporting"

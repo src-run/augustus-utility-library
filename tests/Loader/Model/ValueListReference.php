@@ -18,11 +18,6 @@ class ValueListReference extends ValueList
      */
     private $reference;
 
-    /**
-     * @param string  $name
-     * @param string  $reference
-     * @param Package $parent
-     */
     public function __construct(string $name, string $reference, Package $parent)
     {
         parent::__construct($name, [], $parent);
@@ -30,9 +25,6 @@ class ValueListReference extends ValueList
         $this->reference = $reference;
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         $this->initialize();
@@ -40,9 +32,6 @@ class ValueListReference extends ValueList
         return parent::count();
     }
 
-    /**
-     * @return bool
-     */
     public function isEmpty(): bool
     {
         $this->initialize();
@@ -50,9 +39,6 @@ class ValueListReference extends ValueList
         return parent::isEmpty();
     }
 
-    /**
-     * @return bool
-     */
     public function isNotEmpty(): bool
     {
         $this->initialize();
@@ -70,9 +56,6 @@ class ValueListReference extends ValueList
         return parent::get();
     }
 
-    /**
-     * @return \Generator
-     */
     public function each(): \Generator
     {
         $this->initialize();

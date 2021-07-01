@@ -17,19 +17,11 @@ use SR\Utilities\Interpreter\Reporting\ReportingLevel;
 
 final class Interpreter
 {
-    /**
-     * @param bool $clear
-     *
-     * @return Error
-     */
     public static function error(bool $clear = true): Error
     {
         return Error::create($clear);
     }
 
-    /**
-     * @return bool
-     */
     public static function hasError(): bool
     {
         return Error::create(false)->isReal();
@@ -43,21 +35,11 @@ final class Interpreter
         return Error::create(false)->clear();
     }
 
-    /**
-     * @param int $level
-     *
-     * @return Backtrace
-     */
     public static function trace(int $level = 100): Backtrace
     {
         return Backtrace::create($level);
     }
 
-    /**
-     * @param int|null $level
-     *
-     * @return \SR\Utilities\Interpreter\Reporting\ReportingLevel
-     */
     public static function reporting(int $level = null): ReportingLevel
     {
         return ReportingLevel::create($level);

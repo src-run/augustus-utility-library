@@ -31,7 +31,7 @@ class InterpreterTest extends TestCase
     {
         yield [function () {
             @file_get_contents(sprintf('%s/foo/bar/baz.ext', sys_get_temp_dir()));
-        }, 'file_get_contents(%s/foo/bar/baz.ext): failed to open stream: No such file or directory'];
+        }, 'file_get_contents(%s/foo/bar/baz.ext): %sailed to open stream: No such file or directory'];
         yield [function () {
             @unlink(sprintf('%s/foo/bar/baz.ext', sys_get_temp_dir()));
         }, 'unlink(%s/foo/bar/baz.ext): No such file or directory'];
@@ -39,9 +39,6 @@ class InterpreterTest extends TestCase
 
     /**
      * @dataProvider provideErrorData
-     *
-     * @param \Closure $errorCauser
-     * @param string   $expectedMessageFormat
      */
     public function testError(\Closure $errorCauser, string $expectedMessageFormat)
     {
@@ -67,9 +64,9 @@ class InterpreterTest extends TestCase
 
         $this->assertValidTrace($error->trace());
 
-        $this->assertInternalType('int', $error->type());
+        $this->assertIsInt($error->type());
         $this->assertInstanceOf(\SplFileInfo::class, $error->file());
-        $this->assertInternalType('int', $error->line());
+        $this->assertIsInt($error->line());
         $this->assertInstanceOf(Backtrace::class, $error->trace());
         $this->assertTrue($error->hasFile());
         $this->assertTrue($error->hasTrace());
@@ -87,7 +84,7 @@ class InterpreterTest extends TestCase
 
     public function testFunctionError(): void
     {
-        require __DIR__.'/../Resources/Fixtures/error-function.php';
+        require __DIR__ . '/../Resources/Fixtures/error-function.php';
 
         $error = get_interpreter_error(true);
         $trace = $error->trace();
@@ -99,8 +96,6 @@ class InterpreterTest extends TestCase
 
     /**
      * @dataProvider provideErrorData
-     *
-     * @param \Closure $errorCauser
      */
     public function testTrace(\Closure $errorCauser)
     {
@@ -182,12 +177,24 @@ class InterpreterTest extends TestCase
         $this->assertInstanceOf(ReportingLevel::class, new \SR\Interpreter\Reporting\ReportingLevel());
     }
 
-    /**
-     * @param Backtrace $trace
-     */
+    public function testExtractBacktraceRecordDataWithEmptyArray(): void
+    {
+        $bt = new BacktraceRecord([]);
+
+        $this->assertEmpty($bt->getArrayData());
+        $this->assertNull($bt->getFile());
+        $this->assertNull($bt->getLine());
+        $this->assertNull($bt->getFuncName());
+        $this->assertNull($bt->getFuncReflection());
+        $this->assertNull($bt->getFuncCallType());
+        $this->assertNull($bt->getClassName());
+        $this->assertNull($bt->getObjectInstance());
+        $this->assertNull($bt->getObjectReflection());
+    }
+
     private function assertValidTrace(Backtrace $trace): void
     {
-        $this->assertInternalType('array', $trace->getRawData());
+        $this->assertIsArray($trace->getRawData());
         $this->assertTrue($trace->hasRawData());
         $this->assertCount(count($trace->getRecords()), $trace);
         $this->assertTrue($trace->hasRecords());
@@ -201,9 +208,6 @@ class InterpreterTest extends TestCase
         }
     }
 
-    /**
-     * @param BacktraceRecord $record
-     */
     private function assertValidBacktraceRecord(BacktraceRecord $record): void
     {
         if ('object' === $record->getType() || 'class' === $record->getType()) {
@@ -224,8 +228,8 @@ class InterpreterTest extends TestCase
         }
 
         $this->assertTrue($record->hasFuncName());
-        $this->assertInternalType('array', $record->getArrayData());
-        $this->assertInternalType('array', $record->getArguments());
+        $this->assertIsArray($record->getArrayData());
+        $this->assertIsArray($record->getArguments());
 
         if (0 < count($record->getArguments())) {
             $this->assertTrue($record->hasArguments());

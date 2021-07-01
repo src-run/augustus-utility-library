@@ -39,7 +39,7 @@ abstract class AbstractUtilitiesTest extends TestCase
             $parameters = $assert[$i];
             array_unshift($parameters, $data);
             $expected = array_pop($parameters);
-            $received = call_user_func_array($namespace.$callable, $parameters);
+            $received = call_user_func_array($namespace . $callable, $parameters);
 
             $this->assertSame(
                 $expected,

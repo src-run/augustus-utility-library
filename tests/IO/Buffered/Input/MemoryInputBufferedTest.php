@@ -23,12 +23,9 @@ use SR\Utilities\IO\Buffered\Output\MemoryOutputBuffered;
 class MemoryInputBufferedTest extends MemoryBufferedTestCase
 {
     /**
-     * @param float|null  $memory
-     * @param string|null $mode
-     *
      * @return BufferedInterface|MemoryOutputBuffered
      */
-    protected static function createMemoryBufferedInstance(float $memory = null, string $mode = null): BufferedInterface
+    protected static function createMemoryBufferedInstance(float $memory = null, string $mode = null): BufferedInterface | MemoryOutputBuffered
     {
         return new MemoryInputBuffered($memory, $mode);
     }

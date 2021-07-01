@@ -33,7 +33,7 @@ class FileContextTest extends TestCase
         $context = $this->instantiateFileContext();
 
         $this->assertInstanceOf(\ReflectionMethod::class, $context->getMethod());
-        $this->assertSame(__CLASS__.'::'.$method, $context->getMethodName(true));
+        $this->assertSame(__CLASS__ . '::' . $method, $context->getMethodName(true));
         $this->assertSame($method, $context->getMethodName());
     }
 
@@ -75,8 +75,6 @@ class FileContextTest extends TestCase
 
     /**
      * @dataProvider provideGetFileDiffAtEndOrBeginningOfFileData
-     *
-     * @param string $method
      */
     public function testGetFileDiffAtEndOrBeginningOfFile(string $method): void
     {
@@ -118,7 +116,7 @@ class FileContextTest extends TestCase
 
     public function testUsingTrait(): void
     {
-        $context = $this->instantiateFileContext($file = __DIR__.'/../Fixture/FixtureTrait.php', 18);
+        $context = $this->instantiateFileContext($file = __DIR__ . '/../Fixture/FixtureTrait.php', 18);
 
         $this->assertSame(FixtureTrait::class, $context->getClassName());
         $this->assertSame('trait', $context->getType());
@@ -126,7 +124,7 @@ class FileContextTest extends TestCase
 
     public function testUsingInterface(): void
     {
-        $context = $this->instantiateFileContext($file = __DIR__.'/../Fixture/FixtureInterface.php', 18);
+        $context = $this->instantiateFileContext($file = __DIR__ . '/../Fixture/FixtureInterface.php', 18);
 
         $this->assertSame(FixtureInterface::class, $context->getClassName());
         $this->assertSame('interface', $context->getType());
@@ -156,7 +154,7 @@ class FileContextTest extends TestCase
 
     public function testThrowsExceptionOnNotFoundClass(): void
     {
-        $context = $this->instantiateFileContext(__DIR__.'/../Fixture/data-provider_transform-string.yml');
+        $context = $this->instantiateFileContext(__DIR__ . '/../Fixture/data-provider_transform-string.yml');
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Could not initialize file context');
@@ -166,7 +164,7 @@ class FileContextTest extends TestCase
 
     public function testThrowsExceptionOnNotFoundNamespaceOrClass(): void
     {
-        $context = $this->instantiateFileContext(__DIR__.'/../Fixture/NoClass.php');
+        $context = $this->instantiateFileContext(__DIR__ . '/../Fixture/NoClass.php');
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Could not initialize file context');

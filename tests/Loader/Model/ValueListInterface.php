@@ -15,29 +15,14 @@ use SR\Tests\Utilities\Loader\Model\Traits\NameAwareInterface;
 
 interface ValueListInterface extends NameAwareInterface, \Countable, \IteratorAggregate
 {
-    /**
-     * @return string
-     */
     public function getName(): string;
 
-    /**
-     * @return Package
-     */
     public function getParent(): Package;
 
-    /**
-     * @return int
-     */
     public function count(): int;
 
-    /**
-     * @return bool
-     */
     public function isEmpty(): bool;
 
-    /**
-     * @return bool
-     */
     public function isNotEmpty(): bool;
 
     /**
@@ -45,18 +30,9 @@ interface ValueListInterface extends NameAwareInterface, \Countable, \IteratorAg
      */
     public function get(): array;
 
-    /**
-     * @return \Generator
-     */
     public function each(): \Generator;
 
-    /**
-     * @return \ArrayIterator
-     */
     public function getIterator(): \ArrayIterator;
 
-    /**
-     * @return bool
-     */
     public function isReference(): bool;
 }

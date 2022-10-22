@@ -34,6 +34,19 @@ HEADER,
     }
 };
 
+$resolveFinder = static function (): Symfony\Component\Finder\Finder {
+    return (new Finder())
+        ->in(__DIR__)
+        ->name('.php-cs-fixer.dist.php')
+        ->ignoreDotFiles(false)
+        ->exclude([
+            '.bldr',
+            'var',
+            'vendor',
+        ])
+    ;
+};
+
 return (new Config())
     ->setUsingCache(true)
     ->setRiskyAllowed(true)
@@ -41,17 +54,7 @@ return (new Config())
     ->setLineEnding("\n")
     ->setIndent('    ')
     ->setCacheFile('.php-cs-fixer.cache')
-    ->setFinder(
-        (new Finder())
-            ->in(__DIR__)
-            ->name('.php-cs-fixer.dist.php')
-            ->ignoreDotFiles(false)
-            ->exclude([
-                '.bldr',
-                'var',
-                'vendor',
-            ])
-    )
+    ->setFinder($resolveFinder())
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,

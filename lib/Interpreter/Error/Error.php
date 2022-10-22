@@ -171,7 +171,7 @@ final class Error
 
     private static function extractErrorFile(array $error): ?\SplFileInfo
     {
-        return is_file($file = $error['file'] ?? null) ? new \SplFileInfo($file) : null;
+        return isset($error['file']) && is_file($file = $error['file']) ? new \SplFileInfo($file) : null;
     }
 
     private static function extractErrorLine(array $data): int

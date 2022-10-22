@@ -119,10 +119,8 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
 
     /**
      * Initialize runner for method context.
-     *
-     * @param string $method
      */
-    protected function initRunner($method)
+    protected function initRunner(string $method)
     {
         foreach ($this->getPackageForMethod($method)->each() as $i => [$provided, $expected, $arguments, $name, $package]) {
             $this->runnerAssert($package, $i, $provided, $expected, $arguments, $name);
@@ -131,11 +129,8 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
 
     /**
      * Perform runner assertion tests.
-     *
-     * @param mixed $provided
-     * @param mixed $expected
      */
-    protected function runnerAssert(Package $package, int $iteration, $provided, $expected, array $arguments, string $method): void
+    protected function runnerAssert(Package $package, mixed $iteration, mixed $provided, mixed $expected, array $arguments, string $method): void
     {
         $template = sprintf('Set "%d" for "%s" context.', $iteration, $method);
 
@@ -151,17 +146,11 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
 
         $this->assertTransform($instance, $provided, $instance->get(), $template, '2/4');
         $this->assertTransform($instance, $expected, call_user_func_array($callable, $arguments), $template, '3/4');
-        $this->assertTransform($instance, $expected, call_user_func_array($callable, $arguments), $template, '3/4');
+        $this->assertTransform($instance, $expected, call_user_func_array($callable, $arguments), $template, '4/4');
 
         $this->runnerAssertCustom($package, $iteration, $provided, $expected, $arguments, $method, $callable);
     }
 
-    /**
-     * @param $provided
-     * @param $expected
-     * @param $arguments
-     * @param $method
-     */
     protected function runBooleanCheck($provided, $expected, $arguments, $method)
     {
         $inst = $this->getTargetInstance($provided);
@@ -171,11 +160,7 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
         $this->assertSame($expected, $ret);
     }
 
-    /**
-     * @param mixed $provided
-     * @param array $expected
-     */
-    protected function runnerAssertCustom(Package $package, int $iteration, $provided, $expected, array $arguments, string $method, callable $callable): void
+    protected function runnerAssertCustom(Package $package, int $iteration, mixed $provided, mixed $expected, array $arguments, string $method, callable $callable): void
     {
     }
 
@@ -201,11 +186,7 @@ abstract class AbstractTransformTest extends AbstractUtilitiesTest
         $this->assertSame($expected, $received, $this->equalsMessage($message, $which, $expected, $received));
     }
 
-    /**
-     * @param string|int $expected
-     * @param string|int $received
-     */
-    protected function assertTransform($instance, $expected, $received, string $message, string $which): void
+    protected function assertTransform($instance, mixed $expected, mixed $received, string $message, string $which): void
     {
         $message = $this->equalsMessage($message, $which, $expected, $received);
 

@@ -32,8 +32,6 @@ interface TransformInterface
 
     /**
      * @param mixed $value
-     *
-     * @return TransformInterface
      */
     public function set($value): self;
 
@@ -44,9 +42,6 @@ interface TransformInterface
 
     public function has(): bool;
 
-    /**
-     * @return TransformInterface
-     */
     public function setMutable(bool $mutable): self;
 
     public function isMutable(): bool;
@@ -71,14 +66,8 @@ interface TransformInterface
      */
     public function isNotEqual($to): bool;
 
-    /**
-     * @return TransformInterface
-     */
     public function copy(): self;
 
-    /**
-     * @return TransformInterface
-     */
     public function apply(\Closure $closure): self;
 }
 

@@ -159,9 +159,6 @@ final class ClassQuery
         throw new \InvalidArgumentException('Failed asserting passed value is valid trait name.');
     }
 
-    /**
-     * @param $target
-     */
     public static function isReflectable($target): bool
     {
         try {
@@ -224,7 +221,7 @@ final class ClassQuery
     {
         ($method = static::getReflection($from)->getMethod($method))
             ->setAccessible(true)
-    ;
+        ;
 
         return $method;
     }
@@ -247,7 +244,7 @@ final class ClassQuery
     {
         ($property = static::getReflection($from)->getProperty($property))
             ->setAccessible(true)
-    ;
+        ;
 
         return $property;
     }

@@ -12,32 +12,19 @@
 namespace SR\Utilities\IO\Buffered;
 
 use SR\Utilities\Interpreter\Interpreter;
+use SR\Utilities\IO\Buffered\Input\MemoryInputBuffered;
+use SR\Utilities\IO\Buffered\Output\MemoryOutputBuffered;
 
 trait MemoryBufferedTrait
 {
-    /**
-     * @var string
-     */
-    private $mode;
+    private ?string $mode = null;
 
-    /**
-     * @var float|null
-     */
-    private $memory;
+    private ?float $memory = null;
 
-    /**
-     * @var string
-     */
-    private $scheme;
+    private ?string $scheme = null;
 
-    /**
-     * @var resource
-     */
-    private $buffer;
+    private mixed $buffer = null;
 
-    /**
-     * Ensure the file resource is closed.
-     */
     public function __destruct()
     {
         $this->close();
@@ -48,12 +35,7 @@ trait MemoryBufferedTrait
         return $this->get();
     }
 
-    /**
-     * @throws \RuntimeException will throw on failure to open stream using `fopen`
-     *
-     * @return BufferedInterface|MemoryBufferedTrait
-     */
-    private function setup(): BufferedInterface
+    private function setup(): self
     {
         Interpreter::error();
 
@@ -61,7 +43,7 @@ trait MemoryBufferedTrait
             return $this;
         }
 
-        throw new \RuntimeException(vsprintf('Failed to open "%s" (mode: "%s"; limit: "%.02f megabytes / %d bytes"): %s', [$this->scheme(), $this->mode(), $this->memory() ?? 'null', $this->memory() ? self::convertMegabytesToBytes($this->memory()) : 'null', Interpreter::error()->text()]));
+        throw new \RuntimeException(sprintf('Failed to open "%s" (mode: "%s"; limit: "%.02f megabytes / %d bytes"): %s', $this->scheme(), $this->mode(), $this->memory() ?? 'null', $this->memory() ? self::convertMegabytesToBytes($this->memory()) : 'null', Interpreter::error()->text()));
     }
 
     public function mode(): string
@@ -74,11 +56,9 @@ trait MemoryBufferedTrait
      *                     entry's "mode" argument documentation for acceptable values:
      *                     {@see http://php.net/manual/en/function.fopen.php#refsect1-function.fopen-parameters}.
      *
-     * @throws \RuntimeException throws when setter method is called prior to the buffer being closed
-     *
-     * @return BufferedInterface|MemoryBufferedTrait
+     * @return MemoryOutputBuffered|MemoryInputBuffered|MemoryBufferedTrait
      */
-    public function setMode(string $mode): BufferedInterface
+    public function setMode(string $mode): self
     {
         if ($this->isResourceOpen()) {
             throw new \RuntimeException(sprintf('Cannot set mode while resource is open. Close resource with %s::close().', static::class));
@@ -97,14 +77,12 @@ trait MemoryBufferedTrait
     /**
      * @param float|null $memory Optionally specify max memory to use before falling over to an on-disk, temporary
      *                           file. This value is passed in megabytes as a "float". A "null" value causes memory to
-     *                           always be used, irregardless of the buffer size, and a value of -1 causes falling
+     *                           always be used, regardless of the buffer size, and a value of -1 causes falling
      *                           over to an on-disk temporary file at the default memory limitation, as defined by PHP.
      *
-     * @throws \RuntimeException throws when setter method is called prior to the buffer being closed
-     *
-     * @return BufferedInterface|MemoryBufferedTrait
+     * @return MemoryOutputBuffered|MemoryInputBuffered|MemoryBufferedTrait
      */
-    public function setMemory(float $memory = null): BufferedInterface
+    public function setMemory(float $memory = null): self
     {
         if ($this->isResourceOpen()) {
             throw new \RuntimeException(sprintf('Cannot set memory while resource is open. Close resource with %s::close().', static::class));
@@ -124,10 +102,7 @@ trait MemoryBufferedTrait
         return $this->scheme;
     }
 
-    /**
-     * @return BufferedInterface|MemoryBufferedTrait
-     */
-    public function add(string $content, bool $newline = false): BufferedInterface
+    public function add(string $content, bool $newline = false): self
     {
         if (!$this->isResourceOpen()) {
             throw new \RuntimeException(sprintf('Failed to write "%s" data to closed buffer: re-open the buffer resource using the "%s::reset()" method.', mb_strlen($content) > 40 ? sprintf('%s [...]', mb_substr($content, 0, 40)) : $content, __CLASS__));
@@ -149,12 +124,7 @@ trait MemoryBufferedTrait
         return (null === $length ? stream_get_contents($this->buffer) : fread($this->buffer, $length)) ?: '';
     }
 
-    /**
-     * @throws \RuntimeException throws on failure to re-setup buffer during reset operation
-     *
-     * @return BufferedInterface|MemoryBufferedTrait
-     */
-    public function reset(): BufferedInterface
+    public function reset(): self
     {
         $this->close();
         $this->setup();
@@ -162,10 +132,7 @@ trait MemoryBufferedTrait
         return $this;
     }
 
-    /**
-     * @return BufferedInterface|MemoryBufferedTrait
-     */
-    public function close(): BufferedInterface
+    public function close(): self
     {
         if ($this->isResourceOpen()) {
             @fclose($this->buffer);
@@ -178,7 +145,7 @@ trait MemoryBufferedTrait
     /**
      * @return resource|null
      */
-    public function resource()
+    public function resource(): mixed
     {
         return $this->buffer;
     }

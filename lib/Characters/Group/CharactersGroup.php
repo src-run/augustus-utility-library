@@ -17,9 +17,6 @@ final class CharactersGroup implements \Countable, \IteratorAggregate
 {
     use CharactersTrait;
 
-    /**
-     * @param int ...$decimals
-     */
     public function __construct(int ...$decimals)
     {
         $this->bytes = $decimals;

@@ -112,10 +112,10 @@ class ClassQueryTest extends TestCase
     public function testNewClassReflection()
     {
         $instanceReflection = ClassQuery::getReflection(new ClassQuery());
-        $this->assertTrue($instanceReflection instanceof \ReflectionObject);
+        $this->assertInstanceOf(\ReflectionObject::class, $instanceReflection);
 
         $classReflection = ClassQuery::getReflection(__CLASS__);
-        $this->assertTrue($classReflection instanceof \ReflectionClass);
+        $this->assertInstanceOf(\ReflectionClass::class, $classReflection);
 
         $this->expectException(\InvalidArgumentException::class);
         ClassQuery::getReflection('Invalud\Path\To\A\Namespaced\Class\Id\Really\Hope');

@@ -15,27 +15,18 @@ interface BufferedInterface
 {
     public function __toString(): string;
 
-    /**
-     * @return self
-     */
-    public function add(string $content, bool $newline = false);
+    public function add(string $content, bool $newline = false): self;
 
     public function get(int $length = null): string;
 
-    /**
-     * @return self
-     */
-    public function reset();
+    public function reset(): self;
 
-    /**
-     * @return self
-     */
-    public function close();
+    public function close(): self;
 
     /**
      * @return resource|null
      */
-    public function resource();
+    public function resource(): mixed;
 
     public function isResourceOpen(): bool;
 

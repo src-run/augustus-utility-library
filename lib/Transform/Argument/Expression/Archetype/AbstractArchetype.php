@@ -45,7 +45,7 @@ abstract class AbstractArchetype implements ArchetypeInterface
         }
 
         $return = CallSilencerFactory::create(function () {
-            return preg_match(sprintf('{%s}', $this->get()), null);
+            return preg_match(sprintf('{%s}', $this->get()), '');
         })->setValidator(function ($result) {
             return false !== $result;
         })->invoke();

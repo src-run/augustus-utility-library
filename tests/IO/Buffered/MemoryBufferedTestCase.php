@@ -19,9 +19,6 @@ use Symfony\Component\Finder\Finder;
 
 abstract class MemoryBufferedTestCase extends TestCase
 {
-    /**
-     * @return \Generator|int[]
-     */
     public static function provideMemoryData(): \Generator
     {
         yield [null, null];
@@ -69,7 +66,7 @@ abstract class MemoryBufferedTestCase extends TestCase
      */
     public function testMode(?float $megabytes, ?string $providedMode, string $expectedMode = null): void
     {
-        $this->assertSame($expectedMode ?? $providedMode, (static::createMemoryBufferedInstance($megabytes, $providedMode))->mode());
+        $this->assertSame($expectedMode ?? $providedMode, static::createMemoryBufferedInstance($megabytes, $providedMode)->mode());
     }
 
     public static function provideSchemeData(): \Generator
@@ -84,7 +81,7 @@ abstract class MemoryBufferedTestCase extends TestCase
      */
     public function testScheme(?float $megabytes, string $expectedScheme): void
     {
-        $this->assertSame($expectedScheme, (static::createMemoryBufferedInstance($megabytes))->scheme());
+        $this->assertSame($expectedScheme, static::createMemoryBufferedInstance($megabytes)->scheme());
     }
 
     public static function provideFullConstructionData(): \Generator
@@ -167,7 +164,7 @@ abstract class MemoryBufferedTestCase extends TestCase
         shuffle($files);
         $count = count($files);
 
-        for ($i = mt_rand(0, $count / 10); $i < $count - 1; $i += mt_rand($count / 6, $count / 4)) {
+        for ($i = mt_rand(0, (int) ($count / 10)); $i < $count - 1; $i += mt_rand((int) ($count / 6), (int) ($count / 4))) {
             yield [$files[$i], $files[$i + 1], null];
             yield [$files[$i], $files[$i + 1], 1];
         }
@@ -176,7 +173,7 @@ abstract class MemoryBufferedTestCase extends TestCase
     /**
      * @dataProvider provideFileData
      */
-    public function testSimultaneousReadAndWrite(string $fileOne, string $fileTwo, int $megabytes = null): void
+    public function testSimultaneousReadAndWrite(string $fileOne, string $fileTwo, int|float $megabytes = null): void
     {
         $bufferOne = static::createMemoryBufferedInstance($megabytes);
         $bufferTwo = static::createMemoryBufferedInstance($megabytes);
@@ -239,10 +236,7 @@ abstract class MemoryBufferedTestCase extends TestCase
         $buffer->get();
     }
 
-    /**
-     * @return BufferedInterface|MemoryOutputBuffered|MemoryInputBuffered
-     */
-    abstract protected static function createMemoryBufferedInstance(float $memory = null, string $mode = null): BufferedInterface;
+    abstract protected static function createMemoryBufferedInstance(float $memory = null, string $mode = null): BufferedInterface|MemoryOutputBuffered|MemoryInputBuffered;
 
     private static function convertMegabytesToBytes(float $megabytes): int
     {

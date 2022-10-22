@@ -37,9 +37,6 @@ class SearchReplaceRepresentative extends SearchRepresentative
         return null !== $this->replacement && mb_strlen($this->replacement) > 0;
     }
 
-    /**
-     * @return SearchReplaceRepresentative
-     */
     public function setReplacement(string $replacement = null): self
     {
         $this->replacement = $replacement;

@@ -239,8 +239,6 @@ class Package implements NameAwareInterface, \Countable, \IteratorAggregate
     }
 
     /**
-     * @param Package $that
-     *
      * @return string[]Package[]
      */
     private static function parseCustomReferencePointerArguments(string $valueListName, string $reference, self $that): array

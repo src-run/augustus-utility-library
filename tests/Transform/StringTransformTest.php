@@ -36,12 +36,12 @@ class StringTransformTest extends AbstractTransformTest
         yield ['string', 'string'];
         yield [100, '100'];
         yield [100.5, '100.5'];
-        yield [(new class() {
+        yield [new class() {
             public function __toString(): string
             {
                 return 'string';
             }
-        }), 'string'];
+        }, 'string'];
     }
 
     public function provideTestConstructorExceptionOnInvalidValueData(): \Generator

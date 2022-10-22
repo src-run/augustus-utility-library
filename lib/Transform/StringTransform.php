@@ -17,28 +17,7 @@ use SR\Utilities\Transform\Argument\Expression\Representative\SearchReplaceRepre
 
 class StringTransform extends AbstractTransform
 {
-    /**
-     * Construct by optionally setting the string value to manipulate.
-     *
-     * @param string $string
-     */
-    public function __construct($string = null, bool $mutable = false)
-    {
-        if (null !== $string) {
-            parent::__construct($string, $mutable);
-        } else {
-            $this->setMutable($mutable);
-        }
-    }
-
-    /**
-     * @param string $value
-     *
-     * @throws \InvalidArgumentException if a non string or non coercable string is provided
-     *
-     * @return StringTransform
-     */
-    public function set($value): TransformInterface
+    public function set(mixed $value): self
     {
         if (false === static::isConsumable($value)) {
             throw new \InvalidArgumentException('Value is not a string and could not be coerced to one.');
@@ -47,18 +26,11 @@ class StringTransform extends AbstractTransform
         return parent::set((string) $value);
     }
 
-    public function get(): string
-    {
-        return parent::get();
-    }
-
     /**
      * Perform string replacement using regular expression and replacement. Optionally turn regex inverse (negative)
      * and enforce case sensitivity.
-     *
-     * @return StringTransform|AbstractTransform
      */
-    public function replace(SearchReplaceRepresentative $config)
+    public function replace(SearchReplaceRepresentative $config): self
     {
         return $this->apply(function () use ($config) {
             return preg_replace($config->regex(), $config->replacement(), $this->get());
@@ -67,58 +39,45 @@ class StringTransform extends AbstractTransform
 
     /**
      * Perform conversion to alpha characters only.
-     *
-     * @return StringTransform|AbstractTransform
      */
-    public function toAlpha()
+    public function toAlpha(): self
     {
         return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('a-z', true)));
     }
 
     /**
      * Perform conversion to numeric characters only.
-     *
-     * @return StringTransform|AbstractTransform
      */
-    public function toNumeric()
+    public function toNumeric(): self
     {
         return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('0-9', true)));
     }
 
     /**
      * Perform conversion to alphanumeric characters only.
-     *
-     * @return StringTransform|AbstractTransform
      */
-    public function toAlphanumeric()
+    public function toAlphanumeric(): self
     {
         return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('a-z0-9', true)));
     }
 
     /**
      * Perform conversion to alphanumeric and dash characters only.
-     *
-     * @return StringTransform|AbstractTransform
      */
-    public function toAlphanumericAndDashes()
+    public function toAlphanumericAndDashes(): self
     {
         return $this->replace(new SearchReplaceRepresentative('', new RangedArchetype('a-z0-9-', true)));
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function spacesToDashes()
+    public function spacesToDashes(): self
     {
         return $this->replace(new SearchReplaceRepresentative('-', new StringArchetype('[ ]+')));
     }
 
     /**
      * Perform conversion to alphanumeric and spaces to dashes only.
-     *
-     * @return StringTransform|AbstractTransform
      */
-    public function toAlphanumericAndSpacesToDashes()
+    public function toAlphanumericAndSpacesToDashes(): self
     {
         return $this
             ->replace(new SearchReplaceRepresentative('-', new StringArchetype('[\s\n]+')))
@@ -127,20 +86,12 @@ class StringTransform extends AbstractTransform
         ;
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function dashesToSpaces()
+    public function dashesToSpaces(): self
     {
         return $this->replace(new SearchReplaceRepresentative(' ', new StringArchetype('[-]+')));
     }
 
-    /**
-     * @param bool $lowercase
-     *
-     * @return StringTransform|AbstractTransform
-     */
-    public function slugify($lowercase = true)
+    public function slugify(bool $lowercase = true): self
     {
         return $this->apply(function (self $value) {
             $result = $value
@@ -156,90 +107,63 @@ class StringTransform extends AbstractTransform
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function toLower()
+    public function toLower(): self
     {
         return $this->apply(function () {
             return mb_strtolower($this->get());
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function toUpper()
+    public function toUpper(): self
     {
         return $this->apply(function () {
             return mb_strtoupper($this->get());
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function camelToPascalCase()
+    public function camelToPascalCase(): self
     {
         return $this->apply(function () {
             return ucfirst($this->get());
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function camelToSnakeCase()
+    public function camelToSnakeCase(): self
     {
         return $this->apply(function () {
             return preg_replace('#(?<=\\w)(?=[A-Z])#', '_$1', $this->get());
         })->toLower();
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function camelToSpinalCase()
+    public function camelToSpinalCase(): self
     {
         return $this->apply(function () {
             return preg_replace('#(?<=\\w)(?=[A-Z])#', '-$1', $this->get());
         })->toLower();
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function pascalToCamelCase()
+    public function pascalToCamelCase(): self
     {
         return $this->apply(function () {
             return lcfirst($this->get());
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function pascalToSnakeCase()
+    public function pascalToSnakeCase(): self
     {
         return $this->apply(function () {
             return $this->camelToSnakeCase();
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function pascalToSpinalCase()
+    public function pascalToSpinalCase(): self
     {
         return $this->apply(function () {
             return $this->camelToSpinalCase();
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function snakeToCamelCase()
+    public function snakeToCamelCase(): self
     {
         return $this->apply(function () {
             return preg_replace_callback('{(_)([a-z])}', function ($match) {
@@ -248,30 +172,21 @@ class StringTransform extends AbstractTransform
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function snakeToPascalCase()
+    public function snakeToPascalCase(): self
     {
         return $this->apply(function () {
             return $this->snakeToCamelCase()->camelToPascalCase();
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function snakeToSpinalCase()
+    public function snakeToSpinalCase(): self
     {
         return $this->apply(function () {
             return str_replace('_', '-', $this->get());
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function spinalToCamelCase()
+    public function spinalToCamelCase(): self
     {
         return $this->apply(function () {
             return preg_replace_callback('{(-)([a-z])}', function ($match) {
@@ -280,32 +195,21 @@ class StringTransform extends AbstractTransform
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function spinalToPascalCase()
+    public function spinalToPascalCase(): self
     {
         return $this->apply(function () {
             return $this->spinalToCamelCase()->camelToPascalCase();
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform
-     */
-    public function spinalToSnakeCase()
+    public function spinalToSnakeCase(): self
     {
         return $this->apply(function () {
             return str_replace('-', '_', $this->get());
         });
     }
 
-    /**
-     * @param string $regex
-     *
-     * @return StringTransform|AbstractTransform|TransformInterface
-     */
-    public function toPhoneNumber($regex = '~.*(\d{3})[^\d]*(\d{3})[^\d]*(\d{4}).*~')
+    public function toPhoneNumber(string $regex = '~.*(\d{3})[^\d]*(\d{3})[^\d]*(\d{4}).*~'): self
     {
         return $this->apply(function () use ($regex) {
             $number = preg_replace('/[^0-9]/', '', preg_replace($regex, '$1$2$3', $this->get()));
@@ -318,10 +222,7 @@ class StringTransform extends AbstractTransform
         });
     }
 
-    /**
-     * @return StringTransform|AbstractTransform|TransformInterface
-     */
-    public function toPhoneFormat()
+    public function toPhoneFormat(): self
     {
         return $this->apply(function () {
             if (false === in_array(mb_strlen($string = $this->copy()->toPhoneNumber()->get()), [11, 7], true)) {

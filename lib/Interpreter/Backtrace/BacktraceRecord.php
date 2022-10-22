@@ -116,10 +116,7 @@ final class BacktraceRecord
         return null !== $this->getFuncName();
     }
 
-    /**
-     * @return \ReflectionFunctionAbstract|\ReflectionFunction|\ReflectionMethod|null
-     */
-    public function getFuncReflection(): ?\ReflectionFunctionAbstract
+    public function getFuncReflection(): \ReflectionFunctionAbstract|\ReflectionFunction|\ReflectionMethod|null
     {
         return $this->funcReflection;
     }
@@ -149,9 +146,6 @@ final class BacktraceRecord
         return '->' === $this->getFuncCallType();
     }
 
-    /**
-     * @return mixed[]
-     */
     public function getArguments(): array
     {
         return $this->arguments;
@@ -172,26 +166,17 @@ final class BacktraceRecord
         return null !== $this->getClassName();
     }
 
-    /**
-     * @return object|null
-     */
-    public function getObjectInstance()
+    public function getObjectInstance(): ?object
     {
         return $this->objectInstance;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasObjectInstance()
+    public function hasObjectInstance(): bool
     {
         return null !== $this->getObjectInstance();
     }
 
-    /**
-     * @return \ReflectionClass|\ReflectionObject|null
-     */
-    public function getObjectReflection(): ?\ReflectionClass
+    public function getObjectReflection(): \ReflectionClass|\ReflectionObject|null
     {
         return $this->objectReflection;
     }
@@ -245,10 +230,7 @@ final class BacktraceRecord
         return $s . sprintf(' (%s)', $this->getType());
     }
 
-    /**
-     * @param mixed $argument
-     */
-    private static function stringifyArguments($argument): string
+    private static function stringifyArguments(mixed $argument): string
     {
         if (is_object($argument)) {
             return sprintf('%s:%s', gettype($argument), get_class($argument));
@@ -259,10 +241,7 @@ final class BacktraceRecord
             : self::stringifyComplex($argument);
     }
 
-    /**
-     * @param mixed $complex
-     */
-    private static function stringifyComplex($complex): string
+    private static function stringifyComplex(mixed $complex): string
     {
         return trim(preg_replace('{\s+}', ' ',
             preg_replace('{\n[\s\t]*}', ' ', @print_r($complex, true))
@@ -273,21 +252,21 @@ final class BacktraceRecord
     {
         return array_merge([
             $record,
-            $line = self::extractBacktraceLine($record),
+            self::extractBacktraceLine($record),
             $func = self::extractBacktraceFunc($record),
-            $type = self::extractBacktraceType($record),
-            $args = self::extractBacktraceArgs($record),
+            self::extractBacktraceType($record),
+            self::extractBacktraceArgs($record),
             $name = self::extractBacktraceName($record),
             $inst = self::extractBacktraceInst($record),
             $nRef = self::extractBacktraceNameReflection($inst, $name),
-            $fRef = self::extractBacktraceFuncReflection($nRef, $func),
-            $file = self::extractBacktraceFile($record, $nRef, $fRef),
+            self::extractBacktraceFuncReflection($nRef, $func),
+            self::extractBacktraceFile($record, $nRef),
         ]);
     }
 
-    private static function extractBacktraceFile(array $data, \ReflectionClass $class = null, \ReflectionFunctionAbstract $function = null): ?\SplFileInfo
+    private static function extractBacktraceFile(array $data, \ReflectionClass $class = null): ?\SplFileInfo
     {
-        $resolved = $data['file'] ?? (null !== $class ? $class->getFileName() : null);
+        $resolved = $data['file'] ?? ($class?->getFileName());
 
         return $resolved ? new \SplFileInfo($resolved) : null;
     }
@@ -307,9 +286,6 @@ final class BacktraceRecord
         return $data['type'] ?? null;
     }
 
-    /**
-     * @return mixed[]
-     */
     private static function extractBacktraceArgs(array $data): array
     {
         return array_map(function ($value): string {
@@ -322,20 +298,12 @@ final class BacktraceRecord
         return $data['class'] ?? null;
     }
 
-    /**
-     * @return object|null
-     */
-    private static function extractBacktraceInst(array $data)
+    private static function extractBacktraceInst(array $data): ?object
     {
         return $data['object'] ?? null;
     }
 
-    /**
-     * @param object|null $object
-     *
-     * @return \ReflectionClass|\ReflectionObject|null
-     */
-    private static function extractBacktraceNameReflection($object = null, string $class = null): ?\ReflectionClass
+    private static function extractBacktraceNameReflection($object = null, string $class = null): \ReflectionClass|\ReflectionObject|null
     {
         if (ClassQuery::isInstance($object)) {
             return ClassQuery::getReflection($object);
@@ -352,6 +320,10 @@ final class BacktraceRecord
     {
         if (null !== $classReflection && $classReflection->hasMethod($function)) {
             return $classReflection->getMethod($function);
+        }
+
+        if (null === $function) {
+            return null;
         }
 
         try {

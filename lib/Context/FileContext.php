@@ -19,35 +19,20 @@ use SR\Utilities\Query\ClassQuery;
  */
 class FileContext implements FileContextInterface
 {
-    /**
-     * @var bool
-     */
-    protected $initialized = false;
+    protected bool $initialized = false;
 
-    /**
-     * @var \SplFileInfo
-     */
-    protected $file;
+    protected ?\SplFileInfo $file = null;
 
     /**
      * @var string[]
      */
-    protected $contents;
+    protected array $contents = [];
 
-    /**
-     * @var int
-     */
-    protected $line;
+    protected ?int $line = null;
 
-    /**
-     * @var \ReflectionClass
-     */
-    protected $class;
+    protected ?\ReflectionClass $class = null;
 
-    /**
-     * @var \ReflectionMethod
-     */
-    protected $method;
+    protected ?\ReflectionMethod $method = null;
 
     /**
      * Define the context by specifying a file path and line number.
@@ -55,7 +40,7 @@ class FileContext implements FileContextInterface
     public function __construct(string $file, int $line)
     {
         $this->file = new \SplFileInfo($file);
-        $this->line = (int) $line;
+        $this->line = $line;
     }
 
     /**
@@ -190,11 +175,6 @@ class FileContext implements FileContextInterface
         return $diff;
     }
 
-    /**
-     * @throws \RuntimeException
-     *
-     * @return FileContext
-     */
     private function init(): self
     {
         if (true !== $this->initialized) {
@@ -204,9 +184,6 @@ class FileContext implements FileContextInterface
         return $this;
     }
 
-    /**
-     * @return FileContext
-     */
     private function initContext(): self
     {
         try {
@@ -214,7 +191,7 @@ class FileContext implements FileContextInterface
             $this->class = $this->initContextReflectionClass();
             $this->method = $this->initContextReflectionMethod();
         } catch (\RuntimeException $e) {
-            throw new \RuntimeException('Could not initialize file context!', null, $e);
+            throw new \RuntimeException('Could not initialize file context!', 0, $e);
         }
 
         $this->initialized = true;

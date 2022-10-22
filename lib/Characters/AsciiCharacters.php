@@ -119,9 +119,6 @@ class AsciiCharacters implements \Countable, \IteratorAggregate
         });
     }
 
-    /**
-     * @param CharactersGroup ...$groups
-     */
     private function mergedCharactersGroup(CharactersGroup ...$groups): CharactersGroup
     {
         return $this->createCharacterGroup(...array_map(function (CharactersGroup $set): array {

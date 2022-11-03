@@ -20,7 +20,7 @@
   ],
   "require": {
     "php": "^8.1",
-    "src-run/augustus-silencer-library": "^0.10.0"
+    "src-run/augustus-silencer-library": "^0.20.0"
   },
   "require-dev": {
     "codacy/coverage": "~1.4",
